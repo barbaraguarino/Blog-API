@@ -105,15 +105,15 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
     3. **Tamanho**: L
     4. **Tag**: `sec` + `core`
     5. **Critérios de Aceitação**:
-        - [ ]  Dependências `spring-boot-starter-security` e biblioteca JWT (ex: `java-jwt` da Auth0) instaladas.
-        - [ ]  Classe de configuração `SecurityConfig` criada, desativando CSRF e configurando a sessão como `STATELESS`.
-        - [ ]  Implementação do `JwtTokenProvider` (componente responsável por assinar e ler tokens).
-        - [ ]  Implementação do `JwtAuthenticationFilter` (estende `OncePerRequestFilter`) para interceptar requisições, ler o header `Authorization` e injetar o contexto de segurança.
-        - [ ]  Rotas públicas definidas explicitamente (ex: `/api/v1/users/register`, `/api/v1/auth/login`).
+        - [x]  Dependências `spring-boot-starter-security` e biblioteca JWT (ex: `java-jwt` da Auth0) instaladas.
+        - [x]  Classe de configuração `SecurityConfig` criada, desativando CSRF e configurando a sessão como `STATELESS`.
+        - [x]  Implementação do `JwtTokenProvider` (componente responsável por assinar e ler tokens).
+        - [x]  Implementação do `JwtAuthenticationFilter` (estende `OncePerRequestFilter`) para interceptar requisições, ler o header `Authorization` e injetar o contexto de segurança.
+        - [x]  Rotas públicas definidas explicitamente (ex: `/api/v1/users/register`, `/api/v1/auth/login`).
     6. **Testes de Aceitação**:
-        - [ ]  Acessar uma rota protegida sem token resulta em HTTP 401 (Unauthorized) ou 403 (Forbidden).
-        - [ ]  Acessar a mesma rota com um Bearer Token válido no header retorna sucesso.
-        - [ ]  Tentar usar um token expirado ou forjado retorna o erro tratado e não quebra a aplicação.
+        - [x]  Acessar uma rota protegida sem token resulta em HTTP 401 (Unauthorized) ou 403 (Forbidden).
+        - [x]  Acessar a mesma rota com um Bearer Token válido no header retorna sucesso.
+        - [x]  Tentar usar um token expirado ou forjado retorna o erro tratado e não quebra a aplicação.
 
 ## Próximos Passos
 
