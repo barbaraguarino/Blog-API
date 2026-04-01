@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -26,6 +27,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleBusinessException(BusinessException exception, HttpServletRequest request) {
         String message = getTranslatedMessage(exception.getMessageKey(), exception.getArgs(), request);
         return buildErrorResponse(exception.getHttpStatus(), message, request, null);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNotFoundException(NoResourceFoundException exception, HttpServletRequest request) {
+        String message = getTranslatedMessage("error.resource.not_found", null, request);
+        return buildErrorResponse(HttpStatus.NOT_FOUND, message, request, null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
