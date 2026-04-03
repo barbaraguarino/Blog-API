@@ -3,7 +3,7 @@ CREATE TABLE tb_users (
 
     name VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    nickname VARCHAR(50) NOT NULL UNIQUE,
 
     password VARCHAR(255),
 

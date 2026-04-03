@@ -33,13 +33,13 @@ public class UserService {
         User newUser = userMapper.toEntity(dto);
 
         newUser.setRole(UserRole.READER);
-        newUser.setUsername(generateRandomUsername(newUser.getName()));
+        newUser.setNickname(generateRandomNickname(newUser.getName()));
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         User savedUser = userRepository.save(newUser);
         return userMapper.toResponseDTO(savedUser);
     }
 
-    private String generateRandomUsername(String name) {
+    private String generateRandomNickname(String name) {
         String cleanName = name.toLowerCase()
                 .replaceAll("\\s+", "_")
                 .replaceAll("[^a-z0-9_]", "");

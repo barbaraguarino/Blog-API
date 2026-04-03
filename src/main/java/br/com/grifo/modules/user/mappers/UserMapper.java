@@ -31,7 +31,7 @@ public class UserMapper {
                 entity.getId(),
                 entity.getName(),
                 entity.getEmail(),
-                entity.getUsername(),
+                entity.getNickname(),
                 entity.getRole().name(),
                 entity.isEnabled(),
                 entity.isLocked(),

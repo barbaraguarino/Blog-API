@@ -26,7 +26,7 @@ public class User implements UserDetails {
     private UUID id;
     private String name;
     private String email;
-    private String username;
+    private String nickname;
     private String password;
     private String googleId;
     @Enumerated(EnumType.STRING)

@@ -7,7 +7,7 @@ public record UserResponseDTO(
         UUID id,
         String name,
         String email,
-        String username,
+        String nickname,
         String role,
         boolean enabled,
         boolean locked,
