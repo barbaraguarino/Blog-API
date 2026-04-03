@@ -56,9 +56,7 @@ Define a **natureza técnica** da tarefa. Responde à pergunta: "Onde no sistema
 
 Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem abaixo,
 
-- [ ] **#1 Tratamento Global de Exceções**
-
-  **Motivação:** Uma API RESTful profissional não cospe *stacktraces* do Java na cara do cliente. Precisamos centralizar o tratamento de erros e padronizar as respostas (baseado na RFC 7807 - *Problem Details for HTTP APIs*), para facilitar a integração, ocultar detalhes da infraestrutura (segurança) e exibir mensagens amigáveis.
+- [x] **#1 Tratamento Global de Exceções**
 
     1. **Objetivo**: Criar um interceptador global para capturar exceções lançadas em qualquer lugar da aplicação e formatá-las em um DTO padrão.
     2. **Prioridade**: P1
@@ -77,8 +75,6 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
 
 - [x] **#2 Internacionalização (i18n)**
 
-  **Motivação:** O GRIFO é uma plataforma literária com potencial para alcance internacional. A API deve ser capaz de retornar mensagens adaptadas ao idioma do cliente com base no header `Accept-Language`.
-
     1. **Objetivo**: Configurar o `MessageSource` do Spring Boot para externalizar todas as mensagens da aplicação em ficheiros de propriedades, permitindo a tradução dinâmica das respostas da API baseada no idioma solicitado pelo cliente.
     2. **Prioridade**: P1
     3. **Tamanho**: M
@@ -96,9 +92,7 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Sem header, retorna idioma padrão.
 
 
-- [ ] **#3 Configuração Base de Segurança com JWT**
-
-  **Motivação:** O GRIFO precisa proteger os dados de seus leitores e autores. O uso de JSON Web Tokens (JWT) permite uma arquitetura *Stateless* (sem estado), que é altamente escalável, rápida e o padrão da indústria para APIs REST.
+- [x] **#3 Configuração Base de Segurança com JWT**
 
     1. **Objetivo**: Configurar o `Spring Security`, blindar todos os endpoints por padrão e implementar o mecanismo de geração e validação de tokens JWT.
     2. **Prioridade**: P0
@@ -115,12 +109,85 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Acessar a mesma rota com um Bearer Token válido no header retorna sucesso.
         - [x]  Tentar usar um token expirado ou forjado retorna o erro tratado e não quebra a aplicação.
 
+- [ ] **#4 Módulo de Usuário: Cadastro de Novos Usuário**
+
+    1. **Objetivo**: Criar o alicerce do primeiro domínio de negócio (User). Implementar a entidade JPA, a migração do banco de dados, o repositório, o serviço com regras de negócio e o endpoint REST para criação de contas locais com senhas criptografadas.
+    2. **Prioridade**: P1
+    3. **Tamanho**: M
+    4. **Tag**: `feat` + `core`
+    5. **Critérios de Aceitação**:
+        - [ ]  Criação do script Flyway (`V1__create_table_users.sql`) com campos essenciais.
+        - [ ]  Criação da entidade `User` (JPA).
+        - [ ]  Criação do `UserRegistrationDTO` com Bean Validation.
+        - [ ]  Implementação do `UserService` com a validação: se o e-mail já existir, lançar a `BusinessException` usando a chave `error.user.already_exists`.
+        - [ ]  Criptografia da senha usando `BCryptPasswordEncoder` antes de salvar no banco.
+        - [ ]  Endpoint `POST /api/v1/users/register` liberado no `SecurityConfig`.
+    6. **Testes de Aceitação**:
+        - [ ]  Enviar um payload válido deve retornar HTTP 201 (Created) e o DTO do usuário sem a senha.
+        - [ ]  Tentar cadastrar um e-mail já existente deve retornar HTTP 409 (Conflict) formatado pelo *GlobalExceptionHandler*.
+        - [ ]  Enviar payload com e-mail inválido ou senha fraca deve retornar HTTP 400 (Bad Request) com lista de campos inválidos.
+
+- [ ] **#5 Módulo de Autenticação: Endpoint de Login Local**
+
+    1. **Objetivo**: Implementar o fluxo de autenticação tradicional por e-mail e senha, integrando o `AuthenticationManager` do Spring Security com o nosso `JwtTokenProvider` para devolver um token válido ao front-end usando HttpOnly Cookies.
+    2. **Prioridade**: P1
+    3. **Tamanho**: M
+    4. **Tag**: `feat` + `sec`
+    5. **Critérios de Aceitação**:
+        - [ ]  Configuração do `AuthenticationManager` e do `PasswordEncoder` no `SecurityConfig` ou em nova classe de configuração de beans.
+        - [ ]  Criação do `CustomUserDetailsService` implementando a interface `UserDetailsService` para buscar o usuário no banco via e-mail.
+        - [ ]  Criação do `LoginRequestDTO` com dados necessários.
+        - [ ]  O endpoint não deve devolver o token no corpo do JSON. Ele deve injetar o token em um cookie HTTP com as flags `HttpOnly`, `Secure` e `SameSite=Strict`.
+        - [ ]  Criação do `AuthController` com o endpoint `POST /api/v1/auth/login`.
+    6. **Testes de Aceitação**:
+        - [ ]  Enviar credenciais corretas deve retornar HTTP 200 (OK) e o JWT.
+        - [ ]  Enviar senha incorreta deve retornar HTTP 401 (Unauthorized) ou 403 (Forbidden) mapeado corretamente via exceção.
+        - [ ]  Enviar um e-mail não cadastrado deve retornar HTTP 401/403.
+        - [ ]  Validação de credenciais e verificação se o header `Set-Cookie` está presente na resposta HTTP 200.
+
+- [ ] **#6 Módulo de Usuário: Cadastro via Google (OAuth2/OIDC)**
+
+    1. **Objetivo**: Permitir que usuários criem uma conta no GRIFO delegando a responsabilidade da senha para o Google. A API deve receber e validar um Google ID Token gerado no front-end.
+    2. **Prioridade**: P2
+    3. **Tamanho**: L
+    4. **Tag**: `feat` + `sec`
+    5. **Critérios de Aceitação**:
+        - [ ]  Inclusão da biblioteca oficial do Google (`google-api-client`) no `pom.xml` para validação de assinatura de tokens.
+        - [ ]  Atualização da tabela e entidade `User` para suportar o tipo de provedor de login (`LOCAL`, `GOOGLE`).
+        - [ ]  Criação do endpoint `POST /api/v1/users/register/google` recebendo um `GoogleTokenDTO`.
+        - [ ]  Implementação de serviço que intercepta o token, valida a assinatura direto com os servidores do Google (JWKS) e extrai payload (email, nome, foto).
+        - [ ]  Salvar o usuário no banco com uma senha nula/randômica (já que o login é delegado) e provedor `GOOGLE`.
+    6. **Testes de Aceitação**:
+        - [ ]  Enviar um Google ID Token válido cria um usuário e retorna HTTP 201.
+        - [ ]  Tentar cadastrar via Google usando um e-mail que já existe como conta `LOCAL` deve lançar exceção de conflito de provedor.
+        - [ ]  Enviar um Google Token forjado ou expirado deve retornar HTTP 401 (Unauthorized).
+
+- [ ] **#7 Módulo de Autenticação: Login via Google**
+
+    1. **Objetivo**: Autenticar um usuário existente através de um Google ID Token. Uma vez validado pelo Google, a nossa API emite o token nativo do GRIFO para o cliente navegar de forma unificada.
+    2. **Prioridade**: P2
+    3. **Tamanho**: M
+    4. **Tag**: `feat` + `sec`
+    5. **Critérios de Aceitação**:
+        - [ ]  Criação do endpoint `POST /api/v1/auth/login/google`.
+        - [ ]  Validação do Google ID Token usando o validador criado na Tarefa #6.
+        - [ ]  Busca do usuário no banco pelo e-mail extraído do token do Google.
+        - [ ]  Geração do token JWT nativo do GRIFO pelo `JwtTokenProvider` se o usuário existir e o provedor for compatível.
+    6. **Testes de Aceitação**:
+        - [ ]  Enviar token válido de um usuário Google existente retorna HTTP 200 (OK) e o JWT do GRIFO.
+        - [ ]  Enviar token válido, mas de um usuário não cadastrado no banco, retorna HTTP 404 (Not Found) - instruindo o Front-end a redirecionar para a tela de registro.
+
 ## Próximos Passos
 
 Aqui ficam as funcionalidades mapeadas para o futuro. Quando a seção “Execução Imediata” esvaziar, deve ser puxado itens daqui, detalhado os critérios técnicos e movido para cima.
 
-1. Módulo de Usuário: Cadastro de Usuário
-2. Documentação Automatizada com OpenAPI/Swagger (`springdoc-openapi`).
-3. Módulo de Autenticação: Endpoint de Login (gerando o JWT).
-4. Entidades JPA: Modelagem e mapeamento das relações Livro x Autor x Resenha.
-5. Integração AWS S3 (Upload de foto de perfil).
+1. Catálogo Literário: Gestão de Livros e Gêneros
+2. Sistema de Autoria: Solicitação e Aprovação
+3. Módulo de Resenhas: Publicação e Rascunhos
+4. Interações Sociais: Comentários e Reações
+5. Integração AWS S3: Upload de Mídias
+6. Módulo de Moderação: Sistema de Denúncias
+7. Documentação Automatizada com OpenAPI/Swagger
+8. Módulo de Usuário Avançado: Recuperação de Senha e Verificação de E-mail
+9. Módulo de Perfil: Vincular Conta ao Google
+10. Módulo de Perfil: Desvincular Google
