@@ -20,7 +20,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] PUBLIC_ROUTES = {
-            "/api/v1/auth/**"
+            "/api/v1/users/register"
     };
 
     @Bean
