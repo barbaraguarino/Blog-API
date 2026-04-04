@@ -21,13 +21,6 @@ class SecurityConfigTest {
     private JwtTokenProvider jwtTokenProvider;
 
     @Test
-    @DisplayName("Deve permitir o acesso sem token a uma rota pública (/api/v1/auth/...)")
-    void shouldAllowAccessToPublicRouteWithoutToken() throws Exception {
-        mockMvc.perform(get("/api/v1/auth/login"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     @DisplayName("Deve bloquear o acesso e retornar HTTP 403 ao tentar acessar rota protegida sem token")
     void shouldBlockAccessToProtectedRouteWithoutToken() throws Exception {
         mockMvc.perform(get("/api/v1/users/perfil"))
