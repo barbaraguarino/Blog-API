@@ -134,11 +134,11 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
     3. **Tamanho**: M
     4. **Tag**: `feat` + `sec`
     5. **Critérios de Aceitação**:
-        - [ ]  Configuração do `AuthenticationManager` e do `PasswordEncoder` no `SecurityConfig` ou em nova classe de configuração de beans.
-        - [ ]  Criação do `CustomUserDetailsService` implementando a interface `UserDetailsService` para buscar o usuário no banco via e-mail.
-        - [ ]  Criação do `LoginRequestDTO` com dados necessários.
-        - [ ]  O endpoint não deve devolver o token no corpo do JSON. Ele deve injetar o token em um cookie HTTP com as flags `HttpOnly`, `Secure` e `SameSite=Strict`.
-        - [ ]  Criação do `AuthController` com o endpoint `POST /api/v1/auth/login`.
+        - [x]  Configuração do `AuthenticationManager` e do `PasswordEncoder` no `SecurityConfig` ou em nova classe de configuração de beans.
+        - [x]  Criação do `CustomUserDetailsService` implementando a interface `UserDetailsService` para buscar o usuário no banco via e-mail.
+        - [x]  Criação do `LoginRequestDTO` com dados necessários.
+        - [x]  O endpoint não deve devolver o token no corpo do JSON. Ele deve injetar o token em um cookie HTTP com as flags `HttpOnly`, `Secure` e `SameSite=Strict`.
+        - [x]  Criação do `AuthController` com o endpoint `POST /api/v1/auth/login`.
     6. **Testes de Aceitação**:
         - [ ]  Enviar credenciais corretas deve retornar HTTP 200 (OK) e o JWT.
         - [ ]  Enviar senha incorreta deve retornar HTTP 401 (Unauthorized) ou 403 (Forbidden) mapeado corretamente via exceção.
