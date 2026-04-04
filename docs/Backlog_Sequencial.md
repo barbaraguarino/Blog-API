@@ -109,23 +109,23 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Acessar a mesma rota com um Bearer Token válido no header retorna sucesso.
         - [x]  Tentar usar um token expirado ou forjado retorna o erro tratado e não quebra a aplicação.
 
-- [ ] **#4 Módulo de Usuário: Cadastro de Novos Usuário**
+- [x] **#4 Módulo de Usuário: Cadastro de Novos Usuário**
 
     1. **Objetivo**: Criar o alicerce do primeiro domínio de negócio (User). Implementar a entidade JPA, a migração do banco de dados, o repositório, o serviço com regras de negócio e o endpoint REST para criação de contas locais com senhas criptografadas.
     2. **Prioridade**: P1
     3. **Tamanho**: M
     4. **Tag**: `feat` + `core`
     5. **Critérios de Aceitação**:
-        - [ ]  Criação do script Flyway (`V1__create_table_users.sql`) com campos essenciais.
-        - [ ]  Criação da entidade `User` (JPA).
-        - [ ]  Criação do `UserRegistrationDTO` com Bean Validation.
-        - [ ]  Implementação do `UserService` com a validação: se o e-mail já existir, lançar a `BusinessException` usando a chave `error.user.already_exists`.
-        - [ ]  Criptografia da senha usando `BCryptPasswordEncoder` antes de salvar no banco.
-        - [ ]  Endpoint `POST /api/v1/users/register` liberado no `SecurityConfig`.
+        - [x]  Criação do script Flyway (`V1__create_table_users.sql`) com campos essenciais.
+        - [x]  Criação da entidade `User` (JPA).
+        - [x]  Criação do `UserRegistrationDTO` com Bean Validation.
+        - [x]  Implementação do `UserService` com a validação: se o e-mail já existir, lançar a `BusinessException` usando a chave `error.user.already_exists`.
+        - [x]  Criptografia da senha usando `BCryptPasswordEncoder` antes de salvar no banco.
+        - [x]  Endpoint `POST /api/v1/users/register` liberado no `SecurityConfig`.
     6. **Testes de Aceitação**:
-        - [ ]  Enviar um payload válido deve retornar HTTP 201 (Created) e o DTO do usuário sem a senha.
-        - [ ]  Tentar cadastrar um e-mail já existente deve retornar HTTP 409 (Conflict) formatado pelo *GlobalExceptionHandler*.
-        - [ ]  Enviar payload com e-mail inválido ou senha fraca deve retornar HTTP 400 (Bad Request) com lista de campos inválidos.
+        - [x]  Enviar um payload válido deve retornar HTTP 201 (Created) e o DTO do usuário sem a senha.
+        - [x]  Tentar cadastrar um e-mail já existente deve retornar HTTP 409 (Conflict) formatado pelo *GlobalExceptionHandler*.
+        - [x]  Enviar payload com e-mail inválido ou senha fraca deve retornar HTTP 400 (Bad Request) com lista de campos inválidos.
 
 - [ ] **#5 Módulo de Autenticação: Endpoint de Login Local**
 
