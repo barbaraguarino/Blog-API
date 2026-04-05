@@ -1,5 +1,6 @@
 package br.com.grifo.core.security;
 
+import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,20 +29,21 @@ class SecurityConfigTest {
     }
 
     @Test
-    @DisplayName("Deve permitir o acesso a rota protegida enviando um Token JWT válido")
+    @DisplayName("Deve permitir o acesso a rota protegida enviando um Token JWT válido via Cookie")
     void shouldAllowAccessToProtectedRouteWithValidToken() throws Exception {
         String token = jwtTokenProvider.generateToken("testuser@grifo.com");
+
         mockMvc.perform(get("/api/v1/users/perfil")
-                        .header("Authorization", "Bearer " + token))
+                        .cookie(new Cookie("grifo_token", token)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    @DisplayName("Deve bloquear o acesso e retornar HTTP 403 ao enviar um Token JWT forjado")
+    @DisplayName("Deve bloquear o acesso e retornar HTTP 403 ao enviar um Cookie com Token JWT forjado")
     void shouldBlockAccessWithForgedToken() throws Exception {
         String forgedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.token.falso";
         mockMvc.perform(get("/api/v1/users/perfil")
-                        .header("Authorization", "Bearer " + forgedToken))
+                        .cookie(new Cookie("grifo_token", forgedToken)))
                 .andExpect(status().isForbidden());
     }
 
