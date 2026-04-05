@@ -72,7 +72,6 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Simular um erro de validação (ex: e-mail inválido) e verificar se o JSON retorna a estrutura padronizada com HTTP 400.
         - [x]  Simular um erro de sistema e garantir que o retorno seja um genérico "Erro interno no servidor" com HTTP 500.
 
-
 - [x] **#2 Internacionalização (i18n)**
 
     1. **Objetivo**: Configurar o `MessageSource` do Spring Boot para externalizar todas as mensagens da aplicação em ficheiros de propriedades, permitindo a tradução dinâmica das respostas da API baseada no idioma solicitado pelo cliente.
@@ -90,7 +89,6 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Ao enviar **`Accept-Language: en`**, mensagens retornam em inglês.
         - [x]  Ao enviar **`Accept-Language: pt-BR`**, mensagens retornam em português.
         - [x]  Sem header, retorna idioma padrão.
-
 
 - [x] **#3 Configuração Base de Segurança com JWT**
 
@@ -127,7 +125,7 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Tentar cadastrar um e-mail já existente deve retornar HTTP 409 (Conflict) formatado pelo *GlobalExceptionHandler*.
         - [x]  Enviar payload com e-mail inválido ou senha fraca deve retornar HTTP 400 (Bad Request) com lista de campos inválidos.
 
-- [ ] **#5 Módulo de Autenticação: Endpoint de Login Local**
+- [x] **#5 Módulo de Autenticação: Endpoint de Login Local**
 
     1. **Objetivo**: Implementar o fluxo de autenticação tradicional por e-mail e senha, integrando o `AuthenticationManager` do Spring Security com o nosso `JwtTokenProvider` para devolver um token válido ao front-end usando HttpOnly Cookies.
     2. **Prioridade**: P1
@@ -140,10 +138,10 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  O endpoint não deve devolver o token no corpo do JSON. Ele deve injetar o token em um cookie HTTP com as flags `HttpOnly`, `Secure` e `SameSite=Strict`.
         - [x]  Criação do `AuthController` com o endpoint `POST /api/v1/auth/login`.
     6. **Testes de Aceitação**:
-        - [ ]  Enviar credenciais corretas deve retornar HTTP 200 (OK) e o JWT.
-        - [ ]  Enviar senha incorreta deve retornar HTTP 401 (Unauthorized) ou 403 (Forbidden) mapeado corretamente via exceção.
-        - [ ]  Enviar um e-mail não cadastrado deve retornar HTTP 401/403.
-        - [ ]  Validação de credenciais e verificação se o header `Set-Cookie` está presente na resposta HTTP 200.
+        - [x]  Enviar credenciais corretas deve retornar HTTP 200 (OK) e o JWT.
+        - [x]  Enviar senha incorreta deve retornar HTTP 401 (Unauthorized) ou 403 (Forbidden) mapeado corretamente via exceção.
+        - [x]  Enviar um e-mail não cadastrado deve retornar HTTP 401/403.
+        - [x]  Validação de credenciais e verificação se o header `Set-Cookie` está presente na resposta HTTP 200.
 
 - [ ] **#6 Módulo de Usuário: Cadastro via Google (OAuth2/OIDC)**
 
