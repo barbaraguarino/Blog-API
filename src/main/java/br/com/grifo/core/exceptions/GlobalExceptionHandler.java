@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +34,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleNotFoundException(NoResourceFoundException exception, HttpServletRequest request) {
         String message = getTranslatedMessage("error.resource.not_found", null, request);
         return buildErrorResponse(HttpStatus.NOT_FOUND, message, request, null);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(BadCredentialsException exception, HttpServletRequest request) {
+        String message = getTranslatedMessage("error.auth.bad_credentials", null, request);
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, message, request, null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

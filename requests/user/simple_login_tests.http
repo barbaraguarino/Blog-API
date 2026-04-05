@@ -1,0 +1,29 @@
+### Realizar Login (Sucesso)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+Accept-Language: pt-BR
+
+{
+  "email": "barbara@grifo.com",
+  "password": "SenhaForte@123"
+}
+
+### Realizar Login Com Senha Incorreta (Unauthorized)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+Accept-Language: pt-BR
+
+{
+  "email": "barbara@grifo.com",
+  "password": "SenhaForta@123"
+}
+
+### Realizar Login com E-mail Incorreto (Unauthorized)
+POST http://localhost:8080/api/v1/auth/login
+Content-Type: application/json
+Accept-Language: pt-BR
+
+{
+  "email": "barbara@grifa.com",
+  "password": "SenhaForta@123"
+}

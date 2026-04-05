@@ -2,6 +2,7 @@ package br.com.grifo.core.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
@@ -35,8 +36,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String recoverToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");if (authHeader != null && authHeader.startsWith("Bearer "))
-            return authHeader.replace("Bearer ", "").trim();
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("grifo_token".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
         return "";
     }
 }
