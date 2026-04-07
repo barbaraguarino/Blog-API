@@ -31,6 +31,7 @@ public class UserRegistrationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
     @Value("${api.security.google.client-id}")
     private String googleClientId;
@@ -56,7 +57,7 @@ public class UserRegistrationService {
                     .setAudience(Collections.singletonList(googleClientId))
                     .build();
 
-            GoogleIdToken idToken = verifier.verify(dto.token());
+            GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 
             if (idToken == null) {
                 throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
