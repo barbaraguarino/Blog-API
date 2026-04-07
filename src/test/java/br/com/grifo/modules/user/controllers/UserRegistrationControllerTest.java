@@ -5,7 +5,7 @@ import br.com.grifo.core.exceptions.BusinessException;
 import br.com.grifo.core.security.JwtTokenProvider;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
-import br.com.grifo.modules.user.services.UserService;
+import br.com.grifo.modules.user.services.UserRegistrationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,9 +26,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
+@WebMvcTest(UserRegistrationController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class UserControllerTest {
+class UserRegistrationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,7 +39,7 @@ class UserControllerTest {
     private JwtTokenProvider jwtTokenProvider;
 
     @MockitoBean
-    private UserService userService;
+    private UserRegistrationService userRegistrationService;
 
     @Test
     @DisplayName("Deve retornar 201 (Created) e o DTO do usuario ao enviar payload valido")
@@ -53,9 +53,9 @@ class UserControllerTest {
                 "barbara_guarino_1234", "READER", true, false, LocalDateTime.now()
         );
 
-        when(userService.registerUser(any(UserRegistrationDTO.class))).thenReturn(responseDTO);
+        when(userRegistrationService.registerUser(any(UserRegistrationDTO.class))).thenReturn(responseDTO);
 
-        mockMvc.perform(post("/api/v1/users/register")
+        mockMvc.perform(post("/api/v1/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isCreated())
@@ -71,10 +71,10 @@ class UserControllerTest {
                 "Bárbara Guarino", "existente@grifo.com", "SenhaForte@123"
         );
 
-        when(userService.registerUser(any(UserRegistrationDTO.class)))
+        when(userRegistrationService.registerUser(any(UserRegistrationDTO.class)))
                 .thenThrow(new BusinessException("error.user.already_exists", HttpStatus.CONFLICT));
 
-        mockMvc.perform(post("/api/v1/users/register")
+        mockMvc.perform(post("/api/v1/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isConflict())
@@ -88,7 +88,7 @@ class UserControllerTest {
                 "Bárbara Guarino", "barbara@grifo.com", "fraca123"
         );
 
-        mockMvc.perform(post("/api/v1/users/register")
+        mockMvc.perform(post("/api/v1/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDTO)))
                 .andExpect(status().isBadRequest());
