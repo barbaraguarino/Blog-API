@@ -51,6 +51,7 @@ public class User implements UserDetails {
     }
 
     @Override
+    @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.role.getRole()));
     }
@@ -61,13 +62,9 @@ public class User implements UserDetails {
     }
 
     @Override
+    @NonNull
     public String getUsername() {
         return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
     }
 
     @Override
