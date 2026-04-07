@@ -42,7 +42,7 @@ class UserRegistrationControllerTest {
     private UserRegistrationService userRegistrationService;
 
     @Test
-    @DisplayName("Deve retornar 201 (Created) e o DTO do usuario ao enviar payload valido")
+    @DisplayName("Deve retornar 201 (Created) e o DTO do usuário ao enviar payload valido")
     void shouldReturn201WhenPayloadIsValid() throws Exception {
         UserRegistrationDTO requestDTO = new UserRegistrationDTO(
                 "Bárbara Guarino", "barbara@grifo.com", "SenhaForte@123"

@@ -1,8 +1,0 @@
-### Teste 1: Buscar Erro de Negócio (Sem Header - Deve retornar PT-BR por padrão)
-GET http://localhost:8080/dummy/error-business
-Accept: application/json
-
-### Teste 2: Buscar Erro de Negócio (Forçando o Idioma para Inglês)
-GET http://localhost:8080/dummy/error-business
-Accept: application/json
-Accept-Language: en
