@@ -93,9 +93,8 @@ class UserRegistrationServiceTest {
 
             when(userRepository.existsByEmail(dto.email())).thenReturn(true);
 
-            BusinessException exception = assertThrows(BusinessException.class, () -> {
-                userRegistrationService.registerUser(dto);
-            });
+            BusinessException exception = assertThrows(BusinessException.class,
+                    () -> userRegistrationService.registerUser(dto));
 
             assertThat(exception.getMessage()).isEqualTo("error.user.already_exists");
             assertThat(exception.getHttpStatus()).isEqualTo(HttpStatus.CONFLICT);
