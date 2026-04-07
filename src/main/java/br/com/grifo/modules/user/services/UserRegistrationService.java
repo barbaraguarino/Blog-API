@@ -10,8 +10,6 @@ import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -32,9 +29,6 @@ public class UserRegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
-
-    @Value("${api.security.google.client-id}")
-    private String googleClientId;
 
     public UserResponseDTO registerUser(UserRegistrationDTO dto) {
 
@@ -53,10 +47,6 @@ public class UserRegistrationService {
 
     public UserResponseDTO registerWithGoogle(GoogleTokenDTO dto) {
         try {
-            GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
-                    .setAudience(Collections.singletonList(googleClientId))
-                    .build();
-
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 
             if (idToken == null) {
