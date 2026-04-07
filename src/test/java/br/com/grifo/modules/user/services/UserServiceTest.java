@@ -37,7 +37,7 @@ class UserServiceTest {
     private UserMapper userMapper;
 
     @InjectMocks
-    private UserService userService;
+    private UserRegistrationService userRegistrationService;
 
     @Test
     @DisplayName("Deve cadastrar um usuário com sucesso")
@@ -66,7 +66,7 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
         when(userMapper.toResponseDTO(savedUser)).thenReturn(responseDTO);
 
-        UserResponseDTO result = userService.registerUser(dto);
+        UserResponseDTO result = userRegistrationService.registerUser(dto);
 
         assertThat(result).isNotNull();
         assertThat(result.email()).isEqualTo("barbara@grifo.com");
@@ -83,7 +83,7 @@ class UserServiceTest {
         when(userRepository.existsByEmail(dto.email())).thenReturn(true);
 
         BusinessException exception = assertThrows(BusinessException.class, () -> {
-            userService.registerUser(dto);
+            userRegistrationService.registerUser(dto);
         });
 
         assertThat(exception.getMessage()).isEqualTo("error.user.already_exists");
