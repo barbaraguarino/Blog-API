@@ -143,22 +143,24 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Enviar um e-mail não cadastrado deve retornar HTTP 401/403.
         - [x]  Validação de credenciais e verificação se o header `Set-Cookie` está presente na resposta HTTP 200.
 
-- [ ] **#6 Módulo de Usuário: Cadastro via Google (OAuth2/OIDC)**
+- [x] **#6 Módulo de Usuário: Cadastro via Google (OAuth2/OIDC)**
 
     1. **Objetivo**: Permitir que usuários criem uma conta no GRIFO delegando a responsabilidade da senha para o Google. A API deve receber e validar um Google ID Token gerado no front-end.
     2. **Prioridade**: P2
     3. **Tamanho**: L
     4. **Tag**: `feat` + `sec`
     5. **Critérios de Aceitação**:
-        - [ ]  Inclusão da biblioteca oficial do Google (`google-api-client`) no `pom.xml` para validação de assinatura de tokens.
-        - [ ]  Atualização da tabela e entidade `User` para suportar o tipo de provedor de login (`LOCAL`, `GOOGLE`).
-        - [ ]  Criação do endpoint `POST /api/v1/users/register/google` recebendo um `GoogleTokenDTO`.
-        - [ ]  Implementação de serviço que intercepta o token, valida a assinatura direto com os servidores do Google (JWKS) e extrai payload (email, nome, foto).
-        - [ ]  Salvar o usuário no banco com uma senha nula/randômica (já que o login é delegado) e provedor `GOOGLE`.
+        - [x] Inclusão da biblioteca oficial do Google (google-api-client v2.9.0) no pom.xml para validação matemática de assinatura de tokens.
+        - [x] Utilização da coluna google_id já existente na entidade/tabela User para identificar usuários delegados (se for nulo, é conta local; se preenchido, é conta Google).
+        - [x] Configuração do GoogleIdTokenVerifier como um @Bean no Spring (GoogleAuthConfig) para garantir a Inversão de Controle e permitir testes unitários.
+        - [x] Criação do endpoint POST /api/v1/register/google recebendo um GoogleTokenDTO validado.
+        - [x] Implementação no UserRegistrationService para interceptar o token, validar a assinatura e extrair o payload (email, nome, subject/id).
+        - [x] Salvar o usuário no banco gerando uma senha randômica (UUID), associando o google_id e retornando o UserResponseDTO.
+        - [x] Mapeamento das exceções no i18n (messages_pt_BR.properties) para conflitos e tokens expirados.
     6. **Testes de Aceitação**:
-        - [ ]  Enviar um Google ID Token válido cria um usuário e retorna HTTP 201.
-        - [ ]  Tentar cadastrar via Google usando um e-mail que já existe como conta `LOCAL` deve lançar exceção de conflito de provedor.
-        - [ ]  Enviar um Google Token forjado ou expirado deve retornar HTTP 401 (Unauthorized).
+        - [x] Enviar um Google ID Token válido cria um usuário e retorna HTTP 201 (Validado via Mockito).
+        - [x] Tentar cadastrar via Google usando um e-mail que já existe como conta LOCAL (com google_id nulo) lança BusinessException mapeada como HTTP 409 (Conflict).
+        - [x] Enviar um Google Token forjado ou expirado lança BusinessException mapeada como HTTP 401 (Unauthorized).
 
 - [ ] **#7 Módulo de Autenticação: Login via Google**
 
