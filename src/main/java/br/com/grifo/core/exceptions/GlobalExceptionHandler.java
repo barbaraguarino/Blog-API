@@ -31,13 +31,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ApiErrorResponse> handleNotFoundException(NoResourceFoundException exception, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleNotFoundException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.resource.not_found", null, request);
         return buildErrorResponse(HttpStatus.NOT_FOUND, message, request, null);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(BadCredentialsException exception, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleBadCredentialsException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.auth.bad_credentials", null, request);
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, message, request, null);
     }
