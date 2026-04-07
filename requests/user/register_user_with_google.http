@@ -1,0 +1,8 @@
+### Cadastrar via Google (Token Falso - Esperado 401)
+POST http://localhost:8080/api/v1/register/google
+Content-Type: application/json
+Accept-Language: pt-BR
+
+{
+  "token": "eyJhbGciOiJSUzI1NiIsImtpZ.falso.token"
+}
