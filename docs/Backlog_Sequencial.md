@@ -162,20 +162,20 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x] Tentar cadastrar via Google usando um e-mail que já existe como conta LOCAL (com google_id nulo) lança BusinessException mapeada como HTTP 409 (Conflict).
         - [x] Enviar um Google Token forjado ou expirado lança BusinessException mapeada como HTTP 401 (Unauthorized).
 
-- [ ] **#7 Módulo de Autenticação: Login via Google**
+- [x] **#7 Módulo de Autenticação: Login via Google**
 
     1. **Objetivo**: Autenticar um usuário existente através de um Google ID Token. Uma vez validado pelo Google, a nossa API emite o token nativo do GRIFO para o cliente navegar de forma unificada.
     2. **Prioridade**: P2
     3. **Tamanho**: M
     4. **Tag**: `feat` + `sec`
     5. **Critérios de Aceitação**:
-        - [ ]  Criação do endpoint `POST /api/v1/auth/login/google`.
-        - [ ]  Validação do Google ID Token usando o validador criado na Tarefa #6.
-        - [ ]  Busca do usuário no banco pelo e-mail extraído do token do Google.
-        - [ ]  Geração do token JWT nativo do GRIFO pelo `JwtTokenProvider` se o usuário existir e o provedor for compatível.
+        - [x]  Criação do endpoint `POST /api/v1/auth/login/google`.
+        - [x]  Validação do Google ID Token usando o validador criado na Tarefa #6.
+        - [x]  Busca do usuário no banco pelo Google ID extraído do token do Google.
+        - [x]  Geração do token JWT nativo do GRIFO pelo `JwtTokenProvider` se o usuário existir e o provedor for compatível.
     6. **Testes de Aceitação**:
-        - [ ]  Enviar token válido de um usuário Google existente retorna HTTP 200 (OK) e o JWT do GRIFO.
-        - [ ]  Enviar token válido, mas de um usuário não cadastrado no banco, retorna HTTP 404 (Not Found) - instruindo o Front-end a redirecionar para a tela de registro.
+        - [x]  Enviar token válido de um usuário Google existente retorna HTTP 200 (OK) e o JWT do GRIFO.
+        - [x]  Enviar token válido, mas de um usuário não cadastrado no banco, retorna HTTP 404 (Not Found) - instruindo o Front-end a redirecionar para a tela de registro.
 
 ## Próximos Passos
 
