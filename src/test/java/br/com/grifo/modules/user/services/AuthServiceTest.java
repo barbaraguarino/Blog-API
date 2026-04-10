@@ -57,7 +57,7 @@ class AuthServiceTest {
         fakeUser.setRole(UserRole.READER);
         UserResponseDTO responseDTO = new UserResponseDTO(
                 fakeUser.getId(), "Bárbara", "barbara@grifo.com", "barbara_1234",
-                "READER", true, false, LocalDateTime.now()
+                "READER", false, true, false, LocalDateTime.now()
         );
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authMock);
         when(jwtTokenProvider.generateToken("barbara@grifo.com")).thenReturn("token.jwt.valido");

@@ -33,6 +33,7 @@ public class UserMapper {
                 entity.getEmail(),
                 entity.getNickname(),
                 entity.getRole().name(),
+                entity.isLinkedToGoogle(),
                 entity.isEnabled(),
                 entity.isLocked(),
                 entity.getCreatedAt()

@@ -68,7 +68,7 @@ class UserRegistrationServiceTest {
 
             UserResponseDTO responseDTO = new UserResponseDTO(
                     savedUser.getId(), "Bárbara", "barbara@grifo.com", "barbara_1234",
-                    "READER", true, false, LocalDateTime.now()
+                    "READER", false, true, false, LocalDateTime.now()
             );
 
             when(userRepository.existsByEmail(dto.email())).thenReturn(false);
@@ -130,7 +130,7 @@ class UserRegistrationServiceTest {
             savedUser.setEmail("barbara.google@grifo.com");
 
             UserResponseDTO responseDTO = new UserResponseDTO(
-                    savedUser.getId(), "Bárbara Google", "barbara.google@grifo.com", "barbara_google_123", "READER", true, false, LocalDateTime.now()
+                    savedUser.getId(), "Bárbara Google", "barbara.google@grifo.com", "barbara_google_123", "READER", true, true, false, LocalDateTime.now()
             );
 
             when(userRepository.save(any(User.class))).thenReturn(savedUser);
@@ -141,6 +141,7 @@ class UserRegistrationServiceTest {
 
             assertThat(result).isNotNull();
             assertThat(result.email()).isEqualTo("barbara.google@grifo.com");
+            assertThat(result.isLinkedToGoogle()).isTrue();
             verify(userRepository).save(any(User.class));
         }
 

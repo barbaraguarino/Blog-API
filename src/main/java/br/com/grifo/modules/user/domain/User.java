@@ -50,6 +50,10 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public boolean isLinkedToGoogle() {
+        return this.googleId != null;
+    }
+
     @Override
     @NonNull
     public Collection<? extends GrantedAuthority> getAuthorities() {
