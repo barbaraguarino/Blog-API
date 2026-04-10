@@ -50,7 +50,7 @@ class UserRegistrationControllerTest {
 
         UserResponseDTO responseDTO = new UserResponseDTO(
                 UUID.randomUUID(), "Bárbara Guarino", "barbara@grifo.com",
-                "barbara_guarino_1234", "READER", true, false, LocalDateTime.now()
+                "barbara_guarino_1234", "READER", true, true, false, LocalDateTime.now()
         );
 
         when(userRegistrationService.registerUser(any(UserRegistrationDTO.class))).thenReturn(responseDTO);

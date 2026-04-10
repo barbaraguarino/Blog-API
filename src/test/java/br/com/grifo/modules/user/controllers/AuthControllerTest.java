@@ -44,7 +44,7 @@ class AuthControllerTest {
         LoginRequestDTO requestDTO = new LoginRequestDTO("barbara@grifo.com", "SenhaForte@123");
         UserResponseDTO userDTO = new UserResponseDTO(
                 UUID.randomUUID(), "Bárbara Guarino", "barbara@grifo.com",
-                "barbara_1234", "READER", true, false, LocalDateTime.now()
+                "barbara_1234", "READER",true, true, false, LocalDateTime.now()
         );
         AuthService.AuthResult authResult = new AuthService.AuthResult("token.jwt.falso", userDTO);
         when(authService.authenticate(any(LoginRequestDTO.class))).thenReturn(authResult);

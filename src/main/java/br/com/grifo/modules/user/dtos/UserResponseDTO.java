@@ -9,6 +9,7 @@ public record UserResponseDTO(
         String email,
         String nickname,
         String role,
+        boolean isLinkedToGoogle,
         boolean enabled,
         boolean locked,
         LocalDateTime createdAt
