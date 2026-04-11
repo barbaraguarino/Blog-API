@@ -177,14 +177,103 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Enviar token válido de um usuário Google existente retorna HTTP 200 (OK) e o JWT do GRIFO.
         - [x]  Enviar token válido, mas de um usuário não cadastrado no banco, retorna HTTP 404 (Not Found) - instruindo o Front-end a redirecionar para a tela de registro.
 
+- [ ] **#8 Catálogo Literário: Cadastro de Gênero (Padrão de Tradução)**
+
+    1. **Objetivo**: Implementar o *endpoint* restrito de criação de gêneros literários. Para garantir um catálogo global, utilizaremos o padrão de Tabela de Tradução, separando o ID estrutural dos nomes em diferentes idiomas.
+    2. **Prioridade**: P1
+    3. **Tamanho**: S
+    4. **Tag**: `feat` + `core` + `sec`
+    5. **Critérios de Aceitação**:
+        - [ ]  Criação do script Flyway (`V2__create_table_genres.sql`) contendo apenas `id` (UUID) e os campos de auditoria (`created_at`, `updated_at`).
+        - [ ]  Criação do script Flyway (`V3__create_table_genre_translations.sql`) contendo `id`, `genre_id` (FK), `language_code` (Ex: pt-BR), `name` e `description`.
+        - [ ]  Criação das entidades JPA `Genre` e `GenreTranslation` com relacionamento `OneToMany`.
+        - [ ]  Criação do `GenreRequestDTO` que deve receber uma lista de traduções (exigindo pelo menos uma tradução padrão).
+        - [ ]  Implementação da regra de negócio: impedir a criação de traduções com nomes duplicados no mesmo idioma (ignorando *case sensitive*).
+        - [ ]  Criação do *endpoint* `POST /api/v1/genres` protegido com a *Role* `ADMIN`.
+    6. **Testes de Aceitação**:
+        - [ ]  Enviar um *payload* válido (Admin) salva nas duas tabelas e retorna **HTTP 201**.
+        - [ ]  Tentar criar um gênero (Reader) retorna **HTTP 403**.
+        - [ ]  Tentar enviar um nome de gênero já existente no mesmo idioma retorna **HTTP 409**.
+
+- [ ] **#9 Catálogo Literário: Cadastro de Subgêneros**
+
+    1. **Objetivo**: Implementar o padrão *Adjacency List* na entidade de Gêneros estruturais, permitindo hierarquia (ex: "Alta Fantasia" como filho de "Fantasia").
+    2. **Prioridade**: P1
+    3. **Tamanho**: S
+    4. **Tag**: `feat` + `core`
+    5. **Critérios de Aceitação**:
+        - [ ]  Criação do script Flyway (`V4__alter_table_genres_add_parent.sql`) adicionando a coluna `parent_id` referenciando `tb_genres`.
+        - [ ]  Atualização da entidade JPA `Genre` com o mapeamento bidirecional `@ManyToOne` (Pai) e `@OneToMany` (Filhos).
+        - [ ]  Criação do `SubgenreRequestDTO` contendo `@NotNull UUID parentId` e os dados de tradução.
+        - [ ]  Regra de negócio: Validar se o `parentId` existe (HTTP 404 se não).
+        - [ ]  Criação do *endpoint* `POST /api/v1/genres/{parentId}/subgenres` blindado para `ADMIN`.
+    6. **Testes de Aceitação**:
+        - [ ]  Sucesso (HTTP 201) ao cadastrar subgênero em um pai válido.
+        - [ ]  Retorno HTTP 404 ao vincular a um `parentId` inexistente.
+
+- [ ] **#10 Catálogo Literário: Cadastro de Autor (Padrão MARC 21 + Localização)**
+
+    1. **Objetivo**: Criar o domínio de Autores isolando a forma como o nome é exibido da forma como ele é ordenado, e permitindo que a biografia seja cadastrada em múltiplos idiomas para suportar uma plataforma global.
+    2. **Prioridade**: P1
+    3. **Tamanho**: S
+    4. **Tag**: `feat` + `core`
+    5. **Critérios de Aceitação**:
+        - [ ]  Criação do script Flyway (`V5__create_table_authors.sql`) contendo `id` (UUID), `display_name` (Ex: Stephen King), `sort_name` (Ex: King, Stephen), `birth_date` (DATE), `website` (VARCHAR) e campos de auditoria.
+        - [ ]  Criação do script Flyway (`V6__create_table_author_localizations.sql`) contendo `id` (UUID), `author_id` (FK), `language_code` (Ex: pt-BR) e `biography` (TEXT).
+        - [ ]  Criação das entidades JPA `Author` e `AuthorLocalization` com relacionamento `OneToMany`.
+        - [ ]  Criação do `AuthorRequestDTO` que deve permitir o envio dos dados básicos e de uma lista de localizações para a biografia.
+        - [ ]  Validação: O autor deve ter pelo menos uma biografia inicial (localização) no momento do cadastro.
+        - [ ]  Criação do *endpoint* `POST /api/v1/authors` restrito a utilizadores com *Role* `ADMIN`.
+    6. **Testes de Aceitação**:
+        - [ ]  Enviar um *payload* com `display_name`, `sort_name` e ao menos uma biografia em um idioma válido deve retornar **HTTP 201 (Created)**.
+        - [ ]  Tentar cadastrar um autor sem nenhuma localização de biografia deve retornar **HTTP 400 (Bad Request)**.
+        - [ ]  Validar que os dados foram persistidos corretamente em ambas as tabelas (`tb_authors` e `tb_author_localizations`).
+
+- [ ] **#11 Catálogo Literário: Cadastro de Série Literária (Localizada)**
+
+    1. **Objetivo**: Criar a entidade de Séries/Coleções para agrupar obras. Assim como os livros, as séries terão títulos e descrições localizados para permitir que usuários de diferentes países encontrem a coleção pelo nome conhecido em sua região.
+    2. **Prioridade**: P1
+    3. **Tamanho**: XS
+    4. **Tag**: `feat` + `core`
+    5. **Critérios de Aceitação**:
+        - [ ]  Criação do script Flyway (`V7__create_table_book_series.sql`) contendo `id` (UUID), `original_title` (O título original da obra, ex: *A Song of Ice and Fire*) e campos de auditoria.
+        - [ ]  Criação do script Flyway (`V8__create_table_book_series_localizations.sql`) contendo `id` (UUID), `series_id` (FK), `language_code` (Ex: pt-BR), `localized_title` (Ex: *As Crônicas de Gelo e Fogo*) e `description` (TEXT).
+        - [ ]  Criação das entidades JPA `BookSeries` e `BookSeriesLocalization`.
+        - [ ]  Criação do `BookSeriesRequestDTO` que aceite os dados básicos e uma lista de localizações.
+        - [ ]  Regra de Negócio: Impedir títulos duplicados dentro do mesmo idioma.
+        - [ ]  Criação do *endpoint* `POST /api/v1/series` restrito a `ADMIN`.
+    6. **Testes de Aceitação**:
+        - [ ]  Cadastro de série com título original e tradução para PT-BR retorna **HTTP 201**.
+        - [ ]  Tentar cadastrar uma série sem nenhuma localização (título/descrição) retorna **HTTP 400**.
+        - [ ]  Tentar duplicar um título localizado já existente para o mesmo idioma retorna **HTTP 409**.
+
+- [ ] **#12 Catálogo Literário: Cadastro de Livro Unificado (Letterboxd Style)**
+
+    1. **Objetivo**: Criar a entidade central unificando todas as relações. O sistema tratará o Livro como uma entidade global e utilizará uma tabela de localização para títulos e sinopses em idiomas diferentes, reduzindo a fricção de cadastro.
+    2. **Prioridade**: P1
+    3. **Tamanho**: M
+    4. **Tag**: `feat` + `core`
+    5. **Critérios de Aceitação**:
+        - [ ]  Criação do Flyway base (`V9__create_table_books.sql`) com `id`, `original_title`, `original_publication_date` (DATE), `cover_url` (VARCHAR), `series_id` (FK Nullable) e `series_volume` (INTEGER).
+        - [ ]  Criação do Flyway de localização (`V10__create_table_book_localizations.sql`) com `id`, `book_id`, `language_code`, `localized_title` e `synopsis`.
+        - [ ]  Criação dos *scripts* para tabelas N:M (`V9__create_table_books_authors.sql` e `V10__create_table_books_genres.sql`).
+        - [ ]  Criação das entidades `Book` e `BookLocalization` (e seus mapeamentos `@ManyToMany`, `@ManyToOne` e `@OneToMany`).
+        - [ ]  Criação do `BookRequestDTO` contendo os dados base, as listas de referências (`Set<UUID> authorIds`, `genreIds`, `UUID seriesId`) e a lista opcional de `BookLocalizationDTO`.
+        - [ ]  Validações de Negócio: O livro deve ter no mínimo 1 autor e 1 gênero. Todos os IDs enviados devem existir no banco (HTTP 404 se falhar).
+        - [ ]  Criação do *endpoint* `POST /api/v1/books` restrito a `ADMIN` ou `MODERATOR`.
+    6. **Testes de Aceitação**:
+        - [ ]  Cadastro completo (com IDs válidos e localizações) retorna HTTP 201 e salva em todas as tabelas envolvidas.
+        - [ ]  Enviar `authorId` ou `genreId` inexistente retorna HTTP 404.
+        - [ ]  Enviar lista de gêneros ou autores vazia retorna HTTP 400.
+
 ## Próximos Passos
 
 Aqui ficam as funcionalidades mapeadas para o futuro. Quando a seção “Execução Imediata” esvaziar, deve ser puxado itens daqui, detalhado os critérios técnicos e movido para cima.
 
-1. Catálogo Literário: Gestão de Livros e Gêneros
-2. Sistema de Autoria: Solicitação e Aprovação
-3. Módulo de Resenhas: Publicação e Rascunhos
-4. Interações Sociais: Comentários e Reações
+1. Sistema de Autoria: Solicitação e Aprovação
+2. Módulo de Resenhas: Publicação e Rascunhos
+3. Interações Sociais: Comentários e Reações
+4. Catálogo Literário: Atualização de Livros, Gêneros, Autores, Séries Literárias.
 5. Integração AWS S3: Upload de Mídias
 6. Módulo de Moderação: Sistema de Denúncias
 7. Documentação Automatizada com OpenAPI/Swagger
