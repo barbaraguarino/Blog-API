@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -41,6 +42,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleAccessDeniedException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.auth.access_denied", null, request);
         return buildErrorResponse(HttpStatus.FORBIDDEN, message, request, null);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+        String message = getTranslatedMessage("error.http.method_not_supported", null, request);
+        return buildErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, message, request, null);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
