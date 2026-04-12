@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -34,6 +35,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorResponse> handleNotFoundException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.resource.not_found", null, request);
         return buildErrorResponse(HttpStatus.NOT_FOUND, message, request, null);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiErrorResponse> handleAccessDeniedException(HttpServletRequest request) {
+        String message = getTranslatedMessage("error.auth.access_denied", null, request);
+        return buildErrorResponse(HttpStatus.FORBIDDEN, message, request, null);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
