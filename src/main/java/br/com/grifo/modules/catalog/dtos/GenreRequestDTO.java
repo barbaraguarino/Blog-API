@@ -7,6 +7,6 @@ import java.util.List;
 
 public record GenreRequestDTO(
 
-        @NotEmpty(message = "error.validation.genre.translations.not_empty")
+        @NotEmpty(message = "{error.validation.genre.translations.not_empty}")
         @Valid List<GenreTranslationDTO> translations
 ) {}
