@@ -22,7 +22,6 @@ public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     @OneToMany(mappedBy = "genre", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<GenreTranslation> translations = new HashSet<>();
     @CreationTimestamp

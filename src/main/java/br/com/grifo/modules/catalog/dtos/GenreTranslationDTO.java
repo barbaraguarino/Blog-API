@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public record GenreTranslationDTO(
+
         @NotBlank(message = "error.validation.language_code.not_blank")
         @Pattern(regexp = "^[a-z]{2}-[A-Z]{2}$", message = "error.validation.language_code.pattern")
         String languageCode,
