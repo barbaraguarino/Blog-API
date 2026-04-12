@@ -2,7 +2,10 @@ package br.com.grifo.modules.user.controllers;
 
 
 import br.com.grifo.core.exceptions.BusinessException;
+import br.com.grifo.core.security.CustomUserDetailsService;
+import br.com.grifo.core.security.JwtAuthenticationFilter;
 import br.com.grifo.core.security.JwtTokenProvider;
+import br.com.grifo.core.security.SecurityConfig;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
 import br.com.grifo.modules.user.services.UserRegistrationService;
@@ -12,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -27,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserRegistrationController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@Import({SecurityConfig.class, JwtAuthenticationFilter.class})
 class UserRegistrationControllerTest {
 
     @Autowired
@@ -40,6 +44,9 @@ class UserRegistrationControllerTest {
 
     @MockitoBean
     private UserRegistrationService userRegistrationService;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Test
     @DisplayName("Deve retornar 201 (Created) e o DTO do usuário ao enviar payload valido")
