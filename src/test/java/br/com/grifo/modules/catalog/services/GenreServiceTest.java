@@ -35,7 +35,7 @@ class GenreServiceTest {
 
     @Test
     @DisplayName("Deve criar gênero com sucesso ao enviar traduções inéditas")
-    void createGenre_ShouldReturnGenre_WhenTranslationsAreUnique() {
+    void shouldReturnGenre_WhenTranslationsAreUnique() {
         GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Fantasia");
         GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
 
@@ -54,7 +54,7 @@ class GenreServiceTest {
 
     @Test
     @DisplayName("Deve lançar BusinessException ao enviar nome de gênero já existente")
-    void createGenre_ShouldThrowBusinessException_WhenNameAlreadyExists() {
+    void shouldThrowBusinessException_WhenNameAlreadyExists() {
         GenreTranslationDTO translationDTO = new GenreTranslationDTO("en-US", "Fantasy");
         GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
 
