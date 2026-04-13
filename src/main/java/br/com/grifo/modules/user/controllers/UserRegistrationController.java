@@ -3,6 +3,7 @@ package br.com.grifo.modules.user.controllers;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
+import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.services.UserRegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,14 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserRegistrationController {
 
     private final UserRegistrationService userRegistrationService;
+    private final UserMapper userMapper;
 
     @PostMapping()
     public ResponseEntity<UserResponseDTO> register(@RequestBody @Valid UserRegistrationDTO dto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(userRegistrationService.registerUser(dto));
+
+        var response = userMapper.toResponseDTO(userRegistrationService.registerUser(dto));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/google")
     public ResponseEntity<UserResponseDTO> registerWithGoogle(@RequestBody @Valid GoogleTokenDTO dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userRegistrationService.registerWithGoogle(dto));
+
+        var response = userMapper.toResponseDTO(userRegistrationService.registerWithGoogle(dto));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
