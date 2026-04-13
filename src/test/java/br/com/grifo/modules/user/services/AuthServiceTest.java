@@ -6,11 +6,10 @@ import br.com.grifo.modules.user.domain.User;
 import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.LoginRequestDTO;
-import br.com.grifo.modules.user.dtos.UserResponseDTO;
-import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,7 +23,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,94 +46,100 @@ class AuthServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private UserMapper userMapper;
-
     @InjectMocks
     private AuthService authService;
 
     @Nested
     @DisplayName("Login com e-mail e senha")
-    class SimpleLogin{
+    class Authenticate {
+
+        private LoginRequestDTO loginDTO;
+        private User fakeUser;
+        private Authentication authMock;
+
+        @BeforeEach
+        void setUp() {
+            loginDTO = new LoginRequestDTO("barbara@grifo.com", "senha123");
+
+            fakeUser = new User();
+            fakeUser.setId(UUID.randomUUID());
+            fakeUser.setEmail("barbara@grifo.com");
+            fakeUser.setRole(UserRole.READER);
+
+            authMock = mock(Authentication.class);
+        }
 
         @Test
         @DisplayName("Deve autenticar e retornar AuthResult com Token e DTO")
         void shouldAuthenticateAndReturnAuthResult() {
-            LoginRequestDTO dto = new LoginRequestDTO("barbara@grifo.com", "senha123");
-            Authentication authMock = mock(Authentication.class);
+
             when(authMock.getName()).thenReturn("barbara@grifo.com");
-            User fakeUser = new User();
-            fakeUser.setId(UUID.randomUUID());
-            fakeUser.setEmail("barbara@grifo.com");
-            fakeUser.setRole(UserRole.READER);
-            UserResponseDTO responseDTO = new UserResponseDTO(
-                    fakeUser.getId(), "Bárbara", "barbara@grifo.com", "barbara_1234",
-                    "READER", false, true, false, LocalDateTime.now()
-            );
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authMock);
             when(jwtTokenProvider.generateToken("barbara@grifo.com")).thenReturn("token.jwt.valido");
             when(userRepository.findByEmail("barbara@grifo.com")).thenReturn(Optional.of(fakeUser));
-            when(userMapper.toResponseDTO(fakeUser)).thenReturn(responseDTO);
-            AuthService.AuthResult result = authService.authenticate(dto);
+
+            AuthService.AuthResult result = authService.authenticate(loginDTO);
+
             assertThat(result).isNotNull();
             assertThat(result.token()).isEqualTo("token.jwt.valido");
-            assertThat(result.user().email()).isEqualTo("barbara@grifo.com");
+            assertThat(result.user().getEmail()).isEqualTo("barbara@grifo.com");
+
             verify(authenticationManager, times(1)).authenticate(any());
             verify(jwtTokenProvider, times(1)).generateToken(anyString());
         }
 
         @Test
-        @DisplayName("Deve estourar BadCredentialsException quando senha for invalida")
-        void shouldThrowExceptionWhenPasswordIsInvalid() {
-            LoginRequestDTO dto = new LoginRequestDTO("barbara@grifo.com", "senha-errada");
+        @DisplayName("Deve estourar BadCredentialsException quando credenciais forem inválidas")
+        void shouldThrowExceptionWhenCredentialsAreInvalid() {
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                     .thenThrow(new BadCredentialsException("Bad credentials"));
-            assertThrows(BadCredentialsException.class, () -> authService.authenticate(dto));
+
+            assertThrows(BadCredentialsException.class, () -> authService.authenticate(loginDTO));
+
             verify(jwtTokenProvider, never()).generateToken(anyString());
         }
-
     }
 
     @Nested
     @DisplayName("Login via Google")
-    class LoginWithGoogle {
+    class AuthenticateWithGoogle {
 
-        @Test
-        @DisplayName("Deve autenticar via Google e retornar AuthResult com Token")
-        void shouldAuthenticateWithGoogleSuccessfully() throws Exception {
-            GoogleTokenDTO requestDTO = new GoogleTokenDTO("token.falso.do.google");
+        private GoogleTokenDTO googleDTO;
+        private GoogleIdToken mockIdToken;
+        private GoogleIdToken.Payload payload;
+        private User fakeUser;
+        private final String GOOGLE_TOKEN = "token.jwt.do.google";
 
-            GoogleIdToken.Payload payload =
-                    new GoogleIdToken.Payload();
+        @BeforeEach
+        void setUp() {
+            googleDTO = new GoogleTokenDTO(GOOGLE_TOKEN);
+
+            payload = new GoogleIdToken.Payload();
             payload.setSubject("google-id-12345");
             payload.setEmail("barbara.google@grifo.com");
 
-            GoogleIdToken mockIdToken =
-                    mock(GoogleIdToken.class);
+            mockIdToken = mock(GoogleIdToken.class);
 
-            when(mockIdToken.getPayload()).thenReturn(payload);
-            when(googleVerifier.verify("token.falso.do.google")).thenReturn(mockIdToken);
-
-            User fakeUser = new User();
+            fakeUser = new User();
             fakeUser.setId(UUID.randomUUID());
             fakeUser.setEmail("barbara.google@grifo.com");
             fakeUser.setGoogleId("google-id-12345");
             fakeUser.setRole(UserRole.READER);
+        }
 
-            UserResponseDTO responseDTO = new UserResponseDTO(
-                    fakeUser.getId(), "Bárbara Google", "barbara.google@grifo.com", "barbara_g",
-                    "READER", true, true, false, LocalDateTime.now()
-            );
-
+        @Test
+        @DisplayName("Deve autenticar via Google e retornar AuthResult com Token")
+        void shouldAuthenticateWithGoogleSuccessfully() throws Exception {
+            when(mockIdToken.getPayload()).thenReturn(payload);
+            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
             when(userRepository.findByGoogleId("google-id-12345")).thenReturn(Optional.of(fakeUser));
-            when(jwtTokenProvider.generateToken("barbara.google@grifo.com")).thenReturn("token.jwt.google");
-            when(userMapper.toResponseDTO(fakeUser)).thenReturn(responseDTO);
+            when(jwtTokenProvider.generateToken("barbara.google@grifo.com")).thenReturn("token.jwt.gerado");
 
-            AuthService.AuthResult result = authService.authenticateWithGoogle(requestDTO);
+            AuthService.AuthResult result = authService.authenticateWithGoogle(googleDTO);
 
             assertThat(result).isNotNull();
-            assertThat(result.token()).isEqualTo("token.jwt.google");
-            assertThat(result.user().email()).isEqualTo("barbara.google@grifo.com");
+            assertThat(result.token()).isEqualTo("token.jwt.gerado");
+            assertThat(result.user().getEmail()).isEqualTo("barbara.google@grifo.com");
             assertThat(result.user().isLinkedToGoogle()).isTrue();
 
             verify(jwtTokenProvider, times(1)).generateToken(anyString());
@@ -144,40 +148,31 @@ class AuthServiceTest {
         @Test
         @DisplayName("Deve retornar BusinessException (NOT FOUND) quando usuário Google não existir")
         void shouldThrowNotFoundWhenGoogleUserDoesNotExist() throws Exception {
-            GoogleTokenDTO requestDTO = new GoogleTokenDTO("token.falso");
-
-            GoogleIdToken.Payload payload =
-                    new GoogleIdToken.Payload();
-            payload.setSubject("google-id-inexistente");
-
-            GoogleIdToken mockIdToken =
-                    mock(GoogleIdToken.class);
-
             when(mockIdToken.getPayload()).thenReturn(payload);
-            when(googleVerifier.verify("token.falso")).thenReturn(mockIdToken);
-
-            when(userRepository.findByGoogleId("google-id-inexistente")).thenReturn(Optional.empty());
+            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
+            when(userRepository.findByGoogleId("google-id-12345")).thenReturn(Optional.empty());
 
             BusinessException exception = assertThrows(BusinessException.class,
-                    () -> authService.authenticateWithGoogle(requestDTO));
+                    () -> authService.authenticateWithGoogle(googleDTO));
 
             assertThat(exception.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
             assertThat(exception.getMessageKey()).isEqualTo("error.auth.user_not_found_google");
+
             verify(jwtTokenProvider, never()).generateToken(anyString());
         }
 
         @Test
-        @DisplayName("Deve retornar BusinessException (UNAUTHORIZED) ao receber token do Google forjado")
+        @DisplayName("Deve retornar BusinessException (UNAUTHORIZED) ao receber token do Google forjado/inválido")
         void shouldThrowUnauthorizedWhenGoogleTokenIsInvalid() throws Exception {
-            GoogleTokenDTO requestDTO = new GoogleTokenDTO("token.expirado");
-            when(googleVerifier.verify("token.expirado")).thenReturn(null);
+            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(null);
 
             BusinessException exception = assertThrows(BusinessException.class,
-                    () -> authService.authenticateWithGoogle(requestDTO));
+                    () -> authService.authenticateWithGoogle(googleDTO));
 
             assertThat(exception.getHttpStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
             assertThat(exception.getMessageKey()).isEqualTo("error.auth.invalid_google_token");
+
+            verify(jwtTokenProvider, never()).generateToken(anyString());
         }
     }
-
 }
