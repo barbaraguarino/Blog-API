@@ -1,7 +1,10 @@
 package br.com.grifo.modules.user.controllers;
 
 import br.com.grifo.core.exceptions.BusinessException;
+import br.com.grifo.core.security.CustomUserDetailsService;
+import br.com.grifo.core.security.JwtAuthenticationFilter;
 import br.com.grifo.core.security.JwtTokenProvider;
+import br.com.grifo.core.security.SecurityConfig;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.LoginRequestDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,7 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
-@AutoConfigureMockMvc(addFilters = false)
+@Import({SecurityConfig.class, JwtAuthenticationFilter.class})
 class AuthControllerTest {
 
     @Autowired
@@ -41,6 +45,9 @@ class AuthControllerTest {
 
     @MockitoBean
     private JwtTokenProvider jwtTokenProvider;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Nested
     @DisplayName("Login com email e senha.")

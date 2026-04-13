@@ -177,23 +177,23 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Enviar token válido de um usuário Google existente retorna HTTP 200 (OK) e o JWT do GRIFO.
         - [x]  Enviar token válido, mas de um usuário não cadastrado no banco, retorna HTTP 404 (Not Found) - instruindo o Front-end a redirecionar para a tela de registro.
 
-- [ ] **#8 Catálogo Literário: Cadastro de Gênero (Padrão de Tradução)**
+- [x] **#8 Catálogo Literário: Cadastro de Gênero (Padrão de Tradução)**
 
     1. **Objetivo**: Implementar o *endpoint* restrito de criação de gêneros literários. Para garantir um catálogo global, utilizaremos o padrão de Tabela de Tradução, separando o ID estrutural dos nomes em diferentes idiomas.
     2. **Prioridade**: P1
     3. **Tamanho**: S
     4. **Tag**: `feat` + `core` + `sec`
     5. **Critérios de Aceitação**:
-        - [ ]  Criação do script Flyway (`V2__create_table_genres.sql`) contendo apenas `id` (UUID) e os campos de auditoria (`created_at`, `updated_at`).
-        - [ ]  Criação do script Flyway (`V3__create_table_genre_translations.sql`) contendo `id`, `genre_id` (FK), `language_code` (Ex: pt-BR), `name` e `description`.
-        - [ ]  Criação das entidades JPA `Genre` e `GenreTranslation` com relacionamento `OneToMany`.
-        - [ ]  Criação do `GenreRequestDTO` que deve receber uma lista de traduções (exigindo pelo menos uma tradução padrão).
-        - [ ]  Implementação da regra de negócio: impedir a criação de traduções com nomes duplicados no mesmo idioma (ignorando *case sensitive*).
-        - [ ]  Criação do *endpoint* `POST /api/v1/genres` protegido com a *Role* `ADMIN`.
+        - [x]  Criação do script Flyway (`V2__create_table_genres.sql`) contendo apenas `id` (UUID) e os campos de auditoria (`created_at`, `updated_at`).
+        - [x]  Criação do script Flyway (`V3__create_table_genre_translations.sql`) contendo `id`, `genre_id` (FK), `language_code` (Ex: pt-BR), `name` e `description`.
+        - [x]  Criação das entidades JPA `Genre` e `GenreTranslation` com relacionamento `OneToMany`.
+        - [x]  Criação do `GenreRequestDTO` que deve receber uma lista de traduções (exigindo pelo menos uma tradução padrão).
+        - [x]  Implementação da regra de negócio: impedir a criação de traduções com nomes duplicados no mesmo idioma (ignorando *case sensitive*).
+        - [x]  Criação do *endpoint* `POST /api/v1/genres` protegido com a *Role* `ADMIN`.
     6. **Testes de Aceitação**:
-        - [ ]  Enviar um *payload* válido (Admin) salva nas duas tabelas e retorna **HTTP 201**.
-        - [ ]  Tentar criar um gênero (Reader) retorna **HTTP 403**.
-        - [ ]  Tentar enviar um nome de gênero já existente no mesmo idioma retorna **HTTP 409**.
+        - [x]  Enviar um *payload* válido (Admin) salva nas duas tabelas e retorna **HTTP 201**.
+        - [x]  Tentar criar um gênero (Reader) retorna **HTTP 403**.
+        - [x]  Tentar enviar um nome de gênero já existente no mesmo idioma retorna **HTTP 409**.
 
 - [ ] **#9 Catálogo Literário: Cadastro de Subgêneros**
 
