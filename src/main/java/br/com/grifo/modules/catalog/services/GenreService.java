@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -29,13 +31,30 @@ public class GenreService {
 
         Genre genre = new Genre();
 
-        for (GenreTranslationDTO translationDto : dto.translations()) {
+        dto.translations().forEach(translationDTO -> {
             GenreTranslation translation = new GenreTranslation();
-            translation.setLanguageCode(translationDto.languageCode());
-            translation.setName(translationDto.name());
+            translation.setLanguageCode(translationDTO.languageCode());
+            translation.setName(translationDTO.name());
             genre.addTranslation(translation);
-        }
+        });
 
         return genreRepository.save(genre);
+    }
+
+    public Genre createSubgenre(UUID parentId, GenreRequestDTO dto) {
+        Genre parentGenre = genreRepository.findById(parentId)
+                .orElseThrow(() -> new BusinessException("error.catalog.genre.not_found", HttpStatus.NOT_FOUND));
+
+        Genre subgenre = new Genre();
+        subgenre.setParent(parentGenre);
+
+        dto.translations().forEach(translationDTO -> {
+            GenreTranslation translation = new GenreTranslation();
+            translation.setLanguageCode(translationDTO.languageCode());
+            translation.setName(translationDTO.name());
+            subgenre.addTranslation(translation);
+        });
+
+        return genreRepository.save(subgenre);
     }
 }
