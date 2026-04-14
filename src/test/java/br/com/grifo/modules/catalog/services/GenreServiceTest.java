@@ -7,6 +7,7 @@ import br.com.grifo.modules.catalog.dtos.GenreTranslationDTO;
 import br.com.grifo.modules.catalog.repositories.GenreRepository;
 import br.com.grifo.modules.catalog.repositories.GenreTranslationRepository;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,39 +34,53 @@ class GenreServiceTest {
     @InjectMocks
     private GenreService genreService;
 
-    @Test
-    @DisplayName("Deve criar gênero com sucesso ao enviar traduções inéditas")
-    void shouldReturnGenre_WhenTranslationsAreUnique() {
-        GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Fantasia");
-        GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+    @Nested
+    @DisplayName("Criação de gênero")
+    class CreateGenre{
 
-        Genre savedGenreMock = new Genre();
-        savedGenreMock.setId(UUID.randomUUID());
+        @Test
+        @DisplayName("Deve criar gênero com sucesso ao enviar traduções inéditas")
+        void shouldReturnGenre_WhenTranslationsAreUnique() {
+            GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Fantasia");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
 
-        when(translationRepository.existsByLanguageCodeAndNameIgnoreCase("pt-BR", "Fantasia")).thenReturn(false);
-        when(genreRepository.save(any(Genre.class))).thenReturn(savedGenreMock);
+            Genre savedGenreMock = new Genre();
+            savedGenreMock.setId(UUID.randomUUID());
 
-        Genre result = genreService.createGenre(requestDTO);
+            when(translationRepository.existsByLanguageCodeAndNameIgnoreCase("pt-BR", "Fantasia")).thenReturn(false);
+            when(genreRepository.save(any(Genre.class))).thenReturn(savedGenreMock);
 
-        assertNotNull(result);
-        assertEquals(savedGenreMock.getId(), result.getId());
-        verify(genreRepository, times(1)).save(any(Genre.class));
+            Genre result = genreService.createGenre(requestDTO);
+
+            assertNotNull(result);
+            assertEquals(savedGenreMock.getId(), result.getId());
+            verify(genreRepository, times(1)).save(any(Genre.class));
+        }
+
+        @Test
+        @DisplayName("Deve lançar BusinessException ao enviar nome de gênero já existente")
+        void shouldThrowBusinessException_WhenNameAlreadyExists() {
+            GenreTranslationDTO translationDTO = new GenreTranslationDTO("en-US", "Fantasy");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+
+            when(translationRepository.existsByLanguageCodeAndNameIgnoreCase("en-US", "Fantasy")).thenReturn(true);
+
+            BusinessException exception = assertThrows(BusinessException.class, () ->
+                    genreService.createGenre(requestDTO)
+            );
+
+            assertEquals(HttpStatus.CONFLICT, exception.getHttpStatus());
+            assertEquals("error.catalog.genre.name_already_exists", exception.getMessageKey());
+            verify(genreRepository, never()).save(any());
+        }
+
     }
 
-    @Test
-    @DisplayName("Deve lançar BusinessException ao enviar nome de gênero já existente")
-    void shouldThrowBusinessException_WhenNameAlreadyExists() {
-        GenreTranslationDTO translationDTO = new GenreTranslationDTO("en-US", "Fantasy");
-        GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+    @Nested
+    @DisplayName("Criação de subgêneros")
+    class CreateSubgenre{
 
-        when(translationRepository.existsByLanguageCodeAndNameIgnoreCase("en-US", "Fantasy")).thenReturn(true);
 
-        BusinessException exception = assertThrows(BusinessException.class, () ->
-            genreService.createGenre(requestDTO)
-        );
-
-        assertEquals(HttpStatus.CONFLICT, exception.getHttpStatus());
-        assertEquals("error.catalog.genre.name_already_exists", exception.getMessageKey());
-        verify(genreRepository, never()).save(any());
     }
+
 }
