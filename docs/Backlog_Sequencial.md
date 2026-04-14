@@ -195,21 +195,21 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Tentar criar um gênero (Reader) retorna **HTTP 403**.
         - [x]  Tentar enviar um nome de gênero já existente no mesmo idioma retorna **HTTP 409**.
 
-- [ ] **#9 Catálogo Literário: Cadastro de Subgêneros**
+- [x] **#9 Catálogo Literário: Cadastro de Subgêneros**
 
     1. **Objetivo**: Implementar o padrão *Adjacency List* na entidade de Gêneros estruturais, permitindo hierarquia (ex: "Alta Fantasia" como filho de "Fantasia").
     2. **Prioridade**: P1
     3. **Tamanho**: S
     4. **Tag**: `feat` + `core`
     5. **Critérios de Aceitação**:
-        - [ ]  Criação do script Flyway (`V4__alter_table_genres_add_parent.sql`) adicionando a coluna `parent_id` referenciando `tb_genres`.
-        - [ ]  Atualização da entidade JPA `Genre` com o mapeamento bidirecional `@ManyToOne` (Pai) e `@OneToMany` (Filhos).
-        - [ ]  Criação do `SubgenreRequestDTO` contendo `@NotNull UUID parentId` e os dados de tradução.
-        - [ ]  Regra de negócio: Validar se o `parentId` existe (HTTP 404 se não).
-        - [ ]  Criação do *endpoint* `POST /api/v1/genres/{parentId}/subgenres` blindado para `ADMIN`.
+        - [x]  Criação do script Flyway (`V4__alter_table_genres_add_parent.sql`) adicionando a coluna `parent_id` referenciando `tb_genres`.
+        - [x]  Atualização da entidade JPA `Genre` com o mapeamento bidirecional `@ManyToOne` (Pai) e `@OneToMany` (Filhos).
+        - [x]  Criação do `SubgenreRequestDTO` contendo `@NotNull UUID parentId` e os dados de tradução.
+        - [x]  Regra de negócio: Validar se o `parentId` existe (HTTP 404 se não).
+        - [x]  Criação do *endpoint* `POST /api/v1/genres/{parentId}/subgenres` blindado para `ADMIN`.
     6. **Testes de Aceitação**:
-        - [ ]  Sucesso (HTTP 201) ao cadastrar subgênero em um pai válido.
-        - [ ]  Retorno HTTP 404 ao vincular a um `parentId` inexistente.
+        - [x]  Sucesso (HTTP 201) ao cadastrar subgênero em um pai válido.
+        - [x]  Retorno HTTP 404 ao vincular a um `parentId` inexistente.
 
 - [ ] **#10 Catálogo Literário: Cadastro de Autor (Padrão MARC 21 + Localização)**
 
