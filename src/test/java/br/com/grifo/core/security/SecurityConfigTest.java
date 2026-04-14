@@ -31,10 +31,10 @@ class SecurityConfigTest {
     @MockitoBean
     private UserRepository userRepository;
 
-
     @Test
     @DisplayName("Deve retornar 403 FORBIDDEN ao acessar rota protegida sem cookie")
     void shouldBlockAccessToProtectedRouteWithoutToken() throws Exception {
+
         mockMvc.perform(get("/api/v1/genres"))
                 .andExpect(status().isForbidden());
     }
@@ -42,7 +42,9 @@ class SecurityConfigTest {
     @Test
     @DisplayName("Deve bloquear o acesso e retornar HTTP 403 ao enviar um Cookie com Token JWT forjado")
     void shouldBlockAccessWithForgedToken() throws Exception {
+
         String forgedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.token.falso";
+
         mockMvc.perform(get("/api/v1/users/perfil")
                         .cookie(new Cookie("grifo_token", forgedToken)))
                 .andExpect(status().isForbidden());
@@ -51,12 +53,14 @@ class SecurityConfigTest {
     @Test
     @DisplayName("Deve permitir acesso à rota protegida com cookie válido contendo token JWT")
     void shouldAllowAccessToProtectedRouteWithValidToken() throws Exception {
+
         String validToken = jwtTokenProvider.generateToken("testuser@grifo.com");
         Cookie authCookie = new Cookie("grifo_token", validToken);
 
         User mockUser = new User();
         mockUser.setEmail("testuser@grifo.com");
         mockUser.setRole(UserRole.ADMIN);
+
         when(userRepository.findByEmail("testuser@grifo.com")).thenReturn(Optional.of(mockUser));
 
         mockMvc.perform(get("/api/v1/genres")

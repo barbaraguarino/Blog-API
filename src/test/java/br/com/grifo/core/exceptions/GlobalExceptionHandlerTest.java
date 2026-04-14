@@ -46,6 +46,7 @@ class GlobalExceptionHandlerTest {
 
     @BeforeEach
     void setUp() {
+
         when(messageSource.getMessage(anyString(), any(), anyString(), any(Locale.class)))
                 .thenAnswer(invocation -> {
                     String key = invocation.getArgument(0);
@@ -65,6 +66,7 @@ class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Deve retornar HTTP 500 e mensagem genérica ao ocorrer Exception não mapeada")
     void handleAllUncaughtExceptionAndReturns500() throws Exception {
+
         mockMvc.perform(get(URI_ERROR_500))
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.status").value(500))
@@ -77,7 +79,9 @@ class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Deve retornar HTTP 400 e lista de erros ao falhar na validação do DTO")
     void handleValidationExceptionAndReturns400WithErrors() throws Exception {
+
         String invalidJson = "{ \"email\": \"email-invalido\" }";
+
         mockMvc.perform(post(URI_ERROR_400)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(invalidJson))
@@ -92,6 +96,7 @@ class GlobalExceptionHandlerTest {
     @Test
     @DisplayName("Deve retornar o HTTP Status correspondente ao lançar BusinessException")
     void handleBusinessExceptionAndReturnsCustomStatus() throws Exception {
+
         mockMvc.perform(get(URI_ERROR_BUSINESS))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.status").value(409))
@@ -104,6 +109,7 @@ class GlobalExceptionHandlerTest {
 
         @GetMapping(URI_ERROR_500)
         public void throwException() throws Exception {
+
             throw new Exception("Erro grotesco no banco de dados que não deve vazar para o usuário");
         }
 
@@ -112,6 +118,7 @@ class GlobalExceptionHandlerTest {
 
         @GetMapping(URI_ERROR_BUSINESS)
         public void throwBusinessException() {
+
             throw new BusinessException("error.user.already_exists", HttpStatus.CONFLICT);
         }
     }

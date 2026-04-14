@@ -5,8 +5,6 @@ import br.com.grifo.core.security.JwtTokenProvider;
 import br.com.grifo.modules.user.domain.User;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.LoginRequestDTO;
-import br.com.grifo.modules.user.dtos.UserResponseDTO;
-import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -23,34 +21,41 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
-    public record AuthResult(String token, UserResponseDTO user) {}
+    public record AuthResult(String token, User user) {}
 
     public AuthResult authenticate(LoginRequestDTO dto) {
+
         var authPasswordToken = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
         var auth = authenticationManager.authenticate(authPasswordToken);
+
         String token = jwtTokenProvider.generateToken(auth.getName());
         User user = userRepository.findByEmail(dto.email()).orElseThrow();
-        UserResponseDTO userDTO = userMapper.toResponseDTO(user);
-        return new AuthResult(token, userDTO);
+
+        return new AuthResult(token, user);
     }
 
     public AuthResult authenticateWithGoogle(GoogleTokenDTO dto){
         try {
+
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
+
             if (idToken == null) {
                 throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
             }
+
             GoogleIdToken.Payload payload = idToken.getPayload();
             String googleSubjectId = payload.getSubject();
+
             User user = userRepository.findByGoogleId(googleSubjectId)
                     .orElseThrow(() -> new BusinessException("error.auth.user_not_found_google", HttpStatus.NOT_FOUND));
+
             String token = jwtTokenProvider.generateToken(user.getEmail());
-            UserResponseDTO userDTO = userMapper.toResponseDTO(user);
-            return new AuthResult(token, userDTO);
+
+            return new AuthResult(token, user);
         }catch (Exception e) {
+
             if (e instanceof BusinessException) throw (BusinessException) e;
             throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
         }

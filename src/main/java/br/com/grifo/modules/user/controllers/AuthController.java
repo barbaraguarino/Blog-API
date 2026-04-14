@@ -3,6 +3,7 @@ package br.com.grifo.modules.user.controllers;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.LoginRequestDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
+import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,25 +21,35 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserMapper userMapper;
     private static final String TOKEN_NAME = "grifo_token";
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
+
         AuthService.AuthResult result = authService.authenticate(dto);
+
+        var response = userMapper.toResponseDTO(result.user());
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, getResponseCookie(result.token()).toString())
-                .body(result.user());
+                .body(response);
     }
 
     @PostMapping("/login/google")
     public ResponseEntity<UserResponseDTO> loginWithGoogle(@RequestBody @Valid GoogleTokenDTO dto) {
+
         AuthService.AuthResult result = authService.authenticateWithGoogle(dto);
+
+        var response = userMapper.toResponseDTO(result.user());
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, getResponseCookie(result.token()).toString())
-                .body(result.user());
+                .body(response);
     }
 
     private ResponseCookie getResponseCookie(String value) {
+
         return ResponseCookie.from(TOKEN_NAME, value)
                 .httpOnly(true)
                 .secure(false)

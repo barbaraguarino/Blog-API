@@ -5,11 +5,11 @@ import br.com.grifo.modules.user.domain.User;
 import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
-import br.com.grifo.modules.user.dtos.UserResponseDTO;
 import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -48,118 +48,127 @@ class UserRegistrationServiceTest {
     private UserRegistrationService userRegistrationService;
 
     @Nested
-    class SimpleRegistration{
+    @DisplayName("Cadastro de Usuário Padrão")
+    class RegisterUser {
 
-        @Test
-        @DisplayName("Deve cadastrar um usuário com sucesso")
-        void shouldRegisterUserSuccessfully() {
-            UserRegistrationDTO dto = new UserRegistrationDTO("Bárbara", "barbara@grifo.com", "senha123");
+        private UserRegistrationDTO dto;
+        private User userEntity;
+        private User savedUser;
 
-            User userEntity = new User();
+        @BeforeEach
+        void setUp() {
+            dto = new UserRegistrationDTO("Bárbara", "barbara@grifo.com", "senha123");
+
+            userEntity = new User();
             userEntity.setName(dto.name());
             userEntity.setEmail(dto.email());
             userEntity.setPassword(dto.password());
 
-            User savedUser = new User();
+            savedUser = new User();
             savedUser.setId(UUID.randomUUID());
             savedUser.setName(userEntity.getName());
+            savedUser.setEmail(userEntity.getEmail());
             savedUser.setNickname("barbara_1234");
             savedUser.setRole(UserRole.READER);
+            savedUser.setPassword("senha-criptografada");
+        }
 
-            UserResponseDTO responseDTO = new UserResponseDTO(
-                    savedUser.getId(), "Bárbara", "barbara@grifo.com", "barbara_1234",
-                    "READER", false, true, false, LocalDateTime.now()
-            );
+        @Test
+        @DisplayName("Deve cadastrar um usuário com sucesso")
+        void shouldRegisterUserSuccessfully() {
 
             when(userRepository.existsByEmail(dto.email())).thenReturn(false);
             when(userMapper.toEntity(dto)).thenReturn(userEntity);
             when(passwordEncoder.encode(any())).thenReturn("senha-criptografada");
             when(userRepository.save(any(User.class))).thenReturn(savedUser);
-            when(userMapper.toResponseDTO(savedUser)).thenReturn(responseDTO);
 
-            UserResponseDTO result = userRegistrationService.registerUser(dto);
+            User result = userRegistrationService.registerUser(dto);
 
             assertThat(result).isNotNull();
-            assertThat(result.email()).isEqualTo("barbara@grifo.com");
+            assertThat(result.getEmail()).isEqualTo("barbara@grifo.com");
+            assertThat(result.getPassword()).isEqualTo("senha-criptografada");
 
             verify(passwordEncoder, times(1)).encode("senha123");
             verify(userRepository, times(1)).save(any(User.class));
         }
 
         @Test
-        @DisplayName("Deve lançar BusinessException quando email ja existir")
+        @DisplayName("Deve lançar BusinessException quando email já existir")
         void shouldThrowExceptionWhenEmailAlreadyExists() {
-            UserRegistrationDTO dto = new UserRegistrationDTO("Bárbara", "existente@grifo.com", "senha123");
 
             when(userRepository.existsByEmail(dto.email())).thenReturn(true);
 
             BusinessException exception = assertThrows(BusinessException.class,
                     () -> userRegistrationService.registerUser(dto));
 
-            assertThat(exception.getMessage()).isEqualTo("error.user.already_exists");
+            assertThat(exception.getMessageKey()).isEqualTo("error.user.already_exists");
             assertThat(exception.getHttpStatus()).isEqualTo(HttpStatus.CONFLICT);
 
             verify(userRepository, never()).save(any(User.class));
         }
-
     }
 
     @Nested
-    class RegisterWithGoogle{
+    @DisplayName("Cadastro via Conta Google")
+    class RegisterWithGoogle {
 
-        @Test
-        @DisplayName("Deve registrar usuário com sucesso via Google e retornar DTO")
-        void shouldRegisterWithGoogleSuccessfully() throws Exception {
-            GoogleTokenDTO requestDTO = new GoogleTokenDTO("token.falso.do.google");
+        private GoogleTokenDTO requestDTO;
+        private GoogleIdToken.Payload payload;
+        private GoogleIdToken mockIdToken;
+        private User savedUser;
+        private final String GOOGLE_TOKEN = "token.falso.do.google";
 
-            GoogleIdToken.Payload payload = new GoogleIdToken.Payload();
+        @BeforeEach
+        void setUp() {
+            requestDTO = new GoogleTokenDTO(GOOGLE_TOKEN);
+
+            payload = new GoogleIdToken.Payload();
             payload.setEmail("barbara.google@grifo.com");
             payload.set("name", "Bárbara Google");
             payload.setSubject("google-id-12345");
 
-            GoogleIdToken mockIdToken = mock(GoogleIdToken.class);
-            when(mockIdToken.getPayload()).thenReturn(payload);
+            mockIdToken = mock(GoogleIdToken.class);
 
-            when(googleVerifier.verify("token.falso.do.google")).thenReturn(mockIdToken);
+            savedUser = new User();
+            savedUser.setId(UUID.randomUUID());
+            savedUser.setEmail("barbara.google@grifo.com");
+            savedUser.setGoogleId("google-id-12345");
+            savedUser.setRole(UserRole.READER);
+            savedUser.setCreatedAt(LocalDateTime.now());
+        }
+
+        @Test
+        @DisplayName("Deve registrar usuário com sucesso via Google e retornar a Entidade")
+        void shouldRegisterWithGoogleSuccessfully() throws Exception {
+            when(mockIdToken.getPayload()).thenReturn(payload);
+            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
             when(userRepository.findByEmail("barbara.google@grifo.com")).thenReturn(Optional.empty());
+            when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
             lenient().when(passwordEncoder.encode(anyString())).thenReturn("hash_aleatorio_seguro");
 
-            User savedUser = new User();
-            savedUser.setId(UUID.randomUUID());
-            savedUser.setEmail("barbara.google@grifo.com");
-
-            UserResponseDTO responseDTO = new UserResponseDTO(
-                    savedUser.getId(), "Bárbara Google", "barbara.google@grifo.com", "barbara_google_123", "READER", true, true, false, LocalDateTime.now()
-            );
-
-            when(userRepository.save(any(User.class))).thenReturn(savedUser);
-
-            when(userMapper.toResponseDTO(any(User.class))).thenReturn(responseDTO);
-
-            UserResponseDTO result = userRegistrationService.registerWithGoogle(requestDTO);
+            User result = userRegistrationService.registerWithGoogle(requestDTO);
 
             assertThat(result).isNotNull();
-            assertThat(result.email()).isEqualTo("barbara.google@grifo.com");
+            assertThat(result.getEmail()).isEqualTo("barbara.google@grifo.com");
             assertThat(result.isLinkedToGoogle()).isTrue();
+
             verify(userRepository).save(any(User.class));
         }
 
         @Test
         @DisplayName("Deve lançar UNAUTHORIZED ao receber token do Google forjado/expirado")
         void shouldThrowUnauthorizedWhenGoogleTokenIsInvalid() throws Exception {
-            GoogleTokenDTO requestDTO = new GoogleTokenDTO("token.expirado.ou.forjado");
 
-            when(googleVerifier.verify("token.expirado.ou.forjado")).thenReturn(null);
+            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(null);
 
             BusinessException exception = assertThrows(BusinessException.class,
                     () -> userRegistrationService.registerWithGoogle(requestDTO));
 
             assertThat(exception.getHttpStatus()).isEqualTo(HttpStatus.UNAUTHORIZED);
             assertThat(exception.getMessageKey()).isEqualTo("error.auth.invalid_google_token");
+
+            verify(userRepository, never()).save(any(User.class));
         }
-
     }
-
-
 }

@@ -6,14 +6,19 @@ import br.com.grifo.core.security.CustomUserDetailsService;
 import br.com.grifo.core.security.JwtAuthenticationFilter;
 import br.com.grifo.core.security.JwtTokenProvider;
 import br.com.grifo.core.security.SecurityConfig;
+import br.com.grifo.modules.user.domain.User;
+import br.com.grifo.modules.user.domain.enums.UserRole;
+import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
+import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.services.UserRegistrationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
@@ -37,8 +42,6 @@ class UserRegistrationControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
     @MockitoBean
     private JwtTokenProvider jwtTokenProvider;
 
@@ -48,58 +51,141 @@ class UserRegistrationControllerTest {
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
 
-    @Test
-    @DisplayName("Deve retornar 201 (Created) e o DTO do usuário ao enviar payload valido")
-    void shouldReturn201WhenPayloadIsValid() throws Exception {
-        UserRegistrationDTO requestDTO = new UserRegistrationDTO(
-                "Bárbara Guarino", "barbara@grifo.com", "SenhaForte@123"
+    @MockitoBean
+    private UserMapper userMapper;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private User userSaved;
+    private UserResponseDTO userResponseDTO;
+
+    @BeforeEach
+    void setUp() {
+        userSaved = new User();
+        userSaved.setId(UUID.randomUUID());
+        userSaved.setName("Bárbara Nascimento");
+        userSaved.setEmail("barbara@grifo.com");
+        userSaved.setNickname("barbara_nascimento_1234");
+        userSaved.setRole(UserRole.READER);
+        userSaved.setCreatedAt(LocalDateTime.now());
+
+        userResponseDTO = new UserResponseDTO(
+                userSaved.getId(),
+                userSaved.getName(),
+                userSaved.getEmail(),
+                userSaved.getNickname(),
+                userSaved.getRole().toString(),
+                false,
+                false,
+                false,
+                userSaved.getCreatedAt()
         );
-
-        UserResponseDTO responseDTO = new UserResponseDTO(
-                UUID.randomUUID(), "Bárbara Guarino", "barbara@grifo.com",
-                "barbara_guarino_1234", "READER", true, true, false, LocalDateTime.now()
-        );
-
-        when(userRegistrationService.registerUser(any(UserRegistrationDTO.class))).thenReturn(responseDTO);
-
-        mockMvc.perform(post("/api/v1/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.nickname").value("barbara_guarino_1234"))
-                .andExpect(jsonPath("$.password").doesNotExist());
     }
 
-    @Test
-    @DisplayName("Deve retornar 409 (Conflict) ao tentar cadastrar e-mail ja existente")
-    void shouldReturn409WhenEmailAlreadyExists() throws Exception {
-        UserRegistrationDTO requestDTO = new UserRegistrationDTO(
-                "Bárbara Guarino", "existente@grifo.com", "SenhaForte@123"
-        );
+    @Nested
+    @DisplayName("Cadastro simples (E-mail e senha)")
+    class Register {
 
-        when(userRegistrationService.registerUser(any(UserRegistrationDTO.class)))
-                .thenThrow(new BusinessException("error.user.already_exists", HttpStatus.CONFLICT));
+        private UserRegistrationDTO registrationDTO;
 
-        mockMvc.perform(post("/api/v1/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
-                .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.status").value(409));
+        @BeforeEach
+        void setUp() {
+            registrationDTO = new UserRegistrationDTO("Bárbara Nascimento", "barbara@grifo.com", "SenhaForte@123");
+        }
+
+        @Test
+        @DisplayName("Deve retornar 201 e dados do usuário quando payload é válido")
+        void shouldReturn201WhenPayloadIsValid() throws Exception {
+
+            when(userRegistrationService.registerUser(any(UserRegistrationDTO.class))).thenReturn(userSaved);
+            when(userMapper.toResponseDTO(any(User.class))).thenReturn(userResponseDTO);
+
+            mockMvc.perform(post("/api/v1/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(registrationDTO)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").exists())
+                    .andExpect(jsonPath("$.nickname").value("barbara_nascimento_1234"))
+                    .andExpect(jsonPath("$.password").doesNotExist());
+        }
+
+        @Test
+        @DisplayName("Deve retornar 409 quando e-mail já existe")
+        void shouldReturn409WhenEmailAlreadyExists() throws Exception {
+
+            when(userRegistrationService.registerUser(any(UserRegistrationDTO.class)))
+                    .thenThrow(new BusinessException("error.user.already_exists", HttpStatus.CONFLICT));
+
+            mockMvc.perform(post("/api/v1/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(registrationDTO)))
+                    .andExpect(status().isConflict())
+                    .andExpect(jsonPath("$.status").value(409));
+        }
+
+        @Test
+        @DisplayName("Deve retornar 400 quando a senha é fraca")
+        void shouldReturn400WhenPasswordIsWeak() throws Exception {
+
+            UserRegistrationDTO weakPasswordDTO = new UserRegistrationDTO("Bárbara", "barbara@grifo.com", "123");
+
+            mockMvc.perform(post("/api/v1/register")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(weakPasswordDTO)))
+                    .andExpect(status().isBadRequest());
+        }
     }
 
-    @Test
-    @DisplayName("Deve retornar 400 (Bad Request) ao enviar payload com senha fraca")
-    void shouldReturn400WhenPasswordIsWeak() throws Exception {
-        UserRegistrationDTO requestDTO = new UserRegistrationDTO(
-                "Bárbara Guarino", "barbara@grifo.com", "fraca123"
-        );
+    @Nested
+    @DisplayName("Cadastro via Google")
+    class RegisterWithGoogle {
 
-        mockMvc.perform(post("/api/v1/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
-                .andExpect(status().isBadRequest());
+        private GoogleTokenDTO googleTokenDTO;
+
+        @BeforeEach
+        void setUp() {
+            googleTokenDTO = new GoogleTokenDTO("token-valido-google");
+        }
+
+        @Test
+        @DisplayName("Deve retornar 201 e dados do usuário quando token Google é válido")
+        void shouldReturn201WhenGoogleTokenIsValid() throws Exception {
+
+            when(userRegistrationService.registerWithGoogle(any(GoogleTokenDTO.class))).thenReturn(userSaved);
+            when(userMapper.toResponseDTO(any(User.class))).thenReturn(userResponseDTO);
+
+            mockMvc.perform(post("/api/v1/register/google")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(googleTokenDTO)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").exists())
+                    .andExpect(jsonPath("$.email").value("barbara@grifo.com"));
+        }
+
+        @Test
+        @DisplayName("Deve retornar 409 se usuário Google já estiver cadastrado")
+        void shouldReturn409WhenGoogleUserAlreadyExists() throws Exception {
+
+            when(userRegistrationService.registerWithGoogle(any(GoogleTokenDTO.class)))
+                    .thenThrow(new BusinessException("error.user.already_exists", HttpStatus.CONFLICT));
+
+            mockMvc.perform(post("/api/v1/register/google")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(googleTokenDTO)))
+                    .andExpect(status().isConflict())
+                    .andExpect(jsonPath("$.status").value(409));
+        }
+
+        @Test
+        @DisplayName("Deve retornar 400 se o token Google estiver vazio")
+        void shouldReturn400WhenGoogleTokenIsEmpty() throws Exception {
+
+            GoogleTokenDTO emptyTokenDTO = new GoogleTokenDTO("");
+
+            mockMvc.perform(post("/api/v1/register/google")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(emptyTokenDTO)))
+                    .andExpect(status().isBadRequest());
+        }
     }
-
-
 }

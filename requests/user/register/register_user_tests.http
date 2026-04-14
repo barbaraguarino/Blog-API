@@ -15,7 +15,7 @@ Content-Type: application/json
 Accept-Language: pt-BR
 
 {
-  "name": "Bárbara Guarino",
+  "name": "Bárbara Nascimento",
   "email": "barbara@grifo.com",
   "password": "SenhaForte@123"
 }
@@ -26,7 +26,7 @@ Content-Type: application/json
 Accept-Language: pt-BR
 
 {
-  "name": "Bárbara Guarino",
+  "name": "Bárbara Nascimento",
   "email": "barbara",
   "password": "Senhaforte@123"
 }

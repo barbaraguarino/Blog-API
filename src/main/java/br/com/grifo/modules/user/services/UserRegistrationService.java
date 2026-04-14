@@ -5,7 +5,6 @@ import br.com.grifo.modules.user.domain.User;
 import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
-import br.com.grifo.modules.user.dtos.UserResponseDTO;
 import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
@@ -29,7 +28,7 @@ public class UserRegistrationService {
     private final UserMapper userMapper;
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
-    public UserResponseDTO registerUser(UserRegistrationDTO dto) {
+    public User registerUser(UserRegistrationDTO dto) {
 
         if (userRepository.existsByEmail(dto.email())) {
             throw new BusinessException("error.user.already_exists", HttpStatus.CONFLICT);
@@ -40,12 +39,13 @@ public class UserRegistrationService {
         newUser.setRole(UserRole.READER);
         newUser.setNickname(generateRandomNickname(newUser.getName()));
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
-        User savedUser = userRepository.save(newUser);
-        return userMapper.toResponseDTO(savedUser);
+
+        return userRepository.save(newUser);
     }
 
-    public UserResponseDTO registerWithGoogle(GoogleTokenDTO dto) {
+    public User registerWithGoogle(GoogleTokenDTO dto) {
         try {
+
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 
             if (idToken == null) {
@@ -74,24 +74,28 @@ public class UserRegistrationService {
             newUser.setRole(UserRole.READER);
             newUser.setNickname(generateRandomNickname(name));
 
-            User savedUser = userRepository.save(newUser);
-            return userMapper.toResponseDTO(savedUser);
+            return userRepository.save(newUser);
 
         } catch (Exception e) {
+
             if (e instanceof BusinessException) throw (BusinessException) e;
             throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
         }
     }
 
     private String generateRandomNickname(String name) {
+
         String cleanName = name.toLowerCase()
                 .replaceAll("\\s+", "_")
                 .replaceAll("[^a-z0-9_]", "");
+
         if (cleanName.length() > 40) {
             cleanName = cleanName.substring(0, 40);
         }
+
         SecureRandom random = new SecureRandom();
         int suffix = 1000 + random.nextInt(9000);
+
         return cleanName + "_" + suffix;
     }
 }

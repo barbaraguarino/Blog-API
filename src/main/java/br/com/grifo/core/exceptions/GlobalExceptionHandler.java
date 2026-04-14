@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ApiErrorResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiErrorResponse> handleMethodNotSupported(HttpServletRequest request) {
         String message = getTranslatedMessage("error.http.method_not_supported", null, request);
         return buildErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, message, request, null);
     }
@@ -62,7 +62,7 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toMap(
                         FieldError::getField,
                         fieldError -> fieldError.getDefaultMessage() != null
-                                ? fieldError.getDefaultMessage()
+                                ? getTranslatedMessage(fieldError.getDefaultMessage(), null, request)
                                 : getTranslatedMessage("error.validation.field", null, request),
                         (existing, ignored) -> existing
                 ));
