@@ -10,7 +10,9 @@ import br.com.grifo.modules.catalog.dtos.GenreTranslationDTO;
 import br.com.grifo.modules.catalog.mappers.GenreMapper;
 import br.com.grifo.modules.catalog.services.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -58,65 +60,142 @@ class GenreControllerTest {
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
 
-    @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
-    @DisplayName("Deve retornar 201 CREATED ao criar gênero com sucesso")
-    void shouldReturnCreatedWhenAdminAndPayloadValid() throws Exception {
-        GenreTranslationDTO translationDTO1 = new GenreTranslationDTO("en-US", "Fantasy");
-        GenreTranslationDTO translationDTO2 = new GenreTranslationDTO("pt-BR", "Fantasia");
-        GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO1, translationDTO2));
+    @Nested
+    @DisplayName("Criação de gêneros")
+    class Create{
 
-        Genre mockedGenre = new Genre();
-        UUID generatedId = UUID.randomUUID();
-        mockedGenre.setId(generatedId);
+        @Test
+        @WithMockUser(authorities = "ROLE_ADMIN")
+        @DisplayName("Deve retornar 201 CREATED ao criar gênero com sucesso")
+        void shouldReturnCreatedWhenAdminAndPayloadValid() throws Exception {
+            GenreTranslationDTO translationDTO1 = new GenreTranslationDTO("en-US", "Fantasy");
+            GenreTranslationDTO translationDTO2 = new GenreTranslationDTO("pt-BR", "Fantasia");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO1, translationDTO2));
 
-        GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, List.of(translationDTO1, translationDTO2));
+            Genre mockedGenre = new Genre();
+            UUID generatedId = UUID.randomUUID();
+            mockedGenre.setId(generatedId);
 
-        when(genreService.createGenre(any(GenreRequestDTO.class))).thenReturn(mockedGenre);
-        when(genreMapper.toResponseDTO(any(Genre.class))).thenReturn(responseDTO);
+            GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, List.of(translationDTO1, translationDTO2));
 
-        mockMvc.perform(post("/api/v1/genres")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.translations[0].name").value("Fantasy"))
-                .andExpect(jsonPath("$.translations[1].name").value("Fantasia"));
+            when(genreService.createGenre(any(GenreRequestDTO.class))).thenReturn(mockedGenre);
+            when(genreMapper.toResponseDTO(any(Genre.class))).thenReturn(responseDTO);
+
+            mockMvc.perform(post("/api/v1/genres")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(requestDTO)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").exists())
+                    .andExpect(jsonPath("$.translations[0].name").value("Fantasy"))
+                    .andExpect(jsonPath("$.translations[1].name").value("Fantasia"));
+        }
+
+        @Test
+        @WithMockUser(authorities = "ROLE_READER")
+        @DisplayName("Deve retornar 403 FORBIDDEN ao tentar criar gênero sem privilégios")
+        void shouldReturnForbiddenWhenUserIsNotAdmin() throws Exception {
+            GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Romance");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+
+            mockMvc.perform(post("/api/v1/genres")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(requestDTO)))
+                    .andExpect(status().isForbidden())
+                    .andExpect(jsonPath("$.status").value(403))
+                    .andExpect(jsonPath("$.error").value("Forbidden"))
+                    .andExpect(jsonPath("$.path").value("/api/v1/genres"))
+                    .andExpect(jsonPath("$.message").exists());
+        }
+
+        @Test
+        @WithMockUser(authorities = "ROLE_ADMIN")
+        @DisplayName("Deve retornar 400 BAD REQUEST ao enviar payload com formato de idioma inválido")
+        void shouldReturnBadRequestWhenInvalidPayload() throws Exception {
+            GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-br", "");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+
+            mockMvc.perform(post("/api/v1/genres")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(requestDTO)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(400))
+                    .andExpect(jsonPath("$.error").value("Bad Request"))
+                    .andExpect(jsonPath("$.path").value("/api/v1/genres"))
+                    .andExpect(jsonPath("$.validationErrors['translations[0].languageCode']").exists())
+                    .andExpect(jsonPath("$.validationErrors['translations[0].name']").exists());
+        }
     }
 
-    @Test
-    @WithMockUser(authorities = "ROLE_READER")
-    @DisplayName("Deve retornar 403 FORBIDDEN ao tentar criar gênero sem privilégios")
-    void shouldReturnForbiddenWhenUserIsNotAdmin() throws Exception {
-        GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Romance");
-        GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+    @Nested
+    @DisplayName("Criação de subgêneros")
+    class CreateSubgenre {
 
-        mockMvc.perform(post("/api/v1/genres")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
-                .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.status").value(403))
-                .andExpect(jsonPath("$.error").value("Forbidden"))
-                .andExpect(jsonPath("$.path").value("/api/v1/genres"))
-                .andExpect(jsonPath("$.message").exists());
-    }
+        private UUID parentId;
 
-    @Test
-    @WithMockUser(authorities = "ROLE_ADMIN")
-    @DisplayName("Deve retornar 400 BAD REQUEST ao enviar payload com formato de idioma inválido")
-    void shouldReturnBadRequestWhenInvalidPayload() throws Exception {
-        GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-br", "");
-        GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+        @BeforeEach
+        void setUp() {
+            parentId = UUID.randomUUID();
+        }
 
-        mockMvc.perform(post("/api/v1/genres")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDTO)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.path").value("/api/v1/genres"))
-                .andExpect(jsonPath("$.validationErrors['translations[0].languageCode']").exists())
-                .andExpect(jsonPath("$.validationErrors['translations[0].name']").exists());
+        @Test
+        @WithMockUser(authorities = "ROLE_ADMIN")
+        @DisplayName("Deve retornar 201 CREATED ao criar subgênero com sucesso")
+        void shouldReturnCreatedWhenAdminAndPayloadValid() throws Exception {
+
+            GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Alta Fantasia");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+
+            Genre mockedGenre = new Genre();
+            UUID generatedId = UUID.randomUUID();
+            mockedGenre.setId(generatedId);
+
+            GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, List.of(translationDTO));
+
+            when(genreService.createSubgenre(org.mockito.ArgumentMatchers.eq(parentId), any(GenreRequestDTO.class))).thenReturn(mockedGenre);
+            when(genreMapper.toResponseDTO(any(Genre.class))).thenReturn(responseDTO);
+
+            mockMvc.perform(post("/api/v1/genres/{parentId}/subgenres", parentId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(requestDTO)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.id").exists())
+                    .andExpect(jsonPath("$.translations[0].name").value("Alta Fantasia"));
+        }
+
+        @Test
+        @WithMockUser(authorities = "ROLE_READER")
+        @DisplayName("Deve retornar 403 FORBIDDEN ao tentar criar subgênero sem privilégios")
+        void shouldReturnForbiddenWhenUserIsNotAdmin() throws Exception {
+
+            GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Ficção Científica");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+
+            mockMvc.perform(post("/api/v1/genres/{parentId}/subgenres", parentId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(requestDTO)))
+                    .andExpect(status().isForbidden())
+                    .andExpect(jsonPath("$.status").value(403))
+                    .andExpect(jsonPath("$.error").value("Forbidden"))
+                    .andExpect(jsonPath("$.message").exists());
+        }
+
+        @Test
+        @WithMockUser(authorities = "ROLE_ADMIN")
+        @DisplayName("Deve retornar 400 BAD REQUEST ao enviar payload com formato de idioma inválido")
+        void shouldReturnBadRequestWhenInvalidPayload() throws Exception {
+
+            GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-br", "");
+            GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
+
+            mockMvc.perform(post("/api/v1/genres/{parentId}/subgenres", parentId)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(requestDTO)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.status").value(400))
+                    .andExpect(jsonPath("$.error").value("Bad Request"))
+                    .andExpect(jsonPath("$.validationErrors['translations[0].languageCode']").exists())
+                    .andExpect(jsonPath("$.validationErrors['translations[0].name']").exists());
+        }
     }
 
 }

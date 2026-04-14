@@ -25,7 +25,9 @@ public class GenreController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<GenreResponseDTO> create(@RequestBody @Valid GenreRequestDTO dto) {
+
         var response = genreMapper.toResponseDTO(genreService.createGenre(dto));
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -34,7 +36,9 @@ public class GenreController {
     public ResponseEntity<GenreResponseDTO> createSubgenre(
             @PathVariable UUID parentId,
             @Valid @RequestBody GenreRequestDTO requestDTO) {
+
         var responseDTO = genreMapper.toResponseDTO(genreService.createSubgenre(parentId, requestDTO));
+
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 }
