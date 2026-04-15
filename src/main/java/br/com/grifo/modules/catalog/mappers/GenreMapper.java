@@ -6,6 +6,7 @@ import br.com.grifo.modules.catalog.dtos.GenreTranslationDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class GenreMapper {
@@ -16,8 +17,11 @@ public class GenreMapper {
                 .map(t -> new GenreTranslationDTO(t.getLanguageCode(), t.getName()))
                 .toList();
 
+        UUID parentId = (genre.getParent() != null) ? genre.getParent().getId() : null;
+
         return new GenreResponseDTO(
                 genre.getId(),
+                parentId,
                 translationDTOs
         );
     }
