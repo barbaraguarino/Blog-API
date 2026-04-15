@@ -2,10 +2,8 @@ package br.com.grifo.modules.user.services;
 
 import br.com.grifo.core.exceptions.BusinessException;
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
-import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -20,9 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,9 +35,6 @@ class UserRegistrationServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private UserMapper userMapper;
-
-    @Mock
     private GoogleIdTokenVerifier googleVerifier;
 
     @InjectMocks
@@ -52,25 +45,18 @@ class UserRegistrationServiceTest {
     class RegisterUser {
 
         private UserRegistrationDTO dto;
-        private User userEntity;
         private User savedUser;
 
         @BeforeEach
         void setUp() {
             dto = new UserRegistrationDTO("Bárbara", "barbara@grifo.com", "senha123");
 
-            userEntity = new User();
-            userEntity.setName(dto.name());
-            userEntity.setEmail(dto.email());
-            userEntity.setPassword(dto.password());
-
-            savedUser = new User();
-            savedUser.setId(UUID.randomUUID());
-            savedUser.setName(userEntity.getName());
-            savedUser.setEmail(userEntity.getEmail());
-            savedUser.setNickname("barbara_1234");
-            savedUser.setRole(UserRole.READER);
-            savedUser.setPassword("senha-criptografada");
+            savedUser = User.createLocalUser(
+                    dto.name(),
+                    dto.email(),
+                    "senha-criptografada",
+                    "barbara_nickname"
+            );
         }
 
         @Test
@@ -78,8 +64,6 @@ class UserRegistrationServiceTest {
         void shouldRegisterUserSuccessfully() {
 
             when(userRepository.existsByEmail(dto.email())).thenReturn(false);
-            when(userMapper.toEntity(dto)).thenReturn(userEntity);
-            when(passwordEncoder.encode(any())).thenReturn("senha-criptografada");
             when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
             User result = userRegistrationService.registerUser(dto);
@@ -129,23 +113,22 @@ class UserRegistrationServiceTest {
 
             mockIdToken = mock(GoogleIdToken.class);
 
-            savedUser = new User();
-            savedUser.setId(UUID.randomUUID());
-            savedUser.setEmail("barbara.google@grifo.com");
-            savedUser.setGoogleId("google-id-12345");
-            savedUser.setRole(UserRole.READER);
-            savedUser.setCreatedAt(LocalDateTime.now());
+            savedUser = User.createGoogleUser(
+                    "Bárbara Google",
+                    "barbara.google@grifo.com",
+                    "google-id-12345",
+                    "barbara_google"
+            );
         }
 
         @Test
         @DisplayName("Deve registrar usuário com sucesso via Google e retornar a Entidade")
         void shouldRegisterWithGoogleSuccessfully() throws Exception {
-            when(mockIdToken.getPayload()).thenReturn(payload);
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
-            when(userRepository.findByEmail("barbara.google@grifo.com")).thenReturn(Optional.empty());
-            when(userRepository.save(any(User.class))).thenReturn(savedUser);
-
-            lenient().when(passwordEncoder.encode(anyString())).thenReturn("hash_aleatorio_seguro");
+            lenient().when(mockIdToken.getPayload()).thenReturn(payload);
+            lenient().when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
+            lenient().when(userRepository.existsByEmail("barbara.google@grifo.com")).thenReturn(false);
+            lenient().when(userRepository.existsByGoogleId("google-id-12345")).thenReturn(false);
+            lenient().when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
             User result = userRegistrationService.registerWithGoogle(requestDTO);
 

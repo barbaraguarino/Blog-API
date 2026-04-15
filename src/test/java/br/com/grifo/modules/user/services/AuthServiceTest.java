@@ -3,7 +3,6 @@ package br.com.grifo.modules.user.services;
 import br.com.grifo.core.exceptions.BusinessException;
 import br.com.grifo.core.security.JwtTokenProvider;
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.LoginRequestDTO;
 import br.com.grifo.modules.user.repositories.UserRepository;
@@ -22,9 +21,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,10 +60,12 @@ class AuthServiceTest {
         void setUp() {
             loginDTO = new LoginRequestDTO("barbara@grifo.com", "senha123");
 
-            fakeUser = new User();
-            fakeUser.setId(UUID.randomUUID());
-            fakeUser.setEmail("barbara@grifo.com");
-            fakeUser.setRole(UserRole.READER);
+            fakeUser = User.createLocalUser(
+                    "Barbara Nascimento",
+                    "barbara@grifo.com",
+                    "Forte!123",
+                    "barbara_nascimento_123"
+            );
 
             authMock = mock(Authentication.class);
         }
@@ -120,11 +121,15 @@ class AuthServiceTest {
 
             mockIdToken = mock(GoogleIdToken.class);
 
-            fakeUser = new User();
-            fakeUser.setId(UUID.randomUUID());
-            fakeUser.setEmail("barbara.google@grifo.com");
-            fakeUser.setGoogleId("google-id-12345");
-            fakeUser.setRole(UserRole.READER);
+            fakeUser = User.createGoogleUser(
+                    "Barbara Nascimento",
+                    "barbara.google@grifo.com",
+                    "google-id-12345",
+                    "barbara_nascimento_123"
+            );
+
+            ReflectionTestUtils.setField(fakeUser, "googleId", GOOGLE_TOKEN);
+
         }
 
         @Test

@@ -1,13 +1,11 @@
 package br.com.grifo.modules.user.controllers;
 
-
 import br.com.grifo.core.exceptions.BusinessException;
 import br.com.grifo.core.security.CustomUserDetailsService;
 import br.com.grifo.core.security.JwtAuthenticationFilter;
 import br.com.grifo.core.security.JwtTokenProvider;
 import br.com.grifo.core.security.SecurityConfig;
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
@@ -24,6 +22,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -61,13 +60,16 @@ class UserRegistrationControllerTest {
 
     @BeforeEach
     void setUp() {
-        userSaved = new User();
-        userSaved.setId(UUID.randomUUID());
-        userSaved.setName("Bárbara Nascimento");
-        userSaved.setEmail("barbara@grifo.com");
-        userSaved.setNickname("barbara_nascimento_1234");
-        userSaved.setRole(UserRole.READER);
-        userSaved.setCreatedAt(LocalDateTime.now());
+        userSaved = User.createLocalUser(
+                "Bárbara Nascimento",
+                "barbara@grifo.com",
+                "senha-criptografada",
+                "barbara_nascimento_1234"
+        );
+
+        ReflectionTestUtils.setField(userSaved, "id", UUID.randomUUID());
+        ReflectionTestUtils.setField(userSaved, "googleId", "token.valido.do.google");
+        ReflectionTestUtils.setField(userSaved, "createdAt", LocalDateTime.now());
 
         userResponseDTO = new UserResponseDTO(
                 userSaved.getId(),

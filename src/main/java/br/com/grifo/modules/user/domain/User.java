@@ -18,9 +18,9 @@ import java.util.UUID;
 @Entity
 @Table(name = "tb_users")
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User implements UserDetails {
 
     @Id
@@ -41,6 +41,36 @@ public class User implements UserDetails {
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public static User createLocalUser(
+            String name,
+            String email,
+            String encodedPassword,
+            String nickname
+    ) {
+        return User.builder()
+                .name(name)
+                .email(email)
+                .password(encodedPassword)
+                .nickname(nickname)
+                .role(UserRole.READER)
+                .build();
+    }
+
+    public static User createGoogleUser(
+            String name,
+            String email,
+            String googleId,
+            String nickname
+    ) {
+        return User.builder()
+                .name(name)
+                .email(email)
+                .googleId(googleId)
+                .nickname(nickname)
+                .role(UserRole.READER)
+                .build();
+    }
 
     public boolean isLinkedToGoogle() {
         return this.googleId != null;

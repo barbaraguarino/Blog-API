@@ -2,10 +2,8 @@ package br.com.grifo.modules.user.services;
 
 import br.com.grifo.core.exceptions.BusinessException;
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
-import br.com.grifo.modules.user.mappers.UserMapper;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -25,7 +22,6 @@ public class UserRegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
     public User registerUser(UserRegistrationDTO dto) {
@@ -34,11 +30,12 @@ public class UserRegistrationService {
             throw new BusinessException("error.user.already_exists", HttpStatus.CONFLICT);
         }
 
-        User newUser = userMapper.toEntity(dto);
-
-        newUser.setRole(UserRole.READER);
-        newUser.setNickname(generateRandomNickname(newUser.getName()));
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        User newUser = User.createLocalUser(
+                dto.name(),
+                dto.email(),
+                passwordEncoder.encode(dto.password()),
+                generateRandomNickname(dto.name())
+        );
 
         return userRepository.save(newUser);
     }
@@ -53,26 +50,25 @@ public class UserRegistrationService {
             }
 
             GoogleIdToken.Payload payload = idToken.getPayload();
+
             String email = payload.getEmail();
-            String name = (String) payload.get("name");
-            String googleSubjectId = payload.getSubject();
 
-            Optional<User> existingUserOpt = userRepository.findByEmail(email);
-
-            if (existingUserOpt.isPresent()) {
-                User existingUser = existingUserOpt.get();
-                if (existingUser.getGoogleId() == null) {
-                    throw new BusinessException("error.user.provider_conflict", HttpStatus.CONFLICT);
-                }
+            if (userRepository.existsByEmail(email))
                 throw new BusinessException("error.user.already_exists", HttpStatus.CONFLICT);
-            }
 
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setName(name);
-            newUser.setGoogleId(googleSubjectId);
-            newUser.setRole(UserRole.READER);
-            newUser.setNickname(generateRandomNickname(name));
+            String googleId = payload.getSubject();
+
+            if(userRepository.existsByGoogleId(googleId))
+                throw new BusinessException("error.user.provider_conflict", HttpStatus.CONFLICT);
+
+            String name = payload.get("name").toString();
+
+            var newUser = User.createGoogleUser(
+                    name,
+                    email,
+                    googleId,
+                    generateRandomNickname(name)
+            );
 
             return userRepository.save(newUser);
 

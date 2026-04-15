@@ -1,7 +1,6 @@
 package br.com.grifo.core.security;
 
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
@@ -57,9 +56,12 @@ class SecurityConfigTest {
         String validToken = jwtTokenProvider.generateToken("testuser@grifo.com");
         Cookie authCookie = new Cookie("grifo_token", validToken);
 
-        User mockUser = new User();
-        mockUser.setEmail("testuser@grifo.com");
-        mockUser.setRole(UserRole.ADMIN);
+        var mockUser = User.createLocalUser(
+                "Name",
+                "testuser@grifo.com",
+                "Forte123!",
+                "nickname"
+        );
 
         when(userRepository.findByEmail("testuser@grifo.com")).thenReturn(Optional.of(mockUser));
 

@@ -6,7 +6,6 @@ import br.com.grifo.core.security.JwtAuthenticationFilter;
 import br.com.grifo.core.security.JwtTokenProvider;
 import br.com.grifo.core.security.SecurityConfig;
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.domain.enums.UserRole;
 import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
 import br.com.grifo.modules.user.dtos.LoginRequestDTO;
 import br.com.grifo.modules.user.dtos.UserResponseDTO;
@@ -24,8 +23,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -59,14 +60,16 @@ class AuthControllerTest {
 
     @BeforeEach
     void setUp() {
-        savedUser = new User();
-        savedUser.setId(UUID.randomUUID());
-        savedUser.setName("Bárbara Nascimento");
-        savedUser.setNickname("barbara_1234");
-        savedUser.setRole(UserRole.READER);
-        savedUser.setPassword("senha-criptografada");
-        savedUser.setEmail("barbara@grifo.com");
-        savedUser.setGoogleId("token.valido.do.google");
+        savedUser = User.createLocalUser(
+                "Bárbara Nascimento",
+                "barbara@grifo.com",
+                "senha-criptografada",
+                "barbara_1234"
+        );
+
+        ReflectionTestUtils.setField(savedUser, "id", UUID.randomUUID());
+        ReflectionTestUtils.setField(savedUser, "googleId", "token.valido.do.google");
+        ReflectionTestUtils.setField(savedUser, "createdAt", LocalDateTime.now());
 
         savedUserResponseDTO = new UserResponseDTO(
                 savedUser.getId(),
@@ -74,9 +77,9 @@ class AuthControllerTest {
                 savedUser.getEmail(),
                 savedUser.getNickname(),
                 savedUser.getRole().toString(),
-                true,
-                false,
-                false,
+                savedUser.isLinkedToGoogle(),
+                savedUser.isEnabled(),
+                savedUser.isLocked(),
                 savedUser.getCreatedAt()
         );
     }

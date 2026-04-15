@@ -4,8 +4,8 @@ Content-Type: application/json
 Accept-Language: pt-BR
 
 {
-  "name": "Luiza Sonza",
-  "email": "luiza@grifo.com",
+  "name": "Fernando Souza",
+  "email": "fernando@grifo.com",
   "password": "SenhaForte@123"
 }
 
