@@ -1,10 +1,9 @@
-package br.com.grifo.modules.catalog.controllers;
+package br.com.grifo.modules.catalog.controllers.genre;
 
-import br.com.grifo.modules.catalog.domain.Genre;
-import br.com.grifo.modules.catalog.dtos.GenreRequestDTO;
-import br.com.grifo.modules.catalog.dtos.GenreResponseDTO;
+import br.com.grifo.modules.catalog.dtos.genre.GenreRequestDTO;
+import br.com.grifo.modules.catalog.dtos.genre.GenreResponseDTO;
 import br.com.grifo.modules.catalog.mappers.GenreMapper;
-import br.com.grifo.modules.catalog.services.GenreService;
+import br.com.grifo.modules.catalog.services.genre.GenreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

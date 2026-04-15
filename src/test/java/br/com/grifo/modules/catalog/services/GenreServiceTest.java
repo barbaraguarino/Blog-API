@@ -1,11 +1,12 @@
 package br.com.grifo.modules.catalog.services;
 
 import br.com.grifo.core.exceptions.BusinessException;
-import br.com.grifo.modules.catalog.domain.Genre;
-import br.com.grifo.modules.catalog.dtos.GenreRequestDTO;
-import br.com.grifo.modules.catalog.dtos.GenreTranslationDTO;
-import br.com.grifo.modules.catalog.repositories.GenreRepository;
-import br.com.grifo.modules.catalog.repositories.GenreTranslationRepository;
+import br.com.grifo.modules.catalog.domain.genre.Genre;
+import br.com.grifo.modules.catalog.dtos.genre.GenreRequestDTO;
+import br.com.grifo.modules.catalog.dtos.genre.GenreTranslationDTO;
+import br.com.grifo.modules.catalog.repositories.genre.GenreRepository;
+import br.com.grifo.modules.catalog.repositories.genre.GenreTranslationRepository;
+import br.com.grifo.modules.catalog.services.genre.GenreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

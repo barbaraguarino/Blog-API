@@ -1,4 +1,4 @@
-package br.com.grifo.modules.catalog.dtos;
+package br.com.grifo.modules.catalog.dtos.genre;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

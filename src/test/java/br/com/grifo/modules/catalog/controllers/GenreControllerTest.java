@@ -3,12 +3,13 @@ package br.com.grifo.modules.catalog.controllers;
 import br.com.grifo.core.exceptions.GlobalExceptionHandler;
 import br.com.grifo.core.security.CustomUserDetailsService;
 import br.com.grifo.core.security.JwtTokenProvider;
-import br.com.grifo.modules.catalog.domain.Genre;
-import br.com.grifo.modules.catalog.dtos.GenreRequestDTO;
-import br.com.grifo.modules.catalog.dtos.GenreResponseDTO;
-import br.com.grifo.modules.catalog.dtos.GenreTranslationDTO;
+import br.com.grifo.modules.catalog.controllers.genre.GenreController;
+import br.com.grifo.modules.catalog.domain.genre.Genre;
+import br.com.grifo.modules.catalog.dtos.genre.GenreRequestDTO;
+import br.com.grifo.modules.catalog.dtos.genre.GenreResponseDTO;
+import br.com.grifo.modules.catalog.dtos.genre.GenreTranslationDTO;
 import br.com.grifo.modules.catalog.mappers.GenreMapper;
-import br.com.grifo.modules.catalog.services.GenreService;
+import br.com.grifo.modules.catalog.services.genre.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -72,9 +74,11 @@ class GenreControllerTest {
             GenreTranslationDTO translationDTO2 = new GenreTranslationDTO("pt-BR", "Fantasia");
             GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO1, translationDTO2));
 
-            Genre mockedGenre = new Genre();
+            var mockedGenre = Genre.createGenre();
+
             UUID generatedId = UUID.randomUUID();
-            mockedGenre.setId(generatedId);
+
+            ReflectionTestUtils.setField(mockedGenre, "id", generatedId);
 
             GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, null, List.of(translationDTO1, translationDTO2));
 
@@ -145,9 +149,10 @@ class GenreControllerTest {
             GenreTranslationDTO translationDTO = new GenreTranslationDTO("pt-BR", "Alta Fantasia");
             GenreRequestDTO requestDTO = new GenreRequestDTO(List.of(translationDTO));
 
-            Genre mockedGenre = new Genre();
+            var mockedGenre = Genre.createGenre();
             UUID generatedId = UUID.randomUUID();
-            mockedGenre.setId(generatedId);
+
+            ReflectionTestUtils.setField(mockedGenre, "id", generatedId);
 
             GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, null, List.of(translationDTO));
 
