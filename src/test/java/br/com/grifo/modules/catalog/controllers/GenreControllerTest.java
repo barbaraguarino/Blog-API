@@ -76,7 +76,7 @@ class GenreControllerTest {
             UUID generatedId = UUID.randomUUID();
             mockedGenre.setId(generatedId);
 
-            GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, List.of(translationDTO1, translationDTO2));
+            GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, null, List.of(translationDTO1, translationDTO2));
 
             when(genreService.createGenre(any(GenreRequestDTO.class))).thenReturn(mockedGenre);
             when(genreMapper.toResponseDTO(any(Genre.class))).thenReturn(responseDTO);
@@ -149,7 +149,7 @@ class GenreControllerTest {
             UUID generatedId = UUID.randomUUID();
             mockedGenre.setId(generatedId);
 
-            GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, List.of(translationDTO));
+            GenreResponseDTO responseDTO = new GenreResponseDTO(generatedId, null, List.of(translationDTO));
 
             when(genreService.createSubgenre(org.mockito.ArgumentMatchers.eq(parentId), any(GenreRequestDTO.class))).thenReturn(mockedGenre);
             when(genreMapper.toResponseDTO(any(Genre.class))).thenReturn(responseDTO);

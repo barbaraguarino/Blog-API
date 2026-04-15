@@ -5,5 +5,6 @@ import java.util.UUID;
 
 public record GenreResponseDTO(
         UUID id,
+        UUID parentId,
         List<GenreTranslationDTO> translations
 ) {}
