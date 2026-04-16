@@ -1,4 +1,4 @@
-package br.com.grifo.modules.catalog.mappers;
+package br.com.grifo.modules.catalog.mappers.genre;
 
 import br.com.grifo.modules.catalog.domain.genre.Genre;
 import br.com.grifo.modules.catalog.dtos.genre.GenreResponseDTO;
