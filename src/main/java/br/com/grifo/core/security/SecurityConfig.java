@@ -24,6 +24,7 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] PUBLIC_ROUTES = {
+            "/api/v1/register",
             "/api/v1/register/**",
             "/api/v1/auth/login",
             "/api/v1/auth/login/**"
