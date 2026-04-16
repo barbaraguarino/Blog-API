@@ -218,12 +218,12 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
     3. **Tamanho**: S
     4. **Tag**: `feat` + `core`
     5. **Critérios de Aceitação**:
-        - [ ]  Criação do script Flyway (`V5__create_table_authors.sql`) contendo `id` (UUID), `display_name` (Ex: Stephen King), `sort_name` (Ex: King, Stephen), `birth_date` (DATE), `website` (VARCHAR) e campos de auditoria.
-        - [ ]  Criação do script Flyway (`V6__create_table_author_localizations.sql`) contendo `id` (UUID), `author_id` (FK), `language_code` (Ex: pt-BR) e `biography` (TEXT).
-        - [ ]  Criação das entidades JPA `Author` e `AuthorLocalization` com relacionamento `OneToMany`.
-        - [ ]  Criação do `AuthorRequestDTO` que deve permitir o envio dos dados básicos e de uma lista de localizações para a biografia.
-        - [ ]  Validação: O autor deve ter pelo menos uma biografia inicial (localização) no momento do cadastro.
-        - [ ]  Criação do *endpoint* `POST /api/v1/authors` restrito a utilizadores com *Role* `ADMIN`.
+        - [x]  Criação do script Flyway (`V5__create_table_authors.sql`) contendo `id` (UUID), `display_name` (Ex: Stephen King), `sort_name` (Ex: King, Stephen), `birth_date` (DATE), `website` (VARCHAR) e campos de auditoria.
+        - [x]  Criação do script Flyway (`V6__create_table_author_localizations.sql`) contendo `id` (UUID), `author_id` (FK), `language_code` (Ex: pt-BR) e `biography` (TEXT).
+        - [x]  Criação das entidades JPA `Author` e `AuthorLocalization` com relacionamento `OneToMany`.
+        - [x]  Criação do `AuthorRequestDTO` que deve permitir o envio dos dados básicos e de uma lista de localizações para a biografia.
+        - [x]  Validação: O autor deve ter pelo menos uma biografia inicial (localização) no momento do cadastro.
+        - [x]  Criação do *endpoint* `POST /api/v1/authors` restrito a utilizadores com *Role* `ADMIN`.
     6. **Testes de Aceitação**:
         - [ ]  Enviar um *payload* com `display_name`, `sort_name` e ao menos uma biografia em um idioma válido deve retornar **HTTP 201 (Created)**.
         - [ ]  Tentar cadastrar um autor sem nenhuma localização de biografia deve retornar **HTTP 400 (Bad Request)**.
