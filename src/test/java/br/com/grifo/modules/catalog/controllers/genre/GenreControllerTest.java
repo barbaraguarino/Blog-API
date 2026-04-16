@@ -1,9 +1,8 @@
-package br.com.grifo.modules.catalog.controllers;
+package br.com.grifo.modules.catalog.controllers.genre;
 
 import br.com.grifo.core.exceptions.GlobalExceptionHandler;
 import br.com.grifo.core.security.CustomUserDetailsService;
 import br.com.grifo.core.security.JwtTokenProvider;
-import br.com.grifo.modules.catalog.controllers.genre.GenreController;
 import br.com.grifo.modules.catalog.domain.genre.Genre;
 import br.com.grifo.modules.catalog.dtos.genre.GenreRequestDTO;
 import br.com.grifo.modules.catalog.dtos.genre.GenreResponseDTO;
