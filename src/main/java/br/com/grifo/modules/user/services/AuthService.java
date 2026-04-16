@@ -31,7 +31,9 @@ public class AuthService {
         var auth = authenticationManager.authenticate(authPasswordToken);
 
         String token = jwtTokenProvider.generateToken(auth.getName());
-        User user = userRepository.findByEmail(dto.email()).orElseThrow();
+
+        User user = userRepository.findByEmail(dto.email())
+                .orElseThrow(() -> new BusinessException("error.auth.user_not_found", HttpStatus.NOT_FOUND));
 
         return new AuthResult(token, user);
     }

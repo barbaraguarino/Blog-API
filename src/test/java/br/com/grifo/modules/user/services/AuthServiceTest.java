@@ -99,6 +99,26 @@ class AuthServiceTest {
 
             verify(jwtTokenProvider, never()).generateToken(anyString());
         }
+
+        @Test
+        @DisplayName("Deve retornar BusinessException (NOT FOUND) se o usuário não for encontrado após autenticação validada")
+        void shouldThrowNotFoundWhenUserDoesNotExistAfterAuthentication() {
+            when(authMock.getName()).thenReturn("barbara@grifo.com");
+            when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authMock);
+
+            when(jwtTokenProvider.generateToken("barbara@grifo.com")).thenReturn("token.jwt.valido");
+
+            when(userRepository.findByEmail("barbara@grifo.com")).thenReturn(Optional.empty());
+
+            BusinessException exception = assertThrows(BusinessException.class,
+                    () -> authService.authenticate(loginDTO));
+
+            assertThat(exception.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+            assertThat(exception.getMessageKey()).isEqualTo("error.auth.user_not_found");
+
+            verify(authenticationManager, times(1)).authenticate(any());
+            verify(jwtTokenProvider, times(1)).generateToken(anyString());
+        }
     }
 
     @Nested
