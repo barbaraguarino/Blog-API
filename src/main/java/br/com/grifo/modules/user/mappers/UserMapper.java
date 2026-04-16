@@ -1,7 +1,7 @@
 package br.com.grifo.modules.user.mappers;
 
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.dtos.UserResponseDTO;
+import br.com.grifo.modules.user.dtos.shared.UserResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component

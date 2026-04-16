@@ -1,10 +1,10 @@
-package br.com.grifo.modules.user.controllers;
+package br.com.grifo.modules.user.controllers.auth;
 
-import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
-import br.com.grifo.modules.user.dtos.LoginRequestDTO;
-import br.com.grifo.modules.user.dtos.UserResponseDTO;
+import br.com.grifo.modules.user.dtos.auth.GoogleTokenDTO;
+import br.com.grifo.modules.user.dtos.auth.LoginRequestDTO;
+import br.com.grifo.modules.user.dtos.shared.UserResponseDTO;
 import br.com.grifo.modules.user.mappers.UserMapper;
-import br.com.grifo.modules.user.services.AuthService;
+import br.com.grifo.modules.user.services.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;

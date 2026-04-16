@@ -1,4 +1,4 @@
-package br.com.grifo.modules.user.dtos;
+package br.com.grifo.modules.user.dtos.registration;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

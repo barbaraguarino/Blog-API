@@ -1,4 +1,4 @@
-package br.com.grifo.modules.user.controllers;
+package br.com.grifo.modules.user.controllers.auth;
 
 import br.com.grifo.core.exceptions.BusinessException;
 import br.com.grifo.core.security.CustomUserDetailsService;
@@ -6,11 +6,11 @@ import br.com.grifo.core.security.JwtAuthenticationFilter;
 import br.com.grifo.core.security.JwtTokenProvider;
 import br.com.grifo.core.security.SecurityConfig;
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
-import br.com.grifo.modules.user.dtos.LoginRequestDTO;
-import br.com.grifo.modules.user.dtos.UserResponseDTO;
+import br.com.grifo.modules.user.dtos.auth.GoogleTokenDTO;
+import br.com.grifo.modules.user.dtos.auth.LoginRequestDTO;
+import br.com.grifo.modules.user.dtos.shared.UserResponseDTO;
 import br.com.grifo.modules.user.mappers.UserMapper;
-import br.com.grifo.modules.user.services.AuthService;
+import br.com.grifo.modules.user.services.auth.AuthService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

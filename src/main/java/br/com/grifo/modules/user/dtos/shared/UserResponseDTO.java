@@ -1,4 +1,4 @@
-package br.com.grifo.modules.user.dtos;
+package br.com.grifo.modules.user.dtos.shared;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

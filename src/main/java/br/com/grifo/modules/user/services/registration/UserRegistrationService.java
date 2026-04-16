@@ -1,9 +1,9 @@
-package br.com.grifo.modules.user.services;
+package br.com.grifo.modules.user.services.registration;
 
 import br.com.grifo.core.exceptions.BusinessException;
 import br.com.grifo.modules.user.domain.User;
-import br.com.grifo.modules.user.dtos.GoogleTokenDTO;
-import br.com.grifo.modules.user.dtos.UserRegistrationDTO;
+import br.com.grifo.modules.user.dtos.auth.GoogleTokenDTO;
+import br.com.grifo.modules.user.dtos.registration.UserRegistrationDTO;
 import br.com.grifo.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
