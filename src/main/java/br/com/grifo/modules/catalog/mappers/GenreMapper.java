@@ -1,8 +1,8 @@
 package br.com.grifo.modules.catalog.mappers;
 
-import br.com.grifo.modules.catalog.domain.Genre;
-import br.com.grifo.modules.catalog.dtos.GenreResponseDTO;
-import br.com.grifo.modules.catalog.dtos.GenreTranslationDTO;
+import br.com.grifo.modules.catalog.domain.genre.Genre;
+import br.com.grifo.modules.catalog.dtos.genre.GenreResponseDTO;
+import br.com.grifo.modules.catalog.dtos.genre.GenreTranslationDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
