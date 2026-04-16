@@ -18,8 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -124,11 +122,12 @@ class UserRegistrationServiceTest {
         @Test
         @DisplayName("Deve registrar usuário com sucesso via Google e retornar a Entidade")
         void shouldRegisterWithGoogleSuccessfully() throws Exception {
-            lenient().when(mockIdToken.getPayload()).thenReturn(payload);
-            lenient().when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
-            lenient().when(userRepository.existsByEmail("barbara.google@grifo.com")).thenReturn(false);
-            lenient().when(userRepository.existsByGoogleId("google-id-12345")).thenReturn(false);
-            lenient().when(userRepository.save(any(User.class))).thenReturn(savedUser);
+
+            when(mockIdToken.getPayload()).thenReturn(payload);
+            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
+            when(userRepository.existsByEmail("barbara.google@grifo.com")).thenReturn(false);
+            when(userRepository.existsByGoogleId("google-id-12345")).thenReturn(false);
+            when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
             User result = userRegistrationService.registerWithGoogle(requestDTO);
 

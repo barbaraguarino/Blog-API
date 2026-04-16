@@ -50,7 +50,7 @@ class GenreServiceTest {
 
         @Test
         @DisplayName("Deve salvar o gênero quando o Domain Service adicionar pelo menos uma tradução inédita")
-        void shouldReturnGenre_WhenTranslationsAreAdded() {
+        void shouldReturnGenreWhenTranslationsAreAdded() {
             var savedGenreMock = Genre.createGenre();
             ReflectionTestUtils.setField(savedGenreMock, "id", UUID.randomUUID());
 
@@ -71,7 +71,7 @@ class GenreServiceTest {
 
         @Test
         @DisplayName("Deve lançar BusinessException quando todas as traduções enviadas já existirem")
-        void shouldThrowBusinessException_WhenAllTranslationsExist() {
+        void shouldThrowBusinessExceptionWhenAllTranslationsExist() {
             BusinessException exception = assertThrows(BusinessException.class, () ->
                     genreService.createGenre(requestDTO)
             );
@@ -86,15 +86,61 @@ class GenreServiceTest {
     @DisplayName("Criação de Subgêneros")
     class CreateSubgenre {
 
+        private UUID parentId;
+        private GenreRequestDTO requestDTO;
+        private Genre parentGenre;
+
+        @BeforeEach
+        void setUp() {
+            parentId = UUID.randomUUID();
+            parentGenre = Genre.createGenre();
+            ReflectionTestUtils.setField(parentGenre, "id", parentId);
+
+            requestDTO = new GenreRequestDTO(List.of(new GenreTranslationDTO("pt-BR", "Alta Fantasia")));
+
+        }
+
+        @Test
+        @DisplayName("Deve salvar o subgênero com sucesso quando o pai existir e houver traduções inéditas")
+        void shouldReturnSubgenreWhenParentExistsAndTranslationsAreAdded() {
+            var savedSubgenreMock = Genre.createSubgenre(parentGenre);
+            ReflectionTestUtils.setField(savedSubgenreMock, "id", UUID.randomUUID());
+
+            when(genreRepository.findById(parentId)).thenReturn(Optional.of(parentGenre));
+
+            doAnswer(invocation -> {
+                Genre genreArgument = invocation.getArgument(0);
+                genreArgument.addTranslation(GenreTranslation.create("pt-BR", "Alta Fantasia"));
+                return null;
+            }).when(genreDomainService).addOnlyNewTranslations(any(Genre.class), anyList());
+
+            when(genreRepository.save(any(Genre.class))).thenReturn(savedSubgenreMock);
+
+            Genre result = genreService.createSubgenre(parentId, requestDTO);
+
+            assertNotNull(result);
+            assertEquals(savedSubgenreMock.getId(), result.getId());
+            assertNotNull(result.getParent());
+            verify(genreRepository, times(1)).save(any(Genre.class));
+        }
+
+        @Test
+        @DisplayName("Deve lançar BusinessException (409) quando todas as traduções do subgênero já existirem")
+        void shouldThrowBusinessExceptionWhenAllTranslationsExist() {
+            when(genreRepository.findById(parentId)).thenReturn(Optional.of(parentGenre));
+
+            BusinessException exception = assertThrows(BusinessException.class, () ->
+                    genreService.createSubgenre(parentId, requestDTO)
+            );
+
+            assertEquals(HttpStatus.CONFLICT, exception.getHttpStatus());
+            assertEquals("error.catalog.genre.all_translations_exist", exception.getMessageKey());
+            verify(genreRepository, never()).save(any());
+        }
+
         @Test
         @DisplayName("Deve lançar BusinessException (404) quando o gênero pai não for encontrado")
-        void shouldThrowBusinessException_WhenParentNotFound() {
-
-            var parentId = UUID.randomUUID();
-            var parentGenre = Genre.createGenre();
-            ReflectionTestUtils.setField(parentGenre, "id", parentId);
-            var requestDTO = new GenreRequestDTO(List.of(new GenreTranslationDTO("pt-BR", "Alta Fantasia")));
-
+        void shouldThrowBusinessExceptionWhenParentNotFound() {
             when(genreRepository.findById(parentId)).thenReturn(Optional.empty());
 
             BusinessException exception = assertThrows(BusinessException.class, () ->
