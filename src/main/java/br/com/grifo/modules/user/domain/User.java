@@ -34,9 +34,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
     @Column(name = "is_enabled")
-    private boolean enabled = true;
+    private boolean enabled;
     @Column(name = "is_locked")
-    private boolean locked = false;
+    private boolean locked;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
@@ -53,6 +53,8 @@ public class User implements UserDetails {
                 .email(email)
                 .password(encodedPassword)
                 .nickname(nickname)
+                .enabled(false)
+                .locked(false)
                 .role(UserRole.READER)
                 .build();
     }
@@ -67,6 +69,8 @@ public class User implements UserDetails {
                 .name(name)
                 .email(email)
                 .googleId(googleId)
+                .enabled(false)
+                .locked(false)
                 .nickname(nickname)
                 .role(UserRole.READER)
                 .build();
