@@ -7,7 +7,7 @@ import br.com.grifo.modules.catalog.domain.genre.Genre;
 import br.com.grifo.modules.catalog.dtos.genre.GenreRequestDTO;
 import br.com.grifo.modules.catalog.dtos.genre.GenreResponseDTO;
 import br.com.grifo.modules.catalog.dtos.genre.GenreTranslationDTO;
-import br.com.grifo.modules.catalog.mappers.GenreMapper;
+import br.com.grifo.modules.catalog.mappers.genre.GenreMapper;
 import br.com.grifo.modules.catalog.services.genre.GenreService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;

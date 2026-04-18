@@ -2,7 +2,7 @@ package br.com.grifo.modules.catalog.controllers.genre;
 
 import br.com.grifo.modules.catalog.dtos.genre.GenreRequestDTO;
 import br.com.grifo.modules.catalog.dtos.genre.GenreResponseDTO;
-import br.com.grifo.modules.catalog.mappers.GenreMapper;
+import br.com.grifo.modules.catalog.mappers.genre.GenreMapper;
 import br.com.grifo.modules.catalog.services.genre.GenreService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

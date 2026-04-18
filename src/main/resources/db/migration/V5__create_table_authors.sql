@@ -1,0 +1,9 @@
+CREATE TABLE tb_authors (
+    id UUID PRIMARY KEY,
+    display_name VARCHAR(200) NOT NULL,
+    sort_name VARCHAR(150) NOT NULL,
+    birth_date DATE,
+    website VARCHAR(255),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

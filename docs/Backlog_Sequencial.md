@@ -211,23 +211,23 @@ Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem 
         - [x]  Sucesso (HTTP 201) ao cadastrar subgênero em um pai válido.
         - [x]  Retorno HTTP 404 ao vincular a um `parentId` inexistente.
 
-- [ ] **#10 Catálogo Literário: Cadastro de Autor (Padrão MARC 21 + Localização)**
+- [x] **#10 Catálogo Literário: Cadastro de Autor (Padrão MARC 21 + Localização)**
 
     1. **Objetivo**: Criar o domínio de Autores isolando a forma como o nome é exibido da forma como ele é ordenado, e permitindo que a biografia seja cadastrada em múltiplos idiomas para suportar uma plataforma global.
     2. **Prioridade**: P1
     3. **Tamanho**: S
     4. **Tag**: `feat` + `core`
     5. **Critérios de Aceitação**:
-        - [ ]  Criação do script Flyway (`V5__create_table_authors.sql`) contendo `id` (UUID), `display_name` (Ex: Stephen King), `sort_name` (Ex: King, Stephen), `birth_date` (DATE), `website` (VARCHAR) e campos de auditoria.
-        - [ ]  Criação do script Flyway (`V6__create_table_author_localizations.sql`) contendo `id` (UUID), `author_id` (FK), `language_code` (Ex: pt-BR) e `biography` (TEXT).
-        - [ ]  Criação das entidades JPA `Author` e `AuthorLocalization` com relacionamento `OneToMany`.
-        - [ ]  Criação do `AuthorRequestDTO` que deve permitir o envio dos dados básicos e de uma lista de localizações para a biografia.
-        - [ ]  Validação: O autor deve ter pelo menos uma biografia inicial (localização) no momento do cadastro.
-        - [ ]  Criação do *endpoint* `POST /api/v1/authors` restrito a utilizadores com *Role* `ADMIN`.
+        - [x]  Criação do script Flyway (`V5__create_table_authors.sql`) contendo `id` (UUID), `display_name` (Ex: Stephen King), `sort_name` (Ex: King, Stephen), `birth_date` (DATE), `website` (VARCHAR) e campos de auditoria.
+        - [x]  Criação do script Flyway (`V6__create_table_author_localizations.sql`) contendo `id` (UUID), `author_id` (FK), `language_code` (Ex: pt-BR) e `biography` (TEXT).
+        - [x]  Criação das entidades JPA `Author` e `AuthorLocalization` com relacionamento `OneToMany`.
+        - [x]  Criação do `AuthorRequestDTO` que deve permitir o envio dos dados básicos e de uma lista de localizações para a biografia.
+        - [x]  Validação: O autor deve ter pelo menos uma biografia inicial (localização) no momento do cadastro.
+        - [x]  Criação do *endpoint* `POST /api/v1/authors` restrito a utilizadores com *Role* `ADMIN`.
     6. **Testes de Aceitação**:
-        - [ ]  Enviar um *payload* com `display_name`, `sort_name` e ao menos uma biografia em um idioma válido deve retornar **HTTP 201 (Created)**.
-        - [ ]  Tentar cadastrar um autor sem nenhuma localização de biografia deve retornar **HTTP 400 (Bad Request)**.
-        - [ ]  Validar que os dados foram persistidos corretamente em ambas as tabelas (`tb_authors` e `tb_author_localizations`).
+        - [x]  Enviar um *payload* com `display_name`, `sort_name` e ao menos uma biografia em um idioma válido deve retornar **HTTP 201 (Created)**.
+        - [x]  Tentar cadastrar um autor sem nenhuma localização de biografia deve retornar **HTTP 400 (Bad Request)**.
+        - [x]  Validar que os dados foram persistidos corretamente em ambas as tabelas (`tb_authors` e `tb_author_localizations`).
 
 - [ ] **#11 Catálogo Literário: Cadastro de Série Literária (Localizada)**
 
