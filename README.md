@@ -1,4 +1,4 @@
-# GRIFO
+# Blog
 
 O GRIFO é uma plataforma de rede social e blog dedicada ao universo literário, projetada para conectar leitores através de resenhas detalhadas e interações sociais dinâmicas. O ecossistema foca em um backend robusto desenvolvido com Spring Boot e PostgreSQL, oferecendo funcionalidades que abrangem desde a moderação de conteúdo e sistemas de comentários até solicitações de autoria. Utilizando AWS S3 para gestão de mídias, o projeto demonstra uma solução escalável e profissional para o gerenciamento de comunidades e compartilhamento de conhecimento literário.
 
