@@ -22,7 +22,7 @@ public class JwtTokenProvider {
     @Value("${api.security.token.expiration}")
     private long expiration;
 
-    private static final String ISSUER = "GRIFO_API";
+    private static final String ISSUER = "blog_api";
 
     public String generateToken(String username) {
         try {

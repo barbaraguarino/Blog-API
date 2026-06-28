@@ -22,7 +22,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserMapper userMapper;
-    private static final String TOKEN_NAME = "grifo_token";
+    private static final String TOKEN_NAME = "blog_token";
 
     @PostMapping("/login")
     public ResponseEntity<UserResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {

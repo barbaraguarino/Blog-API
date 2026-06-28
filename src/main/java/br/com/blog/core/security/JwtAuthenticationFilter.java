@@ -40,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String recoverToken(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if ("grifo_token".equals(cookie.getName())) {
+                if ("blog_token".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }
