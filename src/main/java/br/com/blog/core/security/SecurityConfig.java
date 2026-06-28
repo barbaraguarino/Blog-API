@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final SecurityFilter jwtAuthenticationFilter;
 
     private static final String[] PUBLIC_ROUTES = {
             "/api/v1/register",

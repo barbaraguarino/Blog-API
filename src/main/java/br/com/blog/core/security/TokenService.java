@@ -1,20 +1,19 @@
 package br.com.blog.core.security;
 
-import br.com.blog.core.exceptions.BusinessException;
+import br.com.blog.core.exceptions.domain.SecurityInfrastructureException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Slf4j
-@Component
-public class JwtTokenProvider {
+@Service
+public class TokenService {
 
     @Value("${api.security.token.secret}")
     private String secret;
@@ -22,7 +21,8 @@ public class JwtTokenProvider {
     @Value("${api.security.token.expiration}")
     private long expiration;
 
-    private static final String ISSUER = "blog_api";
+    @Value("${spring.application.name}")
+    private String ISSUER;
 
     public String generateToken(String username) {
         try {
@@ -33,9 +33,9 @@ public class JwtTokenProvider {
                     .withIssuedAt(new Date())
                     .withExpiresAt(new Date(System.currentTimeMillis() + expiration))
                     .sign(algorithm);
-        }catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             log.error("Falha crítica ao gerar token JWT para o usuário: {}", username, exception);
-            throw new BusinessException("error.security.token_generation", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new SecurityInfrastructureException("error.security.token_generation", exception);
         }
     }
 
