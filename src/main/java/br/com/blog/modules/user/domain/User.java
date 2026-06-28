@@ -5,14 +5,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.jspecify.annotations.Nullable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,7 +15,7 @@ import java.util.UUID;
 @Builder(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class User implements UserDetails {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -83,32 +77,5 @@ public class User implements UserDetails {
 
     public boolean isLinkedToGoogle() {
         return this.googleId != null;
-    }
-
-    @Override
-    @NonNull
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role.getRole()));
-    }
-
-    @Override
-    public @Nullable String getPassword() {
-        return this.password;
-    }
-
-    @Override
-    @NonNull
-    public String getUsername() {
-        return this.email;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return !this.locked;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
     }
 }

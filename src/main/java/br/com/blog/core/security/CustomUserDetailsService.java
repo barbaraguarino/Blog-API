@@ -1,5 +1,6 @@
 package br.com.blog.core.security;
 
+import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.repositories.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @NonNull
     public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     String errorMessage = messageSource.getMessage(
                             "error.auth.user_not_found",
@@ -29,5 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     );
                     return new UsernameNotFoundException(errorMessage);
                 });
+
+        return new CustomUserDetails(user);
     }
 }
