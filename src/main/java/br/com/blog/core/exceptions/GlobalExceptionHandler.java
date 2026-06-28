@@ -1,11 +1,11 @@
 package br.com.blog.core.exceptions;
 
 import br.com.blog.core.exceptions.domain.BusinessRuleException;
+import br.com.blog.core.exceptions.domain.InfrastructureException;
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,6 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Slf4j
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
@@ -55,6 +54,12 @@ public class GlobalExceptionHandler {
     /*
      * EXCEÇÕES DE INFRAESTRUTURA E FRAMEWORK (REGRAS DE NEGÓCIO)
      */
+
+    @ExceptionHandler(InfrastructureException.class)
+    public ResponseEntity<ErrorResponseDTO> handleInfrastructureException(InfrastructureException exception, HttpServletRequest request) {
+        String message = getTranslatedMessage(exception.getMessageKey(), exception.getArgs(), request);
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, message, request, null);
+    }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleNotFoundException(HttpServletRequest request) {
@@ -102,9 +107,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleAllUncaughtException(Exception exception, HttpServletRequest request) {
-        log.error("Erro interno não tratado interceptado na URI: {}", request.getRequestURI(), exception);
-
+    public ResponseEntity<ErrorResponseDTO> handleAllUncaughtException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.server.internal", null, request);
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, message, request, null);
     }
