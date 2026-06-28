@@ -1,7 +1,7 @@
 package br.com.blog.core.exceptions;
 
 import br.com.blog.core.exceptions.domain.BusinessRuleException;
-import br.com.blog.core.exceptions.domain.InfrastructureException;
+import br.com.blog.core.exceptions.infrastructure.InfrastructureException;
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;

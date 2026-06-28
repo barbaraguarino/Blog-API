@@ -1,6 +1,6 @@
 package br.com.blog.core.security;
 
-import br.com.blog.core.exceptions.domain.SecurityInfrastructureException;
+import br.com.blog.core.exceptions.infrastructure.SecurityInfrastructureException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

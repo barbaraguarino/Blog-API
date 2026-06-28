@@ -26,17 +26,22 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     private String name;
     private String email;
     private String nickname;
     private String password;
     private String googleId;
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
     @Column(name = "is_enabled")
     private boolean enabled;
+
     @Column(name = "is_locked")
     private boolean locked;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp

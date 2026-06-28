@@ -1,4 +1,4 @@
-package br.com.blog.core.exceptions.domain;
+package br.com.blog.core.exceptions.infrastructure;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package br.com.blog.modules.user.services.registration;
 
-import br.com.blog.core.exceptions.domain.BusinessRuleException;
+import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
 import br.com.blog.modules.user.dtos.registration.UserRegistrationDTO;
@@ -8,7 +8,7 @@ import br.com.blog.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +27,7 @@ public class UserRegistrationService {
     public User registerUser(UserRegistrationDTO dto) {
 
         if (userRepository.existsByEmail(dto.email())) {
-            throw new BusinessRuleException("error.user.already_exists", HttpStatus.CONFLICT);
+            throw new ResourceAlreadyExistsException("error.user.already_exists");
         }
 
         User newUser = User.createLocalUser(
@@ -42,24 +42,22 @@ public class UserRegistrationService {
 
     public User registerWithGoogle(GoogleTokenDTO dto) {
         try {
-
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 
             if (idToken == null) {
-                throw new BusinessRuleException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
+                throw new BadCredentialsException("error.auth.invalid_google_token");
             }
 
             GoogleIdToken.Payload payload = idToken.getPayload();
-
             String email = payload.getEmail();
 
             if (userRepository.existsByEmail(email))
-                throw new BusinessRuleException("error.user.already_exists", HttpStatus.CONFLICT);
+                throw new ResourceAlreadyExistsException("error.user.already_exists");
 
             String googleId = payload.getSubject();
 
             if(userRepository.existsByGoogleId(googleId))
-                throw new BusinessRuleException("error.user.provider_conflict", HttpStatus.CONFLICT);
+                throw new ResourceAlreadyExistsException("error.user.provider_conflict");
 
             String name = payload.get("name").toString();
 
@@ -73,14 +71,12 @@ public class UserRegistrationService {
             return userRepository.save(newUser);
 
         } catch (Exception e) {
-
-            if (e instanceof BusinessRuleException) throw (BusinessRuleException) e;
-            throw new BusinessRuleException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
+            if (e instanceof ResourceAlreadyExistsException) throw (ResourceAlreadyExistsException) e;
+            throw new BadCredentialsException("error.auth.invalid_google_token");
         }
     }
 
     private String generateRandomNickname(String name) {
-
         String cleanName = name.toLowerCase()
                 .replaceAll("\\s+", "_")
                 .replaceAll("[^a-z0-9_]", "");
