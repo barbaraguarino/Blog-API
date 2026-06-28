@@ -77,10 +77,16 @@ As instruções detalhadas de configuração de variáveis de ambiente, prepara�
 
 ## Autora
 
-Desenvolvido por **Barbara Duarte**
+Desenvolvido por Barbara Duarte.
+
+Este projeto faz parte dos meus estudos em desenvolvimento backend com Java e Spring Boot, servindo como base para praticar construção de APIs REST, autenticação, testes, design de arquitetura limpa (SOLID) e integração com serviços em nuvem (AWS).
+
+GitHub: @barbaraguarino
 
 ## Licença
 
-**Copyright © 2026 Barbara Duarte. Todos os direitos reservados.**
+Este projeto possui licença privada e todos os direitos são reservados.
 
-Este é um projeto de código fechado desenvolvido com fins de estudo e composição de portfólio. O código-fonte está aberto exclusivamente para visualização. Não é permitida a cópia, modificação, distribuição ou uso comercial deste software sem autorização prévia e expressa da autora.
+O código-fonte está disponível apenas para fins de estudo, consulta e avaliação acadêmica, não sendo permitida a cópia, modificação, distribuição ou uso sem autorização prévia da autora.
+
+Consulte o arquivo LICENSE para mais detalhes.
