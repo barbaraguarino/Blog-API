@@ -1,10 +1,7 @@
 package br.com.blog.modules.user.controllers.registration;
 
-import br.com.blog.core.exceptions.BusinessException;
-import br.com.blog.core.security.CustomUserDetailsService;
-import br.com.blog.core.security.JwtAuthenticationFilter;
-import br.com.blog.core.security.JwtTokenProvider;
-import br.com.blog.core.security.SecurityConfig;
+import br.com.blog.core.exceptions.domain.BusinessRuleException;
+import br.com.blog.core.security.*;
 import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
 import br.com.blog.modules.user.dtos.registration.UserRegistrationDTO;
@@ -35,14 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserRegistrationController.class)
-@Import({SecurityConfig.class, JwtAuthenticationFilter.class})
+@Import({SecurityConfig.class, SecurityFilter.class})
 class UserRegistrationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private JwtTokenProvider jwtTokenProvider;
+    private TokenService tokenService;
 
     @MockitoBean
     private UserRegistrationService userRegistrationService;
@@ -116,7 +113,7 @@ class UserRegistrationControllerTest {
         void shouldReturn409WhenEmailAlreadyExists() throws Exception {
 
             when(userRegistrationService.registerUser(any(UserRegistrationDTO.class)))
-                    .thenThrow(new BusinessException("error.user.already_exists", HttpStatus.CONFLICT));
+                    .thenThrow(new BusinessRuleException("error.user.already_exists", HttpStatus.CONFLICT));
 
             mockMvc.perform(post("/api/v1/register")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -169,7 +166,7 @@ class UserRegistrationControllerTest {
         void shouldReturn409WhenGoogleUserAlreadyExists() throws Exception {
 
             when(userRegistrationService.registerWithGoogle(any(GoogleTokenDTO.class)))
-                    .thenThrow(new BusinessException("error.user.already_exists", HttpStatus.CONFLICT));
+                    .thenThrow(new BusinessRuleException("error.user.already_exists", HttpStatus.CONFLICT));
 
             mockMvc.perform(post("/api/v1/register/google")
                             .contentType(MediaType.APPLICATION_JSON)

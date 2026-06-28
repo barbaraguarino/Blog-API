@@ -1,10 +1,7 @@
 package br.com.blog.modules.user.controllers.auth;
 
-import br.com.blog.core.exceptions.BusinessException;
-import br.com.blog.core.security.CustomUserDetailsService;
-import br.com.blog.core.security.JwtAuthenticationFilter;
-import br.com.blog.core.security.JwtTokenProvider;
-import br.com.blog.core.security.SecurityConfig;
+import br.com.blog.core.exceptions.domain.BusinessRuleException;
+import br.com.blog.core.security.*;
 import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
 import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
@@ -35,7 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
-@Import({SecurityConfig.class, JwtAuthenticationFilter.class})
+@Import({SecurityConfig.class, SecurityFilter.class})
 class AuthControllerTest {
 
     @Autowired
@@ -48,7 +45,7 @@ class AuthControllerTest {
     private UserMapper userMapper;
 
     @MockitoBean
-    private JwtTokenProvider jwtTokenProvider;
+    private TokenService tokenService;
 
     @MockitoBean
     private CustomUserDetailsService customUserDetailsService;
@@ -164,7 +161,7 @@ class AuthControllerTest {
         @DisplayName("Deve retornar 404 Not Found se usuário tentar logar com Google sem estar cadastrado")
         void shouldReturn404WhenGoogleUserIsNotRegistered() throws Exception {
             when(authService.authenticateWithGoogle(any(GoogleTokenDTO.class)))
-                    .thenThrow(new BusinessException("error.auth.user_not_found_google", HttpStatus.NOT_FOUND));
+                    .thenThrow(new BusinessRuleException("error.auth.user_not_found_google", HttpStatus.NOT_FOUND));
 
             mockMvc.perform(post("/api/v1/auth/login/google")
                             .contentType(MediaType.APPLICATION_JSON)

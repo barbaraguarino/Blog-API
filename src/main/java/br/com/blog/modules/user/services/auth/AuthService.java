@@ -1,7 +1,7 @@
 package br.com.blog.modules.user.services.auth;
 
-import br.com.blog.core.exceptions.BusinessException;
-import br.com.blog.core.security.JwtTokenProvider;
+import br.com.blog.core.exceptions.domain.BusinessRuleException;
+import br.com.blog.core.security.TokenService;
 import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
 import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
     private final UserRepository userRepository;
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
@@ -30,10 +30,10 @@ public class AuthService {
         var authPasswordToken = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
         var auth = authenticationManager.authenticate(authPasswordToken);
 
-        String token = jwtTokenProvider.generateToken(auth.getName());
+        String token = tokenService.generateToken(auth.getName());
 
         User user = userRepository.findByEmail(dto.email())
-                .orElseThrow(() -> new BusinessException("error.auth.user_not_found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BusinessRuleException("error.auth.user_not_found", HttpStatus.NOT_FOUND));
 
         return new AuthResult(token, user);
     }
@@ -44,22 +44,22 @@ public class AuthService {
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 
             if (idToken == null) {
-                throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
+                throw new BusinessRuleException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
             }
 
             GoogleIdToken.Payload payload = idToken.getPayload();
             String googleSubjectId = payload.getSubject();
 
             User user = userRepository.findByGoogleId(googleSubjectId)
-                    .orElseThrow(() -> new BusinessException("error.auth.user_not_found_google", HttpStatus.NOT_FOUND));
+                    .orElseThrow(() -> new BusinessRuleException("error.auth.user_not_found_google", HttpStatus.NOT_FOUND));
 
-            String token = jwtTokenProvider.generateToken(user.getEmail());
+            String token = tokenService.generateToken(user.getEmail());
 
             return new AuthResult(token, user);
         }catch (Exception e) {
 
-            if (e instanceof BusinessException) throw (BusinessException) e;
-            throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
+            if (e instanceof BusinessRuleException) throw (BusinessRuleException) e;
+            throw new BusinessRuleException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
         }
     }
 

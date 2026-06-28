@@ -1,6 +1,6 @@
 package br.com.blog.modules.user.services.registration;
 
-import br.com.blog.core.exceptions.BusinessException;
+import br.com.blog.core.exceptions.domain.BusinessRuleException;
 import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
 import br.com.blog.modules.user.dtos.registration.UserRegistrationDTO;
@@ -27,7 +27,7 @@ public class UserRegistrationService {
     public User registerUser(UserRegistrationDTO dto) {
 
         if (userRepository.existsByEmail(dto.email())) {
-            throw new BusinessException("error.user.already_exists", HttpStatus.CONFLICT);
+            throw new BusinessRuleException("error.user.already_exists", HttpStatus.CONFLICT);
         }
 
         User newUser = User.createLocalUser(
@@ -46,7 +46,7 @@ public class UserRegistrationService {
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 
             if (idToken == null) {
-                throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
+                throw new BusinessRuleException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
             }
 
             GoogleIdToken.Payload payload = idToken.getPayload();
@@ -54,12 +54,12 @@ public class UserRegistrationService {
             String email = payload.getEmail();
 
             if (userRepository.existsByEmail(email))
-                throw new BusinessException("error.user.already_exists", HttpStatus.CONFLICT);
+                throw new BusinessRuleException("error.user.already_exists", HttpStatus.CONFLICT);
 
             String googleId = payload.getSubject();
 
             if(userRepository.existsByGoogleId(googleId))
-                throw new BusinessException("error.user.provider_conflict", HttpStatus.CONFLICT);
+                throw new BusinessRuleException("error.user.provider_conflict", HttpStatus.CONFLICT);
 
             String name = payload.get("name").toString();
 
@@ -74,8 +74,8 @@ public class UserRegistrationService {
 
         } catch (Exception e) {
 
-            if (e instanceof BusinessException) throw (BusinessException) e;
-            throw new BusinessException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
+            if (e instanceof BusinessRuleException) throw (BusinessRuleException) e;
+            throw new BusinessRuleException("error.auth.invalid_google_token", HttpStatus.UNAUTHORIZED);
         }
     }
 
