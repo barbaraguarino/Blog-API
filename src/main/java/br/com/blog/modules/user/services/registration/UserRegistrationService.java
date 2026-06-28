@@ -2,8 +2,8 @@ package br.com.blog.modules.user.services.registration;
 
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
-import br.com.blog.modules.user.dtos.registration.UserRegistrationDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
 import br.com.blog.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -24,7 +24,7 @@ public class UserRegistrationService {
     private final PasswordEncoder passwordEncoder;
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
-    public User registerUser(UserRegistrationDTO dto) {
+    public User registerUser(RegisterUserRequest dto) {
 
         if (userRepository.existsByEmail(dto.email())) {
             throw new ResourceAlreadyExistsException("error.user.already_exists");
@@ -40,7 +40,7 @@ public class UserRegistrationService {
         return userRepository.save(newUser);
     }
 
-    public User registerWithGoogle(GoogleTokenDTO dto) {
+    public User registerWithGoogle(GoogleAuthRequest dto) {
         try {
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 

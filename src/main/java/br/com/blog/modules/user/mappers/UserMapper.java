@@ -1,18 +1,18 @@
 package br.com.blog.modules.user.mappers;
 
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.shared.UserResponseDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
-    public UserResponseDTO toResponseDTO(User entity) {
+    public UserProfileResponse toResponseDTO(User entity) {
         if (entity == null) {
             return null;
         }
 
-        return new UserResponseDTO(
+        return new UserProfileResponse(
                 entity.getId(),
                 entity.getName(),
                 entity.getEmail(),

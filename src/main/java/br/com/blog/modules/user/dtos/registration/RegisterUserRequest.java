@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record UserRegistrationDTO(
+public record RegisterUserRequest(
         @NotBlank(message = "error.user.name.not_blank")
         @Size(max = 150, message = "error.user.name.size")
         String name,

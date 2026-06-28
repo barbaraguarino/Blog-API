@@ -2,8 +2,8 @@ package br.com.blog.modules.user.services.auth;
 
 import br.com.blog.core.security.TokenService;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
-import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.auth.LoginRequest;
 import br.com.blog.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -50,13 +50,13 @@ class AuthServiceTest {
     @DisplayName("Login com e-mail e senha")
     class Authenticate {
 
-        private LoginRequestDTO loginDTO;
+        private LoginRequest loginDTO;
         private User fakeUser;
         private Authentication authMock;
 
         @BeforeEach
         void setUp() {
-            loginDTO = new LoginRequestDTO("barbara@grifo.com", "senha123");
+            loginDTO = new LoginRequest("barbara@grifo.com", "senha123");
 
             fakeUser = User.createLocalUser(
                     "Barbara Nascimento",
@@ -109,7 +109,7 @@ class AuthServiceTest {
     @DisplayName("Login via Google")
     class AuthenticateWithGoogle {
 
-        private GoogleTokenDTO googleDTO;
+        private GoogleAuthRequest googleDTO;
         private GoogleIdToken mockIdToken;
         private GoogleIdToken.Payload payload;
         private User fakeUser;
@@ -117,7 +117,7 @@ class AuthServiceTest {
 
         @BeforeEach
         void setUp() {
-            googleDTO = new GoogleTokenDTO(GOOGLE_TOKEN);
+            googleDTO = new GoogleAuthRequest(GOOGLE_TOKEN);
 
             payload = new GoogleIdToken.Payload();
             payload.setSubject("google-id-12345");
@@ -156,13 +156,13 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("Deve retornar BusinessRuleException (NOT FOUND) quando usuário Google não existir")
-        void shouldThrowNotFoundWhenGoogleUserDoesNotExist() throws Exception {
+        void shouldThrowNotFoundWhenGoogleUserDoesNotExist(){
 
         }
 
         @Test
         @DisplayName("Deve retornar BusinessRuleException (UNAUTHORIZED) ao receber token do Google forjado/inválido")
-        void shouldThrowUnauthorizedWhenGoogleTokenIsInvalid() throws Exception {
+        void shouldThrowUnauthorizedWhenGoogleTokenIsInvalid() {
 
         }
     }

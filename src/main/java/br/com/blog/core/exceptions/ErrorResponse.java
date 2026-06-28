@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record ErrorResponseDTO (
+public record ErrorResponse(
 
     LocalDateTime timestamp,
     Integer status,
@@ -15,12 +15,12 @@ public record ErrorResponseDTO (
     String path,
     Map<String, String> validationErrors
 ){
-    public static ErrorResponseDTO create(Integer status,
-                                          String error,
-                                          String message,
-                                          String path,
-                                          Map<String, String> validationErrors) {
-        return new ErrorResponseDTO(
+    public static ErrorResponse create(Integer status,
+                                       String error,
+                                       String message,
+                                       String path,
+                                       Map<String, String> validationErrors) {
+        return new ErrorResponse(
                 LocalDateTime.now(),
                 status,
                 error,
@@ -29,11 +29,11 @@ public record ErrorResponseDTO (
                 validationErrors);
     }
 
-    public static ErrorResponseDTO create(Integer status,
-                                          String error,
-                                          String message,
-                                          String path) {
-        return new ErrorResponseDTO(
+    public static ErrorResponse create(Integer status,
+                                       String error,
+                                       String message,
+                                       String path) {
+        return new ErrorResponse(
                 LocalDateTime.now(),
                 status,
                 error,

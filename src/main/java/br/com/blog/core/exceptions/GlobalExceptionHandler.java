@@ -34,19 +34,19 @@ public class GlobalExceptionHandler {
      */
 
     @ExceptionHandler(BusinessRuleException.class)
-    public ResponseEntity<ErrorResponseDTO> handleBusinessException(BusinessRuleException exception, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessRuleException exception, HttpServletRequest request) {
         String message = getTranslatedMessage(exception.getMessageKey(), exception.getArgs(), request);
         return buildErrorResponse(HttpStatus.UNPROCESSABLE_CONTENT, message, request, null);
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponseDTO> handleResourceAlreadyExistsException(ResourceAlreadyExistsException exception, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleResourceAlreadyExistsException(ResourceAlreadyExistsException exception, HttpServletRequest request) {
         String message = getTranslatedMessage(exception.getMessageKey(), exception.getArgs(), request);
         return buildErrorResponse(HttpStatus.CONFLICT, message, request, null);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundDomainException(ResourceNotFoundException exception, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundDomainException(ResourceNotFoundException exception, HttpServletRequest request) {
         String message = getTranslatedMessage(exception.getMessageKey(), exception.getArgs(), request);
         return buildErrorResponse(HttpStatus.NOT_FOUND, message, request, null);
     }
@@ -56,43 +56,43 @@ public class GlobalExceptionHandler {
      */
 
     @ExceptionHandler(InfrastructureException.class)
-    public ResponseEntity<ErrorResponseDTO> handleInfrastructureException(InfrastructureException exception, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleInfrastructureException(InfrastructureException exception, HttpServletRequest request) {
         String message = getTranslatedMessage(exception.getMessageKey(), exception.getArgs(), request);
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, message, request, null);
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponseDTO> handleNotFoundException(HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleNotFoundException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.resource.not_found", null, request);
         return buildErrorResponse(HttpStatus.NOT_FOUND, message, request, null);
     }
 
     @ExceptionHandler({DisabledException.class, LockedException.class})
-    public ResponseEntity<ErrorResponseDTO> handleDisabledOrLockedExceptions(HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleDisabledOrLockedExceptions(HttpServletRequest request) {
         String message = getTranslatedMessage("error.auth.account_inactive", null, request);
         return buildErrorResponse(HttpStatus.FORBIDDEN, message, request, null);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponseDTO> handleAccessDeniedException(HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.auth.access_denied", null, request);
         return buildErrorResponse(HttpStatus.FORBIDDEN, message, request, null);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ErrorResponseDTO> handleMethodNotSupported(HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleMethodNotSupported(HttpServletRequest request) {
         String message = getTranslatedMessage("error.http.method_not_supported", null, request);
         return buildErrorResponse(HttpStatus.METHOD_NOT_ALLOWED, message, request, null);
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ErrorResponseDTO> handleBadCredentialsException(HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.auth.bad_credentials", null, request);
         return buildErrorResponse(HttpStatus.UNAUTHORIZED, message, request, null);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponseDTO> handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
         Map<String, String> validationErrors = exception.getBindingResult().getFieldErrors().stream()
                 .collect(Collectors.toMap(
                         FieldError::getField,
@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleAllUncaughtException(HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleAllUncaughtException(HttpServletRequest request) {
         String message = getTranslatedMessage("error.server.internal", null, request);
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, message, request, null);
     }
@@ -120,13 +120,13 @@ public class GlobalExceptionHandler {
         return messageSource.getMessage(key, args, key, request.getLocale());
     }
 
-    private ResponseEntity<ErrorResponseDTO> buildErrorResponse(
+    private ResponseEntity<ErrorResponse> buildErrorResponse(
             HttpStatus status, String message, HttpServletRequest request, Map<String, String> validationErrors) {
 
-        ErrorResponseDTO errorResponse;
+        ErrorResponse errorResponse;
 
         if (validationErrors != null && !validationErrors.isEmpty()) {
-            errorResponse = ErrorResponseDTO.create(
+            errorResponse = ErrorResponse.create(
                     status.value(),
                     status.getReasonPhrase(),
                     message,
@@ -134,7 +134,7 @@ public class GlobalExceptionHandler {
                     validationErrors
             );
         } else {
-            errorResponse = ErrorResponseDTO.create(
+            errorResponse = ErrorResponse.create(
                     status.value(),
                     status.getReasonPhrase(),
                     message,

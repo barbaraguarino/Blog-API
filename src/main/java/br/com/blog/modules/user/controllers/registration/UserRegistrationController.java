@@ -1,8 +1,8 @@
 package br.com.blog.modules.user.controllers.registration;
 
-import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
-import br.com.blog.modules.user.dtos.registration.UserRegistrationDTO;
-import br.com.blog.modules.user.dtos.shared.UserResponseDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.services.registration.UserRegistrationService;
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ public class UserRegistrationController {
     private final UserMapper userMapper;
 
     @PostMapping()
-    public ResponseEntity<UserResponseDTO> register(@RequestBody @Valid UserRegistrationDTO dto){
+    public ResponseEntity<UserProfileResponse> register(@RequestBody @Valid RegisterUserRequest dto){
 
         var response = userMapper.toResponseDTO(userRegistrationService.registerUser(dto));
 
@@ -31,7 +31,7 @@ public class UserRegistrationController {
     }
 
     @PostMapping("/google")
-    public ResponseEntity<UserResponseDTO> registerWithGoogle(@RequestBody @Valid GoogleTokenDTO dto) {
+    public ResponseEntity<UserProfileResponse> registerWithGoogle(@RequestBody @Valid GoogleAuthRequest dto) {
 
         var response = userMapper.toResponseDTO(userRegistrationService.registerWithGoogle(dto));
 

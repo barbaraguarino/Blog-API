@@ -1,8 +1,8 @@
 package br.com.blog.modules.user.controllers.auth;
 
-import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
-import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
-import br.com.blog.modules.user.dtos.shared.UserResponseDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.auth.LoginRequest;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.services.auth.AuthService;
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class AuthController {
     private static final String TOKEN_NAME = "blog_token";
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
+    public ResponseEntity<UserProfileResponse> login(@RequestBody @Valid LoginRequest dto) {
 
         AuthService.AuthResult result = authService.authenticate(dto);
 
@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/login/google")
-    public ResponseEntity<UserResponseDTO> loginWithGoogle(@RequestBody @Valid GoogleTokenDTO dto) {
+    public ResponseEntity<UserProfileResponse> loginWithGoogle(@RequestBody @Valid GoogleAuthRequest dto) {
 
         AuthService.AuthResult result = authService.authenticateWithGoogle(dto);
 

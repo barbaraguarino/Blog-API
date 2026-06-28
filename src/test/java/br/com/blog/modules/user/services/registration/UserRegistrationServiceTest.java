@@ -1,9 +1,8 @@
 package br.com.blog.modules.user.services.registration;
 
-import br.com.blog.core.exceptions.domain.BusinessRuleException;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.GoogleTokenDTO;
-import br.com.blog.modules.user.dtos.registration.UserRegistrationDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
 import br.com.blog.modules.user.repositories.UserRepository;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -15,11 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -42,12 +39,12 @@ class UserRegistrationServiceTest {
     @DisplayName("Cadastro de Usuário Padrão")
     class RegisterUser {
 
-        private UserRegistrationDTO dto;
+        private RegisterUserRequest dto;
         private User savedUser;
 
         @BeforeEach
         void setUp() {
-            dto = new UserRegistrationDTO("Bárbara", "barbara@grifo.com", "senha123");
+            dto = new RegisterUserRequest("Bárbara", "barbara@grifo.com", "senha123");
 
             savedUser = User.createLocalUser(
                     dto.name(),
@@ -85,7 +82,7 @@ class UserRegistrationServiceTest {
     @DisplayName("Cadastro via Conta Google")
     class RegisterWithGoogle {
 
-        private GoogleTokenDTO requestDTO;
+        private GoogleAuthRequest requestDTO;
         private GoogleIdToken.Payload payload;
         private GoogleIdToken mockIdToken;
         private User savedUser;
@@ -93,7 +90,7 @@ class UserRegistrationServiceTest {
 
         @BeforeEach
         void setUp() {
-            requestDTO = new GoogleTokenDTO(GOOGLE_TOKEN);
+            requestDTO = new GoogleAuthRequest(GOOGLE_TOKEN);
 
             payload = new GoogleIdToken.Payload();
             payload.setEmail("barbara.google@grifo.com");
@@ -131,7 +128,7 @@ class UserRegistrationServiceTest {
 
         @Test
         @DisplayName("Deve lançar UNAUTHORIZED ao receber token do Google forjado/expirado")
-        void shouldThrowUnauthorizedWhenGoogleTokenIsInvalid() throws Exception {
+        void shouldThrowUnauthorizedWhenGoogleTokenIsInvalid() {
 
         }
     }
