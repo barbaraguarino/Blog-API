@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -54,6 +55,13 @@ public class GlobalExceptionHandler {
     /*
      * EXCEÇÕES DE INFRAESTRUTURA E FRAMEWORK (REGRAS DE NEGÓCIO)
      */
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse> handleMessageNotReadableException(HttpServletRequest request) {
+        // Aproveitamos a mesma mensagem de erro genérica de validação!
+        String message = getTranslatedMessage("error.validation.generic", null, request);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, message, request, null);
+    }
 
     @ExceptionHandler(InfrastructureException.class)
     public ResponseEntity<ErrorResponse> handleInfrastructureException(InfrastructureException exception, HttpServletRequest request) {
