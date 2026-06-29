@@ -43,7 +43,7 @@ public class AuthService {
             GoogleIdToken idToken = googleIdTokenVerifier.verify(dto.token());
 
             if (idToken == null) {
-                throw new BadCredentialsException("error.auth.invalid_google_token");
+                throw new BadCredentialsException("error.auth.google_token_invalid");
             }
 
             GoogleIdToken.Payload payload = idToken.getPayload();
@@ -58,7 +58,7 @@ public class AuthService {
 
         } catch (Exception e) {
             if (e instanceof ResourceNotFoundException) throw (ResourceNotFoundException) e;
-            throw new BadCredentialsException("error.auth.invalid_google_token");
+            throw new BadCredentialsException("error.auth.google_token_invalid");
         }
     }
 }

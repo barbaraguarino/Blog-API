@@ -17,9 +17,9 @@ public record RegisterUserRequest(
 
         @NotBlank(message = "error.user.password.not_blank")
         @Size(min = 8, message = "error.user.password.size")
-        @Pattern(
-                regexp = "^(?=(?:.*[A-Z]){2})(?=(?:.*[a-z]){2})(?=(?:.*\\d){2})(?=.*[\\W_]).*$",
-                message = "error.user.password.complexity"
-        )
+        @Pattern(regexp = "^(?=(?:.*[A-Z]){2}).*$", message = "error.user.password.uppercase")
+        @Pattern(regexp = "^(?=(?:.*[a-z]){2}).*$", message = "error.user.password.lowercase")
+        @Pattern(regexp = "^(?=(?:.*\\d){2}).*$", message = "error.user.password.number")
+        @Pattern(regexp = "^(?=.*[\\W_]).*$", message = "error.user.password.special")
         String password
 ) {}
