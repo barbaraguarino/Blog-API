@@ -1,122 +1,66 @@
 # Backlog Sequencial
 
-## Definição de Ponto
+Este documento centraliza as tarefas de desenvolvimento da API REST do Blog. O fluxo de trabalho é iterativo e simplificado, priorizando a entrega de valor real, a base estrutural e a persistência de dados antes de expor os endpoints e aplicar a segurança complexa.
 
-Para que qualquer item abaixo seja marcado como `[x]`, ele deve cumprir:
+## Definição de Pronto (DoD)
 
-- [ ]  O código compila sem erros e warnings.
-- [ ]  Testes unitários cobrem as regras de negócio principais.
-- [ ]  A funcionalidade foi testada via Postman/Swagger.
-- [ ]  Documentação (Swagger/README) atualizada.
-- [ ]  Pull Request aprovado e mergeado na branch `dev`.
+Para que qualquer item abaixo seja marcado como concluído (`[x]`), ele deve obrigatoriamente cumprir o seguinte checklist:
 
-## Guia de Classificação e Etiquetas
+- [ ]  **Compilação:** O código compila sem erros ou *warnings*.
+- [ ]  **Testes:** Cobertura de testes unitários e de integração validando as regras de negócio centrais.
+- [ ]  **Validação:** Endpoints testados com sucesso via HTTPClient (arquivos `.http`).
+- [ ]  **Documentação:** README e Swagger (OpenAPI) atualizados com as novas rotas.
+- [ ]  **Versionamento:** Pull Request aprovado e mergeado na branch principal.
 
-Para manter o fluxo de trabalho do **GRIFO** organizado e previsível, utilizamos um sistema tridimensional de classificação para cada Issue no GitHub. Isso nos permite filtrar o backlog rapidamente por urgência (Prioridade), esforço (Tamanho) e domínio técnico (Tag).
-
-## Prioridade
-
-Define a **ordem de execução**. Responde à pergunta: "O quão urgente é isso para o negócio?"
-
-| Etiqueta | Significado | Quando Usar? |
-| --- | --- | --- |
-| **P0 (Critical)** | **Bloqueador / Emergência** | O sistema não roda, o build quebrou, há uma falha de segurança grave ou bloqueia todos os outros devs. **Ação:** Para tudo e resolve. |
-| **P1 (High)** | **MVP Core** | Funcionalidades essenciais. Sem isso, o produto não cumpre seu propósito (ex: Login, Cadastro, Transação). Foco das primeiras Sprints. |
-| **P2 (Medium)** | **Melhoria / Secundário** | Funcionalidades importantes, mas o produto "vive" sem elas por um tempo (ex: Dashboards, Relatórios, Filtros avançados). |
-| **P3 (Low)** | **Cosmético / Futuro** | Ajustes visuais, refatorações não críticas ou ideias "nice-to-have" para versões 2.0. |
-
-## Tamanho
-
-*Define a **estimativa de esforço**. Responde à pergunta: "Quanto tempo/complexidade isso leva?"Nota: As horas são aproximadas e servem para evitar que peguemos mais trabalho do que conseguimos entregar.*
-
-- **XS (Extra Small):** *< 8 horas (1 dia)*.
-    - Ajustes de configuração (`application.properties`), correção de typo, bug simples, criar um DTO isolado.
-- **S (Small):** *~ 16 horas (2 dias)*.
-    - Tarefa de rotina. Criar um endpoint simples sem muita lógica de negócio, criar uma migração de banco simples.
-- **M (Medium):** *~ 3 dias*.
-    - Uma feature padrão. Envolve criar Controller, Service, Repository, Testes Unitários e tratar erros. (Ex: CRUD de Categorias).
-- **L (Large):** *~ 4 a 5 dias (1 semana)*.
-    - Funcionalidade complexa ou com integrações externas. (Ex: Configurar Security com JWT, Integração com Gateway de Pagamento).
-- **XL (Extra Large):** *Bloqueante*.
-    - **Regra:** Se uma tarefa for classificada como XL, ela é **grande demais**. Ela deve ser quebrada em 2 ou mais tarefas (ex: separar o Back-end do Front-end, ou separar a configuração da implementação).
-
-## Tags de Domínio
-
-Define a **natureza técnica** da tarefa. Responde à pergunta: "Onde no sistema eu vou mexer?"
-
-- **`bug`:** Correção de falhas. Algo funcionava e parou, ou não funciona conforme a especificação.
-- **`core`:** O coração do sistema. Lógica de domínio, regras de negócio financeiras, cálculos e arquitetura base.
-- **`feat`:** (Feature) Nova funcionalidade perceptível para o usuário final. Gera valor direto.
-- **`docs`:** Documentação. Atualizar o README, Swagger, diagramas ou Wiki.
-- **`infra`:** DevOps. Docker, CI/CD (GitHub Actions), AWS, Banco de Dados, Logs.
-- **`sec`:** Segurança. Autenticação, Autorização, Criptografia, Tokens, Sanitização de dados.
-- **`question`:** Investigação (Spike). Quando não sabemos como fazer e precisamos de um tempo para estudar antes de codar.
+---
 
 ## Pronto Para Execução
 
-Estas tarefas já foram planejadas tecnicamente e devem ser executadas na ordem abaixo,
+Tarefas planejadas e prontas para serem desenvolvidas. Devem ser executadas sequencialmente.
 
-- [ ] **#1 Tratamento Global de Exceções**
 
-  **Motivação:** Uma API RESTful profissional não cospe *stacktraces* do Java na cara do cliente. Precisamos centralizar o tratamento de erros e padronizar as respostas (baseado na RFC 7807 - *Problem Details for HTTP APIs*), para facilitar a integração, ocultar detalhes da infraestrutura (segurança) e exibir mensagens amigáveis.
+- [ ]  **[#08] Módulo de Autenticação: Login Dinâmico (E-mail ou Nickname)**
+   - **Objetivo:** Permitir que o usuário insira tanto o e-mail quanto o nickname no campo de login.
 
-    1. **Objetivo**: Criar um interceptador global para capturar exceções lançadas em qualquer lugar da aplicação e formatá-las em um DTO padrão.
-    2. **Prioridade**: P1
-    3. **Tamanho**: S
-    4. **Tag**: `core` + `sec`
-    5. **Critérios de Aceitação**:
-        - [ ]  Criação de um `GlobalExceptionHandler` anotado com `@RestControllerAdvice`.
-        - [ ]  Criação de um objeto imutável `ApiErrorResponse` (DTO) contendo: `timestamp`, `status`, `error`, `message` e `path`.
-        - [ ]  Tratamento específico para `MethodArgumentNotValidException` (retorna HTTP 400 e a lista de campos inválidos).
-        - [ ]  Tratamento específico para `BusinessException` (exceção customizada nossa, retorna HTTP 400 ou 422).
-        - [ ]  Tratamento genérico para `Exception.class` (retorna HTTP 500 sem vazar a stacktrace real).
-    6. **Testes de Aceitação**:
-        - [ ]  Simular um erro de validação (ex: e-mail inválido) e verificar se o JSON retorna a estrutura padronizada com HTTP 400.
-        - [ ]  Simular um erro de sistema e garantir que o retorno seja um genérico "Erro interno no servidor" com HTTP 500.
-- [ ] **#2 Internacionalização (i18n)**
+- [ ]  **[#09] Gestão de Sessões: Refresh Tokens e Dispositivos**
+   - **Objetivo:** Mudar a estratégia de autenticação para permitir o controle de sessões ativas (Padrão Microsoft/Google).
+   - **Regra de Negócio:** Criar entidade para guardar IP, User-Agent, Data de Expiração e RefreshToken. O JWT passa a durar apenas 15 minutos, enquanto o Refresh Token dura 7 dias. Criar endpoint para listar e revogar sessões ativas.
 
-  **Motivação:** O GRIFO é uma plataforma literária com potencial para alcance internacional. A API deve ser capaz de retornar mensagens adaptadas ao idioma do cliente com base no header `Accept-Language`.
+- [ ]  **[#10] Verificação de Duas Etapas (2FA): Infraestrutura de E-mail (SMTP)**
+   - **Objetivo:** Integrar a API com um servidor SMTP e criar a tabela de Códigos Temporários (OTP) utilizando a AWS.
+   - **Regra de Negócio:** Alterar o fluxo de "Cadastro de Novos Usuários". A conta nasce bloqueada (`enabled=false`). Enviar código de 6 dígitos para o e-mail. Criar endpoint para ativar a conta.
 
-    1. **Objetivo**: Configurar o `MessageSource` do Spring Boot para externalizar todas as mensagens da aplicação em ficheiros de propriedades, permitindo a tradução dinâmica das respostas da API baseada no idioma solicitado pelo cliente.
-    2. **Prioridade**: P1
-    3. **Tamanho**: M
-    4. **Tag**: `core` + `docs`
-    5. **Critérios de Aceitação**:
-        - [ ]  Configuração de `MessageSource` centralizada.
-        - [ ]  Arquivos criados:
-            - `messages_pt_BR.properties`
-            - `messages_en.properties`
-        - [ ]  Locale padrão definido como `pt-BR`.
-        - [ ]  Integrar com `GlobalExceptionHandler`.
-    6. **Testes de Aceitação**:
-        - [ ]  Ao enviar **`Accept-Language: en`**, mensagens retornam em inglês.
-        - [ ]  Ao enviar **`Accept-Language: pt-BR`**, mensagens retornam em português.
-        - [ ]  Sem header, retorna idioma padrão.
-- [ ] **#3 Configuração Base de Segurança com JWT**
+- [ ]  **[#11] Segurança: Troca de Senha com Verificação de Segurança**
+   - **Objetivo:** Permitir que usuários logados alterem suas senhas.
+   - **Regra de Negócio:** O usuário deve fornecer a senha antiga, a nova senha, e um código de verificação enviado para o e-mail no momento da solicitação.
 
-  **Motivação:** O GRIFO precisa proteger os dados de seus leitores e autores. O uso de JSON Web Tokens (JWT) permite uma arquitetura *Stateless* (sem estado), que é altamente escalável, rápida e o padrão da indústria para APIs REST.
+- [ ]  **[#12] Verificação de Duas Etapas (2FA): Google Authenticator (TOTP)**
+   - **Objetivo:** Permitir que o usuário vincule um aplicativo autenticador como método de segurança adicional ao login.
 
-    1. **Objetivo**: Configurar o `Spring Security`, blindar todos os endpoints por padrão e implementar o mecanismo de geração e validação de tokens JWT.
-    2. **Prioridade**: P0
-    3. **Tamanho**: L
-    4. **Tag**: `sec` + `core`
-    5. **Critérios de Aceitação**:
-        - [ ]  Dependências `spring-boot-starter-security` e biblioteca JWT (ex: `java-jwt` da Auth0) instaladas.
-        - [ ]  Classe de configuração `SecurityConfig` criada, desativando CSRF e configurando a sessão como `STATELESS`.
-        - [ ]  Implementação do `JwtTokenProvider` (componente responsável por assinar e ler tokens).
-        - [ ]  Implementação do `JwtAuthenticationFilter` (estende `OncePerRequestFilter`) para interceptar requisições, ler o header `Authorization` e injetar o contexto de segurança.
-        - [ ]  Rotas públicas definidas explicitamente (ex: `/api/v1/users/register`, `/api/v1/auth/login`).
-    6. **Testes de Aceitação**:
-        - [ ]  Acessar uma rota protegida sem token resulta em HTTP 401 (Unauthorized) ou 403 (Forbidden).
-        - [ ]  Acessar a mesma rota com um Bearer Token válido no header retorna sucesso.
-        - [ ]  Tentar usar um token expirado ou forjado retorna o erro tratado e não quebra a aplicação.
+---
 
 ## Próximos Passos
 
-Aqui ficam as funcionalidades mapeadas para o futuro. Quando a seção “Execução Imediata” esvaziar, deve ser puxado itens daqui, detalhado os critérios técnicos e movido para cima.
+Tarefas mapeadas para o futuro.
 
-1. Módulo de Usuário: Cadastro de Usuário
-2. Documentação Automatizada com OpenAPI/Swagger (`springdoc-openapi`).
-3. Módulo de Autenticação: Endpoint de Login (gerando o JWT).
-4. Entidades JPA: Modelagem e mapeamento das relações Livro x Autor x Resenha.
-5. Integração AWS S3 (Upload de foto de perfil).
+- [ ]  Sistema de Autoria: Solicitação para Publicação (Usuários com mais de 2 meses).
+- [ ]  Sistema de Autoria: Aprovação da Solicitação (Moderação).
+- [ ]  Módulo de Artigos: CRUD de Publicações e Rascunhos.
+- [ ]  Interações Sociais: Sistema de Comentários e Reações nos artigos.
+- [ ]  Integração Cloud: Configuração do AWS S3 para Upload de Mídias (avatares e capas de artigos).
+- [ ]  Módulo de Moderação: Sistema de Denúncias de conteúdo abusivo.
+- [ ]  Módulo de Perfil: Vincular/Desvincular Conta do Google.
+
+---
+
+## Completas
+
+Histórico de tarefas já executadas, testadas e integradas ao projeto.
+
+- [x]  **[#01] Tratamento Global de Exceções:** Criação de interceptador (`@RestControllerAdvice`) para capturar exceções e formatá-las em um DTO padrão de erro (ApiErrorResponse).
+- [x]  **[#02] Internacionalização (i18n):** Configuração do `MessageSource` do Spring Boot para externalizar mensagens em arquivos `.properties`, permitindo tradução dinâmica via cabeçalho HTTP.
+- [x]  **[#03] Configuração Base de Segurança com JWT:** Configuração do Spring Security (`STATELESS`), blindagem de endpoints e mecanismo de geração/validação de tokens JWT.
+- [x]  **[#04] Módulo de Usuário: Cadastro de Novos Usuários:** Criação do domínio de User (JPA, Flyway, Repository, Service) e endpoint REST para registro local com senha criptografada (`BCrypt`).
+- [x]  **[#05] Módulo de Autenticação: Login Local:** Implementação do fluxo via e-mail e senha, integrando `AuthenticationManager` e retornando JWT encapsulado em `HttpOnly Cookies`.
+- [x]  **[#06] Módulo de Usuário: Cadastro via Google (OAuth2/OIDC):** Endpoint que delega a responsabilidade da senha, recebendo e validando a assinatura matemática de um Google ID Token.
+- [x]  **[#07] Módulo de Autenticação: Login via Google:** Autenticação de usuário existente via Google ID Token, emitindo o JWT nativo do Blog para navegação unificada.

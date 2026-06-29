@@ -1,10 +1,10 @@
-package br.com.grifo;
+package br.com.blog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class GrifoApiApplicationTests {
+class BlogApiApplicationTests {
 
     @Test
     void contextLoads() {

@@ -7,29 +7,30 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.3</version>
+        <version>4.0.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <groupId>br.com</groupId>
-    <artifactId>grifo</artifactId>
+    <artifactId>blog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>GRIFO API</name>
-    <description>API RESTful em Spring Boot para a plataforma GRIFO: um ecossistema de rede social e resenhas literárias.</description>
+    <name>Blog API</name>
+    <description>API RESTful em Spring Boot para a criação de Blog.</description>
 
     <licenses>
-        <license>
-            <name>Código Fechado / Todos os direitos reservados</name>
-            <distribution>manual</distribution>
-            <comments>Projeto de código fechado desenvolvido com fins de estudo e composição de portfólio. Uso comercial ou distribuição não autorizados.</comments>
-        </license>
+        <license/>
     </licenses>
 
     <developers>
-        <developer>
-            <name>Barbara Duarte</name>
-        </developer>
+        <developer/>
     </developers>
+
+    <scm>
+        <connection/>
+        <developerConnection/>
+        <tag/>
+        <url/>
+    </scm>
 
     <properties>
         <java.version>25</java.version>
@@ -96,6 +97,29 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>4.5.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>2.9.0</version>
         </dependency>
 
     </dependencies>

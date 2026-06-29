@@ -1,0 +1,32 @@
+### Cadastrar Novo Usuário (Sucesso)
+POST http://localhost:8080/api/v1/register
+Content-Type: application/json
+Accept-Language: pt-BR
+
+{
+  "name": "Fernando Souza",
+  "email": "fernando@grifo.com",
+  "password": "SenhaForte@123"
+}
+
+### Cadastrar Usuário Já Cadastrado (Conflito)
+POST http://localhost:8080/api/v1/register
+Content-Type: application/json
+Accept-Language: pt-BR
+
+{
+  "name": "Bárbara Nascimento",
+  "email": "barbara@grifo.com",
+  "password": "SenhaForte@123"
+}
+
+### Cadastrar Usuário com Dados Invalidos (Bad Request)
+POST http://localhost:8080/api/v1/register
+Content-Type: application/json
+Accept-Language: pt-BR
+
+{
+  "name": "Bárbara Nascimento",
+  "email": "barbara",
+  "password": "Senhaforte@123"
+}
