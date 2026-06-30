@@ -1,13 +1,13 @@
 package br.com.blog.modules.user.services.auth;
 
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
+import br.com.blog.core.security.GoogleAuthGateway;
 import br.com.blog.core.security.TokenService;
 import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.auth.GoogleUserInfo;
 import br.com.blog.modules.user.dtos.auth.LoginRequest;
 import br.com.blog.modules.user.repositories.UserRepository;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +34,8 @@ class AuthServiceTest {
     @Mock private AuthenticationManager authenticationManager;
     @Mock private TokenService tokenService;
     @Mock private UserRepository userRepository;
-    @Mock private GoogleIdTokenVerifier googleVerifier;
+    @Mock private GoogleAuthGateway googleAuthGateway;
+
     @InjectMocks private AuthService authService;
 
     @Nested
@@ -106,19 +107,14 @@ class AuthServiceTest {
 
         private final String GOOGLE_TOKEN = "google.token.valido";
         private GoogleAuthRequest requestDTO;
-        private GoogleIdToken mockIdToken;
-        private GoogleIdToken.Payload payload;
+        private GoogleUserInfo mockGoogleUserInfo;
         private User mockGoogleUser;
 
         @BeforeEach
         void setUp() {
             requestDTO = new GoogleAuthRequest(GOOGLE_TOKEN);
 
-            payload = new GoogleIdToken.Payload();
-            payload.setEmail("google@blog.com");
-            payload.setSubject("google-id-123");
-
-            mockIdToken = mock(GoogleIdToken.class);
+            mockGoogleUserInfo = new GoogleUserInfo("google-id-123", "google@blog.com", "Bárbara Google");
 
             mockGoogleUser = User.createGoogleUser(
                     "Bárbara Google",
@@ -130,10 +126,9 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("Deve logar com sucesso via Google e retornar token gerado")
-        void shouldAuthenticateWithGoogleSuccessfully() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
-            when(mockIdToken.getPayload()).thenReturn(payload);
-            when(userRepository.findByGoogleId(payload.getSubject())).thenReturn(Optional.of(mockGoogleUser));
+        void shouldAuthenticateWithGoogleSuccessfully() {
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUserInfo);
+            when(userRepository.findByGoogleId(mockGoogleUserInfo.googleId())).thenReturn(Optional.of(mockGoogleUser));
             when(tokenService.generateToken("google@blog.com")).thenReturn("token.jwt.gerado");
 
             AuthService.AuthResult result = authService.authenticateWithGoogle(requestDTO);
@@ -145,28 +140,20 @@ class AuthServiceTest {
 
         @Test
         @DisplayName("Deve lançar BadCredentialsException quando token Google for nulo/inválido")
-        void shouldThrowBadCredentialsWhenTokenIsNull() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(null);
+        void shouldThrowBadCredentialsWhenTokenIsInvalid() {
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN))
+                    .thenThrow(new BadCredentialsException("error.auth.google_token_invalid"));
 
             assertThrows(BadCredentialsException.class, () -> authService.authenticateWithGoogle(requestDTO));
         }
 
         @Test
         @DisplayName("Deve lançar ResourceNotFoundException quando conta Google não estiver registrada")
-        void shouldThrowResourceNotFoundWhenUserNotFoundInDatabase() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
-            when(mockIdToken.getPayload()).thenReturn(payload);
-            when(userRepository.findByGoogleId(payload.getSubject())).thenReturn(Optional.empty());
+        void shouldThrowResourceNotFoundWhenUserNotFoundInDatabase() {
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUserInfo);
+            when(userRepository.findByGoogleId(mockGoogleUserInfo.googleId())).thenReturn(Optional.empty());
 
             assertThrows(ResourceNotFoundException.class, () -> authService.authenticateWithGoogle(requestDTO));
-        }
-
-        @Test
-        @DisplayName("Deve lançar BadCredentialsException quando GoogleIdTokenVerifier estourar exceção")
-        void shouldThrowBadCredentialsWhenGoogleVerifierThrowsException() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenThrow(new IllegalArgumentException("Assinatura inválida"));
-
-            assertThrows(BadCredentialsException.class, () -> authService.authenticateWithGoogle(requestDTO));
         }
     }
 }

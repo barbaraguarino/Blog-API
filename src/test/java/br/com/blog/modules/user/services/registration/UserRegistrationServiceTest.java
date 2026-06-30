@@ -1,12 +1,12 @@
 package br.com.blog.modules.user.services.registration;
 
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
+import br.com.blog.core.security.GoogleAuthGateway;
 import br.com.blog.modules.user.domain.User;
 import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.auth.GoogleUserInfo;
 import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
 import br.com.blog.modules.user.repositories.UserRepository;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -27,7 +27,7 @@ class UserRegistrationServiceTest {
 
     @Mock private UserRepository userRepository;
     @Mock private PasswordEncoder passwordEncoder;
-    @Mock private GoogleIdTokenVerifier googleVerifier;
+    @Mock private GoogleAuthGateway googleAuthGateway;
     @InjectMocks private UserRegistrationService userRegistrationService;
 
     @Nested
@@ -67,25 +67,18 @@ class UserRegistrationServiceTest {
 
         private final String GOOGLE_TOKEN = "valid.token";
         private GoogleAuthRequest requestDTO;
-        private GoogleIdToken mockIdToken;
-        private GoogleIdToken.Payload payload;
+        private GoogleUserInfo mockGoogleUser;
 
         @BeforeEach
         void setUp() {
             requestDTO = new GoogleAuthRequest(GOOGLE_TOKEN);
-            payload = new GoogleIdToken.Payload();
-            payload.setEmail("google@blog.com");
-            payload.setSubject("google-id-123");
-            payload.set("name", "Bárbara Google");
-
-            mockIdToken = mock(GoogleIdToken.class);
+            mockGoogleUser = new GoogleUserInfo("google-id-123", "google@blog.com", "Bárbara Google");
         }
 
         @Test
         @DisplayName("Deve registrar usuário Google com sucesso")
-        void shouldRegisterWithGoogleSuccessfully() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
-            when(mockIdToken.getPayload()).thenReturn(payload);
+        void shouldRegisterWithGoogleSuccessfully(){
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUser);
             when(userRepository.existsByEmail(anyString())).thenReturn(false);
             when(userRepository.existsByGoogleId(anyString())).thenReturn(false);
 
@@ -96,29 +89,28 @@ class UserRegistrationServiceTest {
 
         @Test
         @DisplayName("Deve lançar BadCredentialsException quando token for nulo")
-        void shouldThrowBadCredentialsWhenTokenIsNull() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(null);
+        void shouldThrowBadCredentialsWhenTokenIsNull(){
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN))
+                    .thenThrow(new BadCredentialsException("error.auth.google_token_invalid"));
 
             assertThrows(BadCredentialsException.class, () -> userRegistrationService.registerWithGoogle(requestDTO));
         }
 
         @Test
         @DisplayName("Deve lançar ResourceAlreadyExistsException quando e-mail já existir")
-        void shouldThrowResourceAlreadyExistsWhenEmailTaken() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
-            when(mockIdToken.getPayload()).thenReturn(payload);
-            when(userRepository.existsByEmail(payload.getEmail())).thenReturn(true);
+        void shouldThrowResourceAlreadyExistsWhenEmailTaken(){
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUser);
+            when(userRepository.existsByEmail(mockGoogleUser.email())).thenReturn(true);
 
             assertThrows(ResourceAlreadyExistsException.class, () -> userRegistrationService.registerWithGoogle(requestDTO));
         }
 
         @Test
         @DisplayName("Deve lançar ResourceAlreadyExistsException quando Google ID já existir")
-        void shouldThrowResourceAlreadyExistsWhenGoogleIdTaken() throws Exception {
-            when(googleVerifier.verify(GOOGLE_TOKEN)).thenReturn(mockIdToken);
-            when(mockIdToken.getPayload()).thenReturn(payload);
+        void shouldThrowResourceAlreadyExistsWhenGoogleIdTaken(){
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUser);
             when(userRepository.existsByEmail(anyString())).thenReturn(false);
-            when(userRepository.existsByGoogleId(payload.getSubject())).thenReturn(true);
+            when(userRepository.existsByGoogleId(mockGoogleUser.googleId())).thenReturn(true);
 
             assertThrows(ResourceAlreadyExistsException.class, () -> userRegistrationService.registerWithGoogle(requestDTO));
         }
