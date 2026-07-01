@@ -1,10 +1,11 @@
 package br.com.blog.modules.user.controllers.auth;
 
+import br.com.blog.modules.user.dtos.auth.AuthResult;
 import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
 import br.com.blog.modules.user.dtos.auth.LoginRequest;
 import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
-import br.com.blog.modules.user.mappers.UserMapper;
-import br.com.blog.modules.user.services.auth.AuthService;
+import br.com.blog.modules.user.services.auth.AuthenticateGoogleUserService;
+import br.com.blog.modules.user.services.auth.AuthenticateLocalUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,40 +22,36 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
-    private final UserMapper userMapper;
+    private final AuthenticateLocalUserService authenticateLocalUserService;
+    private final AuthenticateGoogleUserService authenticateGoogleUserService;
+
     @Value("${api.security.token.name}")
     private String cookieName;
 
     @PostMapping("/login")
     public ResponseEntity<UserProfileResponse> login(@RequestBody @Valid LoginRequest dto) {
 
-        AuthService.AuthResult result = authService.authenticate(dto);
-
-        var response = userMapper.toResponseDTO(result.user());
+        AuthResult result = authenticateLocalUserService.execute(dto);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, getResponseCookie(result.token()).toString())
-                .body(response);
+                .body(result.userProfile());
     }
 
     @PostMapping("/login/google")
     public ResponseEntity<UserProfileResponse> loginWithGoogle(@RequestBody @Valid GoogleAuthRequest dto) {
 
-        AuthService.AuthResult result = authService.authenticateWithGoogle(dto);
-
-        var response = userMapper.toResponseDTO(result.user());
+        AuthResult result = authenticateGoogleUserService.execute(dto);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, getResponseCookie(result.token()).toString())
-                .body(response);
+                .body(result.userProfile());
     }
 
     private ResponseCookie getResponseCookie(String value) {
-
         return ResponseCookie.from(cookieName, value)
                 .httpOnly(true)
-                .secure(false)
+                .secure(false) // Mude para true em Produção
                 .sameSite("Strict")
                 .path("/")
                 .maxAge(86400)

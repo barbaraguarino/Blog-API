@@ -1,13 +1,14 @@
 package br.com.blog.modules.user.controllers.auth;
 
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
+import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.core.security.*;
-import br.com.blog.modules.user.domain.User;
+import br.com.blog.modules.user.dtos.auth.AuthResult;
 import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
 import br.com.blog.modules.user.dtos.auth.LoginRequest;
 import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
-import br.com.blog.modules.user.mappers.UserMapper;
-import br.com.blog.modules.user.services.auth.AuthService;
+import br.com.blog.modules.user.services.auth.AuthenticateGoogleUserService;
+import br.com.blog.modules.user.services.auth.AuthenticateLocalUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -38,10 +38,10 @@ class AuthControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private AuthService authService;
+    private AuthenticateGoogleUserService authenticateGoogleUserService;
 
     @MockitoBean
-    private UserMapper userMapper;
+    private AuthenticateLocalUserService authenticateLocalUserService;
 
     @MockitoBean
     private TokenService tokenService;
@@ -51,30 +51,20 @@ class AuthControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private User savedUser;
     private UserProfileResponse savedUserProfileResponse;
 
     @BeforeEach
     void setUp() {
-        savedUser = User.createLocalUser(
+        savedUserProfileResponse = new UserProfileResponse(
+                UUID.randomUUID(),
                 "Bárbara Nascimento",
                 "barbara@blog.com",
-                "senha-criptografada"
-        );
-
-        ReflectionTestUtils.setField(savedUser, "id", UUID.randomUUID());
-        ReflectionTestUtils.setField(savedUser, "createdAt", LocalDateTime.now());
-
-        savedUserProfileResponse = new UserProfileResponse(
-                savedUser.getId(),
-                savedUser.getName(),
-                savedUser.getEmail(),
                 "barbara_1234",
-                savedUser.getRole().name(),
-                savedUser.isLinkedToGoogle(),
-                savedUser.isEnabled(),
-                savedUser.isLocked(),
-                savedUser.getCreatedAt()
+                "READER",
+                false,
+                false,
+                false,
+                LocalDateTime.now()
         );
     }
 
@@ -83,19 +73,19 @@ class AuthControllerTest {
     class Login {
 
         private LoginRequest validLoginRequest;
-        private AuthService.AuthResult authResult;
+        private AuthResult authResult;
 
         @BeforeEach
         void setUp() {
             validLoginRequest = new LoginRequest("barbara@blog.com", "SenhaForte@123");
-            authResult = new AuthService.AuthResult("token.jwt.gerado", savedUser);
+
+            authResult = new AuthResult("token.jwt.gerado", savedUserProfileResponse);
         }
 
         @Test
         @DisplayName("Deve retornar 200 OK, setar o Cookie HttpOnly e devolver o perfil do usuário")
         void shouldReturn200AndSetCookieWhenLoginIsSuccessful() throws Exception {
-            when(authService.authenticate(any(LoginRequest.class))).thenReturn(authResult);
-            when(userMapper.toResponseDTO(any(User.class))).thenReturn(savedUserProfileResponse);
+            when(authenticateLocalUserService.execute(any(LoginRequest.class))).thenReturn(authResult);
 
             mockMvc.perform(post("/api/v1/auth/login")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +113,7 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 401 Unauthorized ao enviar credenciais incorretas")
         void shouldReturn401WhenCredentialsAreIncorrect() throws Exception {
-            when(authService.authenticate(any(LoginRequest.class)))
+            when(authenticateLocalUserService.execute(any(LoginRequest.class)))
                     .thenThrow(new BadCredentialsException("error.auth.bad_credentials"));
 
             mockMvc.perform(post("/api/v1/auth/login")
@@ -147,28 +137,25 @@ class AuthControllerTest {
     class LoginWithGoogle {
 
         private GoogleAuthRequest validGoogleRequest;
-        private AuthService.AuthResult authResult;
+        private AuthResult authResult;
 
         @BeforeEach
         void setUp() {
             validGoogleRequest = new GoogleAuthRequest("token.valido.do.google");
-            ReflectionTestUtils.setField(savedUser, "googleId", "google-id-1234");
 
-            authResult = new AuthService.AuthResult("token.jwt.google.gerado", savedUser);
-
-            savedUserProfileResponse = new UserProfileResponse(
-                    savedUser.getId(), savedUser.getName(), savedUser.getEmail(),
-                    savedUser.getNickname(), savedUser.getRole().name(),
-                    true, // isLinkedToGoogle
-                    savedUser.isEnabled(), savedUser.isLocked(), savedUser.getCreatedAt()
+            UserProfileResponse googleProfileResponse = new UserProfileResponse(
+                    UUID.randomUUID(), "Bárbara Google", "google@blog.com",
+                    "barbara_google", "READER",
+                    true, false, false, LocalDateTime.now()
             );
+
+            authResult = new AuthResult("token.jwt.google.gerado", googleProfileResponse);
         }
 
         @Test
         @DisplayName("Deve retornar 200 OK e setar Cookie ao logar com sucesso via Google")
         void shouldReturn200AndSetCookieWhenGoogleLoginIsSuccessful() throws Exception {
-            when(authService.authenticateWithGoogle(any(GoogleAuthRequest.class))).thenReturn(authResult);
-            when(userMapper.toResponseDTO(any(User.class))).thenReturn(savedUserProfileResponse);
+            when(authenticateGoogleUserService.execute(any(GoogleAuthRequest.class))).thenReturn(authResult);
 
             mockMvc.perform(post("/api/v1/auth/login/google")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -183,7 +170,7 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 404 Not Found se usuário Google não estiver cadastrado no banco")
         void shouldReturn404WhenGoogleUserIsNotRegistered() throws Exception {
-            when(authService.authenticateWithGoogle(any(GoogleAuthRequest.class)))
+            when(authenticateGoogleUserService.execute(any(GoogleAuthRequest.class)))
                     .thenThrow(new ResourceNotFoundException("error.auth.user_not_found_google"));
 
             mockMvc.perform(post("/api/v1/auth/login/google")
@@ -196,8 +183,8 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 401 Unauthorized se token Google for forjado ou inválido")
         void shouldReturn401WhenGoogleTokenIsInvalid() throws Exception {
-            when(authService.authenticateWithGoogle(any(GoogleAuthRequest.class)))
-                    .thenThrow(new BadCredentialsException("error.auth.google_token_invalid"));
+            when(authenticateGoogleUserService.execute(any(GoogleAuthRequest.class)))
+                    .thenThrow(new ExternalProviderAuthException("error.auth.google_token_invalid"));
 
             mockMvc.perform(post("/api/v1/auth/login/google")
                             .contentType(MediaType.APPLICATION_JSON)
