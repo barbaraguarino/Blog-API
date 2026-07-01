@@ -22,37 +22,31 @@ O Blog-API é uma plataforma de rede social e publicações projetada para conec
 
 ## Arquitetura do Projeto
 
-O sistema foi arquitetado com base em uma abordagem híbrida de **Pragmatic Clean Architecture** e **MVC**, organizada no padrão **Package by Feature** (Pacotes por Domínio). Essa estrutura visa garantir alta coesão, baixo acoplamento e estrita aderência aos princípios **SOLID**.
+O sistema foi arquitetado com base em uma abordagem de **Pragmatic Clean Architecture**, organizada primeiramente pelo padrão **Package by Feature** (Pacotes por Domínio) e, internamente, subdividida em 4 camadas estritas. Essa estrutura visa garantir alta coesão, baixo acoplamento, isolamento de infraestrutura e estrita aderência aos princípios **SOLID**.
 
-```
+```text
 src/main/
 ├── java/br/com/blog/
 │   ├── BlogApiApplication.java
 │   │
 │   ├── core/                           # 1. Fundações e Configurações Globais
-│   │   ├── config/                     # Beans do Spring
-│   │   ├── security/                   # Filtros interceptadores de requisição e tokens JWT
-│   │   └── exceptions/                 # Tratamento global de erros
+│   │   ├── config/                     # Beans globais do framework (ex: i18n)
+│   │   ├── exceptions/                 # Tratamento global de erros e exceções de domínio/infraestrutura
+│   │   └── security/                   # Configurações do Spring Security, JWT e UserDetails
 │   │
-│   ├── infrastructure/                 # 2. Adaptações Técnicas (Ports & Adapters)
-│   │   └── storage/                    # Implementações externas (ex: AWS S3)
+│   ├── infrastructure/                 # 2. Adaptações Técnicas Globais (Ports & Adapters)
+│   │   └── providers/                  # Implementações de serviços externos
+│   │       └── google/                 # Gateway e configurações do Google Auth
 │   │
-│   └── modules/                        # 3. Domínios de Negócio Isolados
-│       ├── user/                       # Gestão de Identidade, Autenticação e Perfis
-│       │   ├── controllers/            # Endpoints REST
-│       │   ├── dtos/                   # Objetos de transferência puros
-│       │   ├── domain/                 # Entidades JPA mapeadas para o banco
-│       │   ├── services/               # Casos de uso e lógica de negócio pura
-│       │   └── repositories/           # Interfaces de comunicação com o Spring Data JPA
+│   └── modules/                        # 3. Domínios de Negócio Isolados (Contextos)
+│       ├── user/                       # Módulo de Gestão de Identidade, Autenticação e Perfis
+│       │   ├── domain/                 # ⮑ CORAÇÃO: Entidades de negócio ricas (Models, Enums)
+│       │   ├── application/            # ⮑ ORQUESTRAÇÃO: Casos de Uso (Use Cases), DTOs e Mappers
+│       │   ├── infrastructure/         # ⮑ DETALHES TÉCNICOS: Persistência de dados (Spring Data JPA)
+│       │   └── presentation/           # ⮑ DELIVERY: Porta de entrada da API (Controllers REST)
 │       │
-│       ├── article/                    # Gestão de Publicações (Artigos, Categorias, Tags)
-│       │   └── ... (arquitetura interna espelhada: controllers, dtos, domain, etc.)
-│       │
-│       ├── interaction/                # Engajamento (Comentários, Curtidas, Seguidores)
-│       │   └── ... 
-│       │
-│       ├── moderation/                 # Segurança da Comunidade (Denúncias, Banimentos)
-│       │   └── ... 
+│       ├── article/                    # Módulo de Gestão de Publicações (Artigos, Categorias, Tags)
+│       │   └── ... (arquitetura interna espelhada em 4 camadas)
 │       │
 │       └── ...
 │
