@@ -1,6 +1,7 @@
 package br.com.blog.modules.user.services.auth;
 
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
+import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.core.security.GoogleAuthGateway;
 import br.com.blog.core.security.TokenService;
 import br.com.blog.modules.user.domain.User;
@@ -137,12 +138,11 @@ class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("Deve lançar BadCredentialsException quando token Google for nulo/inválido")
-        void shouldThrowBadCredentialsWhenTokenIsInvalid() {
+        @DisplayName("Deve lançar ExternalProviderAuthException quando token Google for nulo/inválido")
+        void shouldThrowExternalProviderAuthWhenTokenIsInvalid() {
             when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN))
-                    .thenThrow(new BadCredentialsException("error.auth.google_token_invalid"));
-
-            assertThrows(BadCredentialsException.class, () -> authService.authenticateWithGoogle(requestDTO));
+                    .thenThrow(new ExternalProviderAuthException("error.auth.google_token_invalid"));
+            assertThrows(ExternalProviderAuthException.class, () -> authService.authenticateWithGoogle(requestDTO));
         }
 
         @Test

@@ -1,6 +1,7 @@
 package br.com.blog.core.exceptions;
 
 import br.com.blog.core.exceptions.domain.BusinessRuleException;
+import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.core.exceptions.infrastructure.InfrastructureException;
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
@@ -55,6 +56,12 @@ public class GlobalExceptionHandler {
     /*
      * EXCEÇÕES DE INFRAESTRUTURA E FRAMEWORK (REGRAS DE NEGÓCIO)
      */
+
+    @ExceptionHandler(ExternalProviderAuthException.class)
+    public ResponseEntity<ErrorResponse> handleExternalProviderAuthException(ExternalProviderAuthException exception, HttpServletRequest request) {
+        String message = getTranslatedMessage(exception.getMessageKey(), exception.getArgs(), request);
+        return buildErrorResponse(HttpStatus.UNAUTHORIZED, message, request, null);
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleMessageNotReadableException(HttpServletRequest request) {
