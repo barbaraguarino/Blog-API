@@ -4,8 +4,8 @@ import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import br.com.blog.core.security.GoogleAuthGateway;
 import br.com.blog.core.security.TokenService;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.AuthResult;
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
+import br.com.blog.modules.user.dtos.auth.AuthResultDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class AuthenticateGoogleUserService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    public AuthResult execute(GoogleAuthRequest dto) {
+    public AuthResultDTO execute(GoogleAuthRequestDTO dto) {
 
         var googleUser = googleAuthGateway.extractUserInfo(dto.token());
 
@@ -31,6 +31,6 @@ public class AuthenticateGoogleUserService {
 
         String token = tokenService.generateToken(user.getEmail());
 
-        return new AuthResult(token, userMapper.toResponseDTO(user));
+        return new AuthResultDTO(token, userMapper.toResponseDTO(user));
     }
 }

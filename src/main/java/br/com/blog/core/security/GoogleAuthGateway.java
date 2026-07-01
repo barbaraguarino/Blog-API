@@ -1,7 +1,7 @@
 package br.com.blog.core.security;
 
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
-import br.com.blog.modules.user.dtos.auth.GoogleUserInfo;
+import br.com.blog.modules.user.dtos.auth.GoogleUserInfoDTO;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class GoogleAuthGateway {
 
     private final GoogleIdTokenVerifier googleIdTokenVerifier;
 
-    public GoogleUserInfo extractUserInfo(String token) {
+    public GoogleUserInfoDTO extractUserInfo(String token) {
         try {
             GoogleIdToken idToken = googleIdTokenVerifier.verify(token);
 
@@ -26,7 +26,7 @@ public class GoogleAuthGateway {
 
             GoogleIdToken.Payload payload = idToken.getPayload();
 
-            return new GoogleUserInfo(
+            return new GoogleUserInfoDTO(
                     payload.getSubject(),
                     payload.getEmail(),
                     payload.get("name") != null ? payload.get("name").toString() : ""

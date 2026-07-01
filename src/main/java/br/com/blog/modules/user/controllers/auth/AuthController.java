@@ -1,9 +1,9 @@
 package br.com.blog.modules.user.controllers.auth;
 
-import br.com.blog.modules.user.dtos.auth.AuthResult;
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
-import br.com.blog.modules.user.dtos.auth.LoginRequest;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.auth.AuthResultDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
+import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.services.auth.AuthenticateGoogleUserService;
 import br.com.blog.modules.user.services.auth.AuthenticateLocalUserService;
 import jakarta.validation.Valid;
@@ -29,9 +29,9 @@ public class AuthController {
     private String cookieName;
 
     @PostMapping("/login")
-    public ResponseEntity<UserProfileResponse> login(@RequestBody @Valid LoginRequest dto) {
+    public ResponseEntity<UserProfileResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
 
-        AuthResult result = authenticateLocalUserService.execute(dto);
+        AuthResultDTO result = authenticateLocalUserService.execute(dto);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, getResponseCookie(result.token()).toString())
@@ -39,9 +39,9 @@ public class AuthController {
     }
 
     @PostMapping("/login/google")
-    public ResponseEntity<UserProfileResponse> loginWithGoogle(@RequestBody @Valid GoogleAuthRequest dto) {
+    public ResponseEntity<UserProfileResponseDTO> loginWithGoogle(@RequestBody @Valid GoogleAuthRequestDTO dto) {
 
-        AuthResult result = authenticateGoogleUserService.execute(dto);
+        AuthResultDTO result = authenticateGoogleUserService.execute(dto);
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, getResponseCookie(result.token()).toString())

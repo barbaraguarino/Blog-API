@@ -3,8 +3,8 @@ package br.com.blog.modules.user.services.registration;
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.security.GoogleAuthGateway;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class RegisterGoogleUserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public UserProfileResponse execute(GoogleAuthRequest dto) {
+    public UserProfileResponseDTO execute(GoogleAuthRequestDTO dto) {
 
         var googleUser = googleAuthGateway.extractUserInfo(dto.token());
 

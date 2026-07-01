@@ -1,8 +1,8 @@
 package br.com.blog.modules.user.controllers.registration;
 
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
-import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
+import br.com.blog.modules.user.dtos.registration.RegisterUserRequestDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.services.registration.RegisterGoogleUserService;
 import br.com.blog.modules.user.services.registration.RegisterLocalUserService;
 import jakarta.validation.Valid;
@@ -23,17 +23,17 @@ public class UserRegistrationController {
     private final RegisterGoogleUserService registerGoogleUserService;
 
     @PostMapping()
-    public ResponseEntity<UserProfileResponse> register(@RequestBody @Valid RegisterUserRequest dto) {
+    public ResponseEntity<UserProfileResponseDTO> register(@RequestBody @Valid RegisterUserRequestDTO dto) {
 
-        UserProfileResponse response = registerLocalUserService.execute(dto);
+        UserProfileResponseDTO response = registerLocalUserService.execute(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/google")
-    public ResponseEntity<UserProfileResponse> registerWithGoogle(@RequestBody @Valid GoogleAuthRequest dto) {
+    public ResponseEntity<UserProfileResponseDTO> registerWithGoogle(@RequestBody @Valid GoogleAuthRequestDTO dto) {
 
-        UserProfileResponse response = registerGoogleUserService.execute(dto);
+        UserProfileResponseDTO response = registerGoogleUserService.execute(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

@@ -3,8 +3,8 @@ package br.com.blog.modules.user.services.auth;
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import br.com.blog.core.security.TokenService;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.AuthResult;
-import br.com.blog.modules.user.dtos.auth.LoginRequest;
+import br.com.blog.modules.user.dtos.auth.AuthResultDTO;
+import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class AuthenticateLocalUserService {
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
-    public AuthResult execute(LoginRequest dto) {
+    public AuthResultDTO execute(LoginRequestDTO dto) {
 
         var authPasswordToken = new UsernamePasswordAuthenticationToken(dto.email(), dto.password());
         var auth = authenticationManager.authenticate(authPasswordToken);
@@ -32,6 +32,6 @@ public class AuthenticateLocalUserService {
         User user = userRepository.findByEmail(dto.email())
                 .orElseThrow(() -> new ResourceNotFoundException("error.auth.user_not_found", dto.email()));
 
-        return new AuthResult(token, userMapper.toResponseDTO(user));
+        return new AuthResultDTO(token, userMapper.toResponseDTO(user));
     }
 }

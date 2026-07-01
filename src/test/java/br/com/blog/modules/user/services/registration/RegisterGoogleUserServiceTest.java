@@ -4,9 +4,9 @@ import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.core.security.GoogleAuthGateway;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
-import br.com.blog.modules.user.dtos.auth.GoogleUserInfo;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleUserInfoDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,20 +39,20 @@ class RegisterGoogleUserServiceTest {
     private RegisterGoogleUserService service;
 
     private final String GOOGLE_TOKEN = "valid.token";
-    private GoogleAuthRequest requestDTO;
-    private GoogleUserInfo mockGoogleUser;
+    private GoogleAuthRequestDTO requestDTO;
+    private GoogleUserInfoDTO mockGoogleUser;
     private User mockSavedUser;
-    private UserProfileResponse mockUserProfile;
+    private UserProfileResponseDTO mockUserProfile;
 
     @BeforeEach
     void setUp() {
-        requestDTO = new GoogleAuthRequest(GOOGLE_TOKEN);
-        mockGoogleUser = new GoogleUserInfo("google-id-123", "google@blog.com", "Bárbara Google");
+        requestDTO = new GoogleAuthRequestDTO(GOOGLE_TOKEN);
+        mockGoogleUser = new GoogleUserInfoDTO("google-id-123", "google@blog.com", "Bárbara Google");
 
         mockSavedUser = User.createGoogleUser("Bárbara Google", "google@blog.com", "google-id-123");
         ReflectionTestUtils.setField(mockSavedUser, "id", UUID.randomUUID());
 
-        mockUserProfile = new UserProfileResponse(
+        mockUserProfile = new UserProfileResponseDTO(
                 mockSavedUser.getId(), mockSavedUser.getName(), mockSavedUser.getEmail(),
                 mockSavedUser.getNickname(), mockSavedUser.getRole().name(),
                 true, false, false, LocalDateTime.now()
@@ -68,7 +68,7 @@ class RegisterGoogleUserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(mockSavedUser);
         when(userMapper.toResponseDTO(mockSavedUser)).thenReturn(mockUserProfile);
 
-        UserProfileResponse result = service.execute(requestDTO);
+        UserProfileResponseDTO result = service.execute(requestDTO);
 
         assertThat(result).isNotNull();
         assertThat(result.email()).isEqualTo("google@blog.com");

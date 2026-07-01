@@ -5,10 +5,10 @@ import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.core.security.GoogleAuthGateway;
 import br.com.blog.core.security.TokenService;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.AuthResult;
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
-import br.com.blog.modules.user.dtos.auth.GoogleUserInfo;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.auth.AuthResultDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleUserInfoDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,16 +45,16 @@ class AuthenticateGoogleUserServiceTest {
     class AuthenticateWithGoogle {
 
         private final String GOOGLE_TOKEN = "google.token.valido";
-        private GoogleAuthRequest requestDTO;
-        private GoogleUserInfo mockGoogleUserInfo;
+        private GoogleAuthRequestDTO requestDTO;
+        private GoogleUserInfoDTO mockGoogleUserInfoDTO;
         private User mockGoogleUser;
-        private UserProfileResponse mockUserProfile;
+        private UserProfileResponseDTO mockUserProfile;
 
         @BeforeEach
         void setUp() {
-            requestDTO = new GoogleAuthRequest(GOOGLE_TOKEN);
+            requestDTO = new GoogleAuthRequestDTO(GOOGLE_TOKEN);
 
-            mockGoogleUserInfo = new GoogleUserInfo("google-id-123", "google@blog.com", "Bárbara Google");
+            mockGoogleUserInfoDTO = new GoogleUserInfoDTO("google-id-123", "google@blog.com", "Bárbara Google");
 
             mockGoogleUser = User.createGoogleUser(
                     "Bárbara Google",
@@ -63,7 +63,7 @@ class AuthenticateGoogleUserServiceTest {
             );
             ReflectionTestUtils.setField(mockGoogleUser, "id", UUID.randomUUID());
 
-            mockUserProfile = new UserProfileResponse(
+            mockUserProfile = new UserProfileResponseDTO(
                     mockGoogleUser.getId(), mockGoogleUser.getName(), mockGoogleUser.getEmail(),
                     mockGoogleUser.getNickname(), mockGoogleUser.getRole().name(),
                     true, false, false, LocalDateTime.now()
@@ -73,12 +73,12 @@ class AuthenticateGoogleUserServiceTest {
         @Test
         @DisplayName("Deve logar com sucesso via Google e retornar token gerado e perfil DTO")
         void shouldAuthenticateWithGoogleSuccessfully() {
-            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUserInfo);
-            when(userRepository.findByGoogleId(mockGoogleUserInfo.googleId())).thenReturn(Optional.of(mockGoogleUser));
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUserInfoDTO);
+            when(userRepository.findByGoogleId(mockGoogleUserInfoDTO.googleId())).thenReturn(Optional.of(mockGoogleUser));
             when(tokenService.generateToken("google@blog.com")).thenReturn("token.jwt.gerado");
             when(userMapper.toResponseDTO(mockGoogleUser)).thenReturn(mockUserProfile);
 
-            AuthResult result = service.execute(requestDTO);
+            AuthResultDTO result = service.execute(requestDTO);
 
             assertThat(result).isNotNull();
             assertThat(result.token()).isEqualTo("token.jwt.gerado");
@@ -97,8 +97,8 @@ class AuthenticateGoogleUserServiceTest {
         @Test
         @DisplayName("Deve lançar ResourceNotFoundException quando conta Google não estiver registrada")
         void shouldThrowResourceNotFoundWhenUserNotFoundInDatabase() {
-            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUserInfo);
-            when(userRepository.findByGoogleId(mockGoogleUserInfo.googleId())).thenReturn(Optional.empty());
+            when(googleAuthGateway.extractUserInfo(GOOGLE_TOKEN)).thenReturn(mockGoogleUserInfoDTO);
+            when(userRepository.findByGoogleId(mockGoogleUserInfoDTO.googleId())).thenReturn(Optional.empty());
 
             assertThrows(ResourceNotFoundException.class, () -> service.execute(requestDTO));
         }

@@ -3,9 +3,9 @@ package br.com.blog.modules.user.controllers.registration;
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.core.security.*;
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
-import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
+import br.com.blog.modules.user.dtos.registration.RegisterUserRequestDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.services.registration.RegisterGoogleUserService;
 import br.com.blog.modules.user.services.registration.RegisterLocalUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,11 +44,11 @@ class UserRegistrationControllerTest {
     @MockitoBean private RegisterLocalUserService registerLocalUserService;
     @MockitoBean private RegisterGoogleUserService registerGoogleUserService;
 
-    private UserProfileResponse mockProfileResponse;
+    private UserProfileResponseDTO mockProfileResponse;
 
     @BeforeEach
     void setUp() {
-        mockProfileResponse = new UserProfileResponse(
+        mockProfileResponse = new UserProfileResponseDTO(
                 UUID.randomUUID(),
                 "Bárbara",
                 "barbara@blog.com",
@@ -65,17 +65,17 @@ class UserRegistrationControllerTest {
     @DisplayName("Cadastro com e-mail e senha")
     class Register {
 
-        private RegisterUserRequest validRequest;
+        private RegisterUserRequestDTO validRequest;
 
         @BeforeEach
         void setUp() {
-            validRequest = new RegisterUserRequest("Bárbara", "barbara@blog.com", "SenhaForte@123");
+            validRequest = new RegisterUserRequestDTO("Bárbara", "barbara@blog.com", "SenhaForte@123");
         }
 
         @Test
         @DisplayName("Deve retornar HTTP 201 (Created) e o perfil do usuário quando dados forem válidos")
         void shouldReturn201WhenPayloadIsValid() throws Exception {
-            when(registerLocalUserService.execute(any(RegisterUserRequest.class))).thenReturn(mockProfileResponse);
+            when(registerLocalUserService.execute(any(RegisterUserRequestDTO.class))).thenReturn(mockProfileResponse);
 
             mockMvc.perform(post("/api/v1/register")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -89,7 +89,7 @@ class UserRegistrationControllerTest {
         @Test
         @DisplayName("Deve retornar HTTP 400 (Bad Request) quando DTO não passar na validação (@Valid)")
         void shouldReturn400WhenPayloadIsInvalid() throws Exception {
-            RegisterUserRequest invalidRequest = new RegisterUserRequest("Bárbara", "barbara@blog.com", "123");
+            RegisterUserRequestDTO invalidRequest = new RegisterUserRequestDTO("Bárbara", "barbara@blog.com", "123");
 
             mockMvc.perform(post("/api/v1/register")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ class UserRegistrationControllerTest {
         @Test
         @DisplayName("Deve retornar HTTP 409 (Conflict) quando e-mail já existir no banco")
         void shouldReturn409WhenEmailAlreadyExists() throws Exception {
-            when(registerLocalUserService.execute(any(RegisterUserRequest.class)))
+            when(registerLocalUserService.execute(any(RegisterUserRequestDTO.class)))
                     .thenThrow(new ResourceAlreadyExistsException("error.user.already_exists"));
 
             mockMvc.perform(post("/api/v1/register")
@@ -124,17 +124,17 @@ class UserRegistrationControllerTest {
     @DisplayName("Cadastro com a Conta Google")
     class RegisterWithGoogle {
 
-        private GoogleAuthRequest validGoogleRequest;
+        private GoogleAuthRequestDTO validGoogleRequest;
 
         @BeforeEach
         void setUp() {
-            validGoogleRequest = new GoogleAuthRequest("google.token.valido");
+            validGoogleRequest = new GoogleAuthRequestDTO("google.token.valido");
         }
 
         @Test
         @DisplayName("Deve retornar HTTP 201 (Created) ao processar token válido do Google")
         void shouldReturn201WhenGoogleTokenIsValid() throws Exception {
-            when(registerGoogleUserService.execute(any(GoogleAuthRequest.class))).thenReturn(mockProfileResponse);
+            when(registerGoogleUserService.execute(any(GoogleAuthRequestDTO.class))).thenReturn(mockProfileResponse);
 
             mockMvc.perform(post("/api/v1/register/google")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -147,7 +147,7 @@ class UserRegistrationControllerTest {
         @Test
         @DisplayName("Deve retornar HTTP 400 (Bad Request) quando token Google for vazio")
         void shouldReturn400WhenGoogleTokenIsEmpty() throws Exception {
-            GoogleAuthRequest invalidGoogleRequest = new GoogleAuthRequest("");
+            GoogleAuthRequestDTO invalidGoogleRequest = new GoogleAuthRequestDTO("");
 
             mockMvc.perform(post("/api/v1/register/google")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -159,7 +159,7 @@ class UserRegistrationControllerTest {
         @Test
         @DisplayName("Deve retornar HTTP 409 (Conflict) quando conta Google já estiver vinculada a um usuário")
         void shouldReturn409WhenGoogleUserAlreadyExists() throws Exception {
-            when(registerGoogleUserService.execute(any(GoogleAuthRequest.class)))
+            when(registerGoogleUserService.execute(any(GoogleAuthRequestDTO.class)))
                     .thenThrow(new ResourceAlreadyExistsException("error.user.already_exists"));
 
             mockMvc.perform(post("/api/v1/register/google")
@@ -172,7 +172,7 @@ class UserRegistrationControllerTest {
         @Test
         @DisplayName("Deve retornar HTTP 401 (Unauthorized) quando token do Google for inválido ou forjado")
         void shouldReturn401WhenGoogleTokenIsInvalid() throws Exception {
-            when(registerGoogleUserService.execute(any(GoogleAuthRequest.class)))
+            when(registerGoogleUserService.execute(any(GoogleAuthRequestDTO.class)))
                     .thenThrow(new ExternalProviderAuthException("error.auth.google_token_invalid"));
 
             mockMvc.perform(post("/api/v1/register/google")

@@ -3,10 +3,10 @@ package br.com.blog.modules.user.controllers.auth;
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.core.security.*;
-import br.com.blog.modules.user.dtos.auth.AuthResult;
-import br.com.blog.modules.user.dtos.auth.GoogleAuthRequest;
-import br.com.blog.modules.user.dtos.auth.LoginRequest;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.auth.AuthResultDTO;
+import br.com.blog.modules.user.dtos.auth.GoogleAuthRequestDTO;
+import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.services.auth.AuthenticateGoogleUserService;
 import br.com.blog.modules.user.services.auth.AuthenticateLocalUserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,11 +51,11 @@ class AuthControllerTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    private UserProfileResponse savedUserProfileResponse;
+    private UserProfileResponseDTO savedUserProfileResponseDTO;
 
     @BeforeEach
     void setUp() {
-        savedUserProfileResponse = new UserProfileResponse(
+        savedUserProfileResponseDTO = new UserProfileResponseDTO(
                 UUID.randomUUID(),
                 "Bárbara Nascimento",
                 "barbara@blog.com",
@@ -72,24 +72,24 @@ class AuthControllerTest {
     @DisplayName("Login com e-mail e senha")
     class Login {
 
-        private LoginRequest validLoginRequest;
-        private AuthResult authResult;
+        private LoginRequestDTO validLoginRequestDTO;
+        private AuthResultDTO authResultDTO;
 
         @BeforeEach
         void setUp() {
-            validLoginRequest = new LoginRequest("barbara@blog.com", "SenhaForte@123");
+            validLoginRequestDTO = new LoginRequestDTO("barbara@blog.com", "SenhaForte@123");
 
-            authResult = new AuthResult("token.jwt.gerado", savedUserProfileResponse);
+            authResultDTO = new AuthResultDTO("token.jwt.gerado", savedUserProfileResponseDTO);
         }
 
         @Test
         @DisplayName("Deve retornar 200 OK, setar o Cookie HttpOnly e devolver o perfil do usuário")
         void shouldReturn200AndSetCookieWhenLoginIsSuccessful() throws Exception {
-            when(authenticateLocalUserService.execute(any(LoginRequest.class))).thenReturn(authResult);
+            when(authenticateLocalUserService.execute(any(LoginRequestDTO.class))).thenReturn(authResultDTO);
 
             mockMvc.perform(post("/api/v1/auth/login")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(validLoginRequest)))
+                            .content(objectMapper.writeValueAsString(validLoginRequestDTO)))
                     .andExpect(status().isOk())
                     .andExpect(cookie().exists("blog_token"))
                     .andExpect(cookie().value("blog_token", "token.jwt.gerado"))
@@ -101,11 +101,11 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 400 Bad Request ao enviar DTO inválido (validação @Valid)")
         void shouldReturn400WhenPayloadIsInvalid() throws Exception {
-            LoginRequest invalidLoginRequest = new LoginRequest("email-invalido", "");
+            LoginRequestDTO invalidLoginRequestDTO = new LoginRequestDTO("email-invalido", "");
 
             mockMvc.perform(post("/api/v1/auth/login")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(invalidLoginRequest)))
+                            .content(objectMapper.writeValueAsString(invalidLoginRequestDTO)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.validationErrors").exists());
         }
@@ -113,12 +113,12 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 401 Unauthorized ao enviar credenciais incorretas")
         void shouldReturn401WhenCredentialsAreIncorrect() throws Exception {
-            when(authenticateLocalUserService.execute(any(LoginRequest.class)))
+            when(authenticateLocalUserService.execute(any(LoginRequestDTO.class)))
                     .thenThrow(new BadCredentialsException("error.auth.bad_credentials"));
 
             mockMvc.perform(post("/api/v1/auth/login")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(validLoginRequest)))
+                            .content(objectMapper.writeValueAsString(validLoginRequestDTO)))
                     .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.status").value(401));
         }
@@ -136,26 +136,26 @@ class AuthControllerTest {
     @DisplayName("Login com conta Google")
     class LoginWithGoogle {
 
-        private GoogleAuthRequest validGoogleRequest;
-        private AuthResult authResult;
+        private GoogleAuthRequestDTO validGoogleRequest;
+        private AuthResultDTO authResultDTO;
 
         @BeforeEach
         void setUp() {
-            validGoogleRequest = new GoogleAuthRequest("token.valido.do.google");
+            validGoogleRequest = new GoogleAuthRequestDTO("token.valido.do.google");
 
-            UserProfileResponse googleProfileResponse = new UserProfileResponse(
+            UserProfileResponseDTO googleProfileResponse = new UserProfileResponseDTO(
                     UUID.randomUUID(), "Bárbara Google", "google@blog.com",
                     "barbara_google", "READER",
                     true, false, false, LocalDateTime.now()
             );
 
-            authResult = new AuthResult("token.jwt.google.gerado", googleProfileResponse);
+            authResultDTO = new AuthResultDTO("token.jwt.google.gerado", googleProfileResponse);
         }
 
         @Test
         @DisplayName("Deve retornar 200 OK e setar Cookie ao logar com sucesso via Google")
         void shouldReturn200AndSetCookieWhenGoogleLoginIsSuccessful() throws Exception {
-            when(authenticateGoogleUserService.execute(any(GoogleAuthRequest.class))).thenReturn(authResult);
+            when(authenticateGoogleUserService.execute(any(GoogleAuthRequestDTO.class))).thenReturn(authResultDTO);
 
             mockMvc.perform(post("/api/v1/auth/login/google")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -170,7 +170,7 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 404 Not Found se usuário Google não estiver cadastrado no banco")
         void shouldReturn404WhenGoogleUserIsNotRegistered() throws Exception {
-            when(authenticateGoogleUserService.execute(any(GoogleAuthRequest.class)))
+            when(authenticateGoogleUserService.execute(any(GoogleAuthRequestDTO.class)))
                     .thenThrow(new ResourceNotFoundException("error.auth.user_not_found_google"));
 
             mockMvc.perform(post("/api/v1/auth/login/google")
@@ -183,7 +183,7 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 401 Unauthorized se token Google for forjado ou inválido")
         void shouldReturn401WhenGoogleTokenIsInvalid() throws Exception {
-            when(authenticateGoogleUserService.execute(any(GoogleAuthRequest.class)))
+            when(authenticateGoogleUserService.execute(any(GoogleAuthRequestDTO.class)))
                     .thenThrow(new ExternalProviderAuthException("error.auth.google_token_invalid"));
 
             mockMvc.perform(post("/api/v1/auth/login/google")
@@ -196,7 +196,7 @@ class AuthControllerTest {
         @Test
         @DisplayName("Deve retornar 400 Bad Request se DTO do Google falhar na validação")
         void shouldReturn400WhenGooglePayloadIsInvalid() throws Exception {
-            GoogleAuthRequest emptyTokenRequest = new GoogleAuthRequest("");
+            GoogleAuthRequestDTO emptyTokenRequest = new GoogleAuthRequestDTO("");
 
             mockMvc.perform(post("/api/v1/auth/login/google")
                             .contentType(MediaType.APPLICATION_JSON)

@@ -2,8 +2,8 @@ package br.com.blog.modules.user.services.registration;
 
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.registration.RegisterUserRequestDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class RegisterLocalUserService {
     private final UserMapper userMapper;
 
     @Transactional
-    public UserProfileResponse execute(RegisterUserRequest dto) {
+    public UserProfileResponseDTO execute(RegisterUserRequestDTO dto) {
 
         if (userRepository.existsByEmail(dto.email())) {
             throw new ResourceAlreadyExistsException("error.user.already_exists");

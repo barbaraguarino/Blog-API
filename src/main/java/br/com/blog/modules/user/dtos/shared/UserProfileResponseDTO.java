@@ -3,7 +3,7 @@ package br.com.blog.modules.user.dtos.shared;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record UserProfileResponse(
+public record UserProfileResponseDTO(
         UUID id,
         String name,
         String email,

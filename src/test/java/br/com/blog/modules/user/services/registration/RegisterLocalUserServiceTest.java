@@ -2,8 +2,8 @@ package br.com.blog.modules.user.services.registration;
 
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.registration.RegisterUserRequest;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponse;
+import br.com.blog.modules.user.dtos.registration.RegisterUserRequestDTO;
+import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,18 +35,18 @@ class RegisterLocalUserServiceTest {
     @InjectMocks
     private RegisterLocalUserService service;
 
-    private RegisterUserRequest requestDTO;
+    private RegisterUserRequestDTO requestDTO;
     private User mockUser;
-    private UserProfileResponse mockUserProfile;
+    private UserProfileResponseDTO mockUserProfile;
 
     @BeforeEach
     void setUp() {
-        requestDTO = new RegisterUserRequest("Bárbara", "barbara@blog.com", "SenhaForte@123");
+        requestDTO = new RegisterUserRequestDTO("Bárbara", "barbara@blog.com", "SenhaForte@123");
 
         mockUser = User.createLocalUser("Bárbara", "barbara@blog.com", "encoded-password");
         ReflectionTestUtils.setField(mockUser, "id", UUID.randomUUID());
 
-        mockUserProfile = new UserProfileResponse(
+        mockUserProfile = new UserProfileResponseDTO(
                 mockUser.getId(), mockUser.getName(), mockUser.getEmail(),
                 mockUser.getNickname(), mockUser.getRole().name(),
                 false, false, false, LocalDateTime.now()
@@ -61,7 +61,7 @@ class RegisterLocalUserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
         when(userMapper.toResponseDTO(mockUser)).thenReturn(mockUserProfile);
 
-        UserProfileResponse result = service.execute(requestDTO);
+        UserProfileResponseDTO result = service.execute(requestDTO);
 
         assertThat(result).isNotNull();
         assertThat(result.email()).isEqualTo("barbara@blog.com");
