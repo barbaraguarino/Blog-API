@@ -57,7 +57,7 @@ class UserRegistrationControllerTest {
 
     @BeforeEach
     void setUp() {
-        mockUser = User.createLocalUser("Bárbara", "barbara@blog.com", "senha-criptografada", "barbara_nickname");
+        mockUser = User.createLocalUser("Bárbara", "barbara@blog.com", "senha-criptografada");
         ReflectionTestUtils.setField(mockUser, "id", UUID.randomUUID());
         ReflectionTestUtils.setField(mockUser, "createdAt", LocalDateTime.now());
 
@@ -65,7 +65,7 @@ class UserRegistrationControllerTest {
                 mockUser.getId(),
                 mockUser.getName(),
                 mockUser.getEmail(),
-                mockUser.getNickname(),
+                "barbara_nickname",
                 mockUser.getRole().name(),
                 mockUser.isLinkedToGoogle(),
                 mockUser.isEnabled(),

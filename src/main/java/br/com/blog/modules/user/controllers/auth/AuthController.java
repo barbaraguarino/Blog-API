@@ -7,6 +7,7 @@ import br.com.blog.modules.user.mappers.UserMapper;
 import br.com.blog.modules.user.services.auth.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,8 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserMapper userMapper;
-    private static final String TOKEN_NAME = "blog_token";
+    @Value("${api.security.token.name}")
+    private String cookieName;
 
     @PostMapping("/login")
     public ResponseEntity<UserProfileResponse> login(@RequestBody @Valid LoginRequest dto) {
@@ -50,7 +52,7 @@ public class AuthController {
 
     private ResponseCookie getResponseCookie(String value) {
 
-        return ResponseCookie.from(TOKEN_NAME, value)
+        return ResponseCookie.from(cookieName, value)
                 .httpOnly(true)
                 .secure(false)
                 .sameSite("Strict")

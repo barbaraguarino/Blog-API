@@ -53,8 +53,7 @@ class AuthServiceTest {
             mockUser = User.createLocalUser(
                     "Bárbara",
                     "barbara@blog.com",
-                    "senha-criptografada",
-                    "barbara_nickname"
+                    "senha-criptografada"
             );
 
             mockAuthentication = mock(Authentication.class);
@@ -119,8 +118,7 @@ class AuthServiceTest {
             mockGoogleUser = User.createGoogleUser(
                     "Bárbara Google",
                     "google@blog.com",
-                    "google-id-123",
-                    "barbara_google"
+                    "google-id-123"
             );
         }
 

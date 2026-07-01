@@ -59,8 +59,7 @@ class AuthControllerTest {
         savedUser = User.createLocalUser(
                 "Bárbara Nascimento",
                 "barbara@blog.com",
-                "senha-criptografada",
-                "barbara_1234"
+                "senha-criptografada"
         );
 
         ReflectionTestUtils.setField(savedUser, "id", UUID.randomUUID());
@@ -70,7 +69,7 @@ class AuthControllerTest {
                 savedUser.getId(),
                 savedUser.getName(),
                 savedUser.getEmail(),
-                savedUser.getNickname(),
+                "barbara_1234",
                 savedUser.getRole().name(),
                 savedUser.isLinkedToGoogle(),
                 savedUser.isEnabled(),

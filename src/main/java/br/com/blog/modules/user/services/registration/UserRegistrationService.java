@@ -11,8 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.SecureRandom;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -31,8 +29,7 @@ public class UserRegistrationService {
         User newUser = User.createLocalUser(
                 dto.name(),
                 dto.email(),
-                passwordEncoder.encode(dto.password()),
-                generateRandomNickname(dto.name())
+                passwordEncoder.encode(dto.password())
         );
 
         return userRepository.save(newUser);
@@ -52,25 +49,9 @@ public class UserRegistrationService {
         var newUser = User.createGoogleUser(
                 googleUser.name(),
                 googleUser.email(),
-                googleUser.googleId(),
-                generateRandomNickname(googleUser.name())
+                googleUser.googleId()
         );
 
         return userRepository.save(newUser);
-    }
-
-    private String generateRandomNickname(String name) {
-        String cleanName = name.toLowerCase()
-                .replaceAll("\\s+", "_")
-                .replaceAll("[^a-z0-9_]", "");
-
-        if (cleanName.length() > 40) {
-            cleanName = cleanName.substring(0, 40);
-        }
-
-        SecureRandom random = new SecureRandom();
-        int suffix = 1000 + random.nextInt(9000);
-
-        return cleanName + "_" + suffix;
     }
 }

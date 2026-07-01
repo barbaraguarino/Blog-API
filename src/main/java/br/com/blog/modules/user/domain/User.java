@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -44,14 +45,13 @@ public class User {
     public static User createLocalUser(
             String name,
             String email,
-            String encodedPassword,
-            String nickname
+            String encodedPassword
     ) {
         return User.builder()
                 .name(name)
                 .email(email)
                 .password(encodedPassword)
-                .nickname(nickname)
+                .nickname(generateRandomNickname(name))
                 .enabled(false)
                 .locked(false)
                 .role(UserRole.READER)
@@ -61,8 +61,7 @@ public class User {
     public static User createGoogleUser(
             String name,
             String email,
-            String googleId,
-            String nickname
+            String googleId
     ) {
         return User.builder()
                 .name(name)
@@ -70,12 +69,27 @@ public class User {
                 .googleId(googleId)
                 .enabled(false)
                 .locked(false)
-                .nickname(nickname)
+                .nickname(generateRandomNickname(name))
                 .role(UserRole.READER)
                 .build();
     }
 
     public boolean isLinkedToGoogle() {
         return this.googleId != null;
+    }
+
+    private static String generateRandomNickname(String name) {
+        String cleanName = name.toLowerCase()
+                .replaceAll("\\s+", "_")
+                .replaceAll("[^a-z0-9_]", "");
+
+        if (cleanName.length() > 40) {
+            cleanName = cleanName.substring(0, 40);
+        }
+
+        SecureRandom random = new SecureRandom();
+        int suffix = 1000 + random.nextInt(9000);
+
+        return cleanName + "_" + suffix;
     }
 }
