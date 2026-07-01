@@ -1,13 +1,14 @@
 package br.com.blog.modules.user.services.auth;
 
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
-import br.com.blog.core.security.TokenService;
-import br.com.blog.modules.user.domain.User;
-import br.com.blog.modules.user.dtos.auth.AuthResultDTO;
-import br.com.blog.modules.user.dtos.auth.LoginRequestDTO;
-import br.com.blog.modules.user.dtos.shared.UserProfileResponseDTO;
-import br.com.blog.modules.user.mappers.UserMapper;
-import br.com.blog.modules.user.repositories.UserRepository;
+import br.com.blog.core.security.jwt.TokenService;
+import br.com.blog.modules.user.application.usecases.auth.AuthenticateLocalUserService;
+import br.com.blog.modules.user.domain.models.User;
+import br.com.blog.modules.user.application.dtos.auth.internal.AuthResultDTO;
+import br.com.blog.modules.user.application.dtos.auth.LoginRequestDTO;
+import br.com.blog.modules.user.application.dtos.shared.UserProfileResponseDTO;
+import br.com.blog.modules.user.application.mappers.UserMapper;
+import br.com.blog.modules.user.infrastructure.persistence.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
