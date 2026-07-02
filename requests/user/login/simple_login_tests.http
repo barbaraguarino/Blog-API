@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept-Language: pt-BR
 
 {
-  "email": "barbara@grifo.com",
+  "login": "barbara@grifo.com",
   "password": "SenhaForte@123"
 }
 
@@ -14,7 +14,7 @@ Content-Type: application/json
 Accept-Language: pt-BR
 
 {
-  "email": "barbara@grifo.com",
+  "login": "barbara@grifo.com",
   "password": "SenhaForta@123"
 }
 
@@ -24,6 +24,6 @@ Content-Type: application/json
 Accept-Language: pt-BR
 
 {
-  "email": "barbara@grifa.com",
+  "login": "barbara@grifa.com",
   "password": "SenhaForta@123"
 }

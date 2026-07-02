@@ -1,14 +1,13 @@
 package br.com.blog.modules.user.services.auth;
 
-import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import br.com.blog.core.security.jwt.TokenService;
+import br.com.blog.core.security.userdetails.CustomUserDetails;
 import br.com.blog.modules.user.application.usecases.auth.AuthenticateLocalUserService;
 import br.com.blog.modules.user.domain.models.User;
 import br.com.blog.modules.user.application.dtos.auth.internal.AuthResultDTO;
 import br.com.blog.modules.user.application.dtos.auth.LoginRequestDTO;
 import br.com.blog.modules.user.application.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.application.mappers.UserMapper;
-import br.com.blog.modules.user.infrastructure.persistence.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -24,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,32 +37,29 @@ class AuthenticateLocalUserServiceTest {
 
     @Mock private AuthenticationManager authenticationManager;
     @Mock private TokenService tokenService;
-    @Mock private UserRepository userRepository;
     @Mock private UserMapper userMapper;
 
-    @InjectMocks
-    private AuthenticateLocalUserService service;
+    @InjectMocks private AuthenticateLocalUserService service;
 
     @Nested
-    @DisplayName("Login com e-mail e senha")
+    @DisplayName("Login com Credenciais Locais (E-mail ou Nickname)")
     class Authenticate {
 
-        private LoginRequestDTO loginRequestDTO;
+        private LoginRequestDTO loginRequest;
         private User mockUser;
+        private CustomUserDetails mockUserDetails;
         private Authentication mockAuthentication;
         private UserProfileResponseDTO mockUserProfile;
 
         @BeforeEach
         void setUp() {
-            loginRequestDTO = new LoginRequestDTO("barbara@blog.com", "SenhaForte@123");
+            loginRequest = new LoginRequestDTO("barbara_1234", "SenhaForte@123");
 
-            mockUser = User.createLocalUser(
-                    "Bárbara",
-                    "barbara@blog.com",
-                    "senha-criptografada"
-            );
+            mockUser = User.createLocalUser("Bárbara", "barbara@blog.com", "senha-criptografada");
             ReflectionTestUtils.setField(mockUser, "id", UUID.randomUUID());
+            ReflectionTestUtils.setField(mockUser, "nickname", "barbara_1234");
 
+            mockUserDetails = new CustomUserDetails(mockUser);
             mockAuthentication = mock(Authentication.class);
 
             mockUserProfile = new UserProfileResponseDTO(
@@ -75,44 +70,33 @@ class AuthenticateLocalUserServiceTest {
         }
 
         @Test
-        @DisplayName("Deve autenticar com sucesso e retornar token e usuário DTO")
+        @DisplayName("Deve autenticar com sucesso extraindo o User da memória")
         void shouldAuthenticateSuccessfully() {
-            when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuthentication);
-            when(mockAuthentication.getName()).thenReturn(loginRequestDTO.email());
-            when(tokenService.generateToken(loginRequestDTO.email())).thenReturn("token.jwt.valido");
-            when(userRepository.findByEmail(loginRequestDTO.email())).thenReturn(Optional.of(mockUser));
+            when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                    .thenReturn(mockAuthentication);
+            when(mockAuthentication.getPrincipal()).thenReturn(mockUserDetails);
+            when(tokenService.generateToken(mockUser.getEmail())).thenReturn("token.jwt.valido");
             when(userMapper.toResponseDTO(mockUser)).thenReturn(mockUserProfile);
 
-            AuthResultDTO result = service.execute(loginRequestDTO);
+            AuthResultDTO result = service.execute(loginRequest);
 
             assertThat(result).isNotNull();
             assertThat(result.token()).isEqualTo("token.jwt.valido");
-            assertThat(result.userProfile().email()).isEqualTo("barbara@blog.com");
+            assertThat(result.userProfile().nickname()).isEqualTo("barbara_1234");
 
             verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-            verify(tokenService).generateToken(loginRequestDTO.email());
+            verify(tokenService).generateToken(mockUser.getEmail());
         }
 
         @Test
-        @DisplayName("Deve lançar BadCredentialsException quando credenciais forem inválidas")
+        @DisplayName("Deve lançar BadCredentialsException quando as credenciais forem inválidas")
         void shouldThrowBadCredentialsWhenLoginFails() {
             when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                     .thenThrow(new BadCredentialsException("Bad credentials"));
 
-            assertThrows(BadCredentialsException.class, () -> service.execute(loginRequestDTO));
+            assertThrows(BadCredentialsException.class, () -> service.execute(loginRequest));
 
             verify(tokenService, never()).generateToken(anyString());
-        }
-
-        @Test
-        @DisplayName("Deve lançar ResourceNotFoundException quando usuário não for encontrado no banco")
-        void shouldThrowResourceNotFoundWhenUserNotFoundInDatabase() {
-            when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(mockAuthentication);
-            when(mockAuthentication.getName()).thenReturn(loginRequestDTO.email());
-            when(tokenService.generateToken(loginRequestDTO.email())).thenReturn("token.jwt.valido");
-            when(userRepository.findByEmail(loginRequestDTO.email())).thenReturn(Optional.empty());
-
-            assertThrows(ResourceNotFoundException.class, () -> service.execute(loginRequestDTO));
         }
     }
 }

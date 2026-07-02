@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
@@ -20,16 +22,20 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     @NonNull
-    public UserDetails loadUserByUsername(@NonNull String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> {
-                    String errorMessage = messageSource.getMessage(
-                            "error.auth.user_not_found",
-                            new Object[]{email},
-                            LocaleContextHolder.getLocale()
-                    );
-                    return new UsernameNotFoundException(errorMessage);
-                });
+    public UserDetails loadUserByUsername(@NonNull String login) throws UsernameNotFoundException {
+
+        Optional<User> userOptional = login.contains("@")
+                ? userRepository.findByEmail(login)
+                : userRepository.findByNickname(login);
+
+        User user = userOptional.orElseThrow(() -> {
+            String errorMessage = messageSource.getMessage(
+                    "error.auth.user_not_found",
+                    new Object[]{login},
+                    LocaleContextHolder.getLocale()
+            );
+            return new UsernameNotFoundException(errorMessage);
+        });
 
         return new CustomUserDetails(user);
     }

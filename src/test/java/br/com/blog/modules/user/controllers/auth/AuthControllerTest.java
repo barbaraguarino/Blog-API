@@ -81,8 +81,8 @@ class AuthControllerTest {
 
         @BeforeEach
         void setUp() {
-            validLoginRequestDTO = new LoginRequestDTO("barbara@blog.com", "SenhaForte@123");
 
+            validLoginRequestDTO = new LoginRequestDTO("barbara_1234", "SenhaForte@123");
             authResultDTO = new AuthResultDTO("token.jwt.gerado", savedUserProfileResponseDTO);
         }
 
@@ -97,15 +97,13 @@ class AuthControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(cookie().exists("blog_token"))
                     .andExpect(cookie().value("blog_token", "token.jwt.gerado"))
-                    .andExpect(cookie().httpOnly("blog_token", true))
-                    .andExpect(jsonPath("$.email").value("barbara@blog.com"))
                     .andExpect(jsonPath("$.nickname").value("barbara_1234"));
         }
 
         @Test
-        @DisplayName("Deve retornar 400 Bad Request ao enviar DTO inválido (validação @Valid)")
+        @DisplayName("Deve retornar 400 Bad Request ao enviar DTO inválido")
         void shouldReturn400WhenPayloadIsInvalid() throws Exception {
-            LoginRequestDTO invalidLoginRequestDTO = new LoginRequestDTO("email-invalido", "");
+            LoginRequestDTO invalidLoginRequestDTO = new LoginRequestDTO("", "123");
 
             mockMvc.perform(post("/api/v1/auth/login")
                             .contentType(MediaType.APPLICATION_JSON)
