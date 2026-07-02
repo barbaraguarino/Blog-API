@@ -18,10 +18,6 @@ Para que qualquer item abaixo seja marcado como concluído (`[x]`), ele deve obr
 
 Tarefas planejadas e prontas para serem desenvolvidas. Devem ser executadas sequencialmente.
 
-
-- [ ]  **[#08] Módulo de Autenticação: Login Dinâmico (E-mail ou Nickname)**
-   - **Objetivo:** Permitir que o usuário insira tanto o e-mail quanto o nickname no campo de login.
-
 - [ ]  **[#09] Gestão de Sessões: Refresh Tokens e Dispositivos**
    - **Objetivo:** Mudar a estratégia de autenticação para permitir o controle de sessões ativas (Padrão Microsoft/Google).
    - **Regra de Negócio:** Criar entidade para guardar IP, User-Agent, Data de Expiração e RefreshToken. O JWT passa a durar apenas 15 minutos, enquanto o Refresh Token dura 7 dias. Criar endpoint para listar e revogar sessões ativas.
@@ -64,3 +60,4 @@ Histórico de tarefas já executadas, testadas e integradas ao projeto.
 - [x]  **[#05] Módulo de Autenticação: Login Local:** Implementação do fluxo via e-mail e senha, integrando `AuthenticationManager` e retornando JWT encapsulado em `HttpOnly Cookies`.
 - [x]  **[#06] Módulo de Usuário: Cadastro via Google (OAuth2/OIDC):** Endpoint que delega a responsabilidade da senha, recebendo e validando a assinatura matemática de um Google ID Token.
 - [x]  **[#07] Módulo de Autenticação: Login via Google:** Autenticação de usuário existente via Google ID Token, emitindo o JWT nativo do Blog para navegação unificada.
+- [x]  **[#08] Módulo de Autenticação: Login Dinâmico (E-mail ou Nickname)**: Permitir que o usuário insira tanto o e-mail quanto o nickname no campo de login.
