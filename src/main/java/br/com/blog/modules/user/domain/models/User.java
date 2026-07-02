@@ -52,7 +52,7 @@ public class User {
                 .email(email)
                 .password(encodedPassword)
                 .nickname(generateRandomNickname(name))
-                .enabled(false)
+                .enabled(true)
                 .locked(false)
                 .role(UserRole.READER)
                 .build();
@@ -67,7 +67,7 @@ public class User {
                 .name(name)
                 .email(email)
                 .googleId(googleId)
-                .enabled(false)
+                .enabled(true)
                 .locked(false)
                 .nickname(generateRandomNickname(name))
                 .role(UserRole.READER)
