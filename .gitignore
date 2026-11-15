@@ -35,8 +35,24 @@ build/
 ### Environment Variables and Secrets ###
 .env
 *.env
+.env.*
+!.env.example
 http-client.env.json
 http-client.private.env.json
+application-local.properties
+application-*.local.properties
+
+### Keys, Certificates and Cloud Credentials ###
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+.aws/
+credentials.json
+client_secret*.json
+service-account*.json
 
 ### Media Files and Local Uploads ###
 /test-files/
