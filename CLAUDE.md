@@ -45,21 +45,23 @@ Toda a documentação fica em `docs/`, em Markdown. Mantenha-a atualizada no mes
 
 | Arquivo | Atualize quando… |
 |---|---|
-| `docs/DEFINICAO_DO_PROJETO.md` | mudar escopo, papéis ou entregas |
-| `docs/REQUISITOS.md` | um requisito (RF/RNF) for criado ou mudar de status |
-| `docs/REGRAS_DE_NEGOCIO.md` | uma regra (RN) for criada, alterada ou implementada, ou uma divergência for corrigida |
-| `docs/ARQUITETURA.md` | mudar estrutura, fluxo, modelo de dados, segurança ou stack |
-| `docs/testes/PLANO_DE_TESTES.md` | mudar a estratégia de testes ou a matriz de rastreabilidade |
+| `docs/Definição_do_Projeto.md` | mudar escopo, papéis ou entregas |
+| `docs/Requisitos.md` | um requisito (RF/RNF) for criado ou mudar de status |
+| `docs/Regras_de_Negócio.md` | uma regra (RN) for criada, alterada ou implementada, ou uma divergência for corrigida |
+| `docs/Arquitetura.md` | mudar estrutura, fluxo, modelo de dados, segurança ou stack |
+| `docs/testes/Plano_de_Testes.md` | mudar a estratégia de testes ou a matriz de rastreabilidade |
 | `docs/testes/relatorios/` | ao fechar um Milestone (novo relatório, sem editar os antigos) |
-| `docs/DECISOES.md` | for tomada qualquer decisão de projeto |
-| `docs/SEGURANCA.md` | mudar algo de segurança do repositório, da conta ou do `.gitignore` |
+| `docs/Decisões.md` | for tomada qualquer decisão de projeto |
+| `docs/Segurança.md` | mudar algo de segurança do repositório, da conta ou do `.gitignore` |
 
 Issues e PRs citam os IDs que atendem (ex. `RF-005`, `RN-012`).
 
+**Nome dos arquivos de documentação:** escreva como se escreve em português, com acentos, `_` no lugar dos espaços, iniciais maiúsculas e preposições/artigos em minúsculo (ex. `Regras_de_Negócio.md`, `Plano_de_Testes.md`). Relatórios começam pela data: `AAAA-MM-DD_Contexto.md`. As exceções são os nomes que ferramentas exigem: `README.md`, `CLAUDE.md`, `LICENSE` e os arquivos em `.github/`.
+
 ## Fluxo de trabalho
 
-- Tarefas vivem em **GitHub Issues**, agrupadas em Milestones (fases do `docs/ROADMAP.md`) e no quadro do GitHub Projects "Blog-API". Não recrie um backlog em `.md`.
-- Decisões de projeto ficam registradas em `docs/DECISOES.md`.
+- Tarefas vivem em **GitHub Issues**, agrupadas em Milestones (fases do `docs/Roadmap.md`) e no quadro do GitHub Projects "Blog-API". Não recrie um backlog em `.md`.
+- Decisões de projeto ficam registradas em `docs/Decisões.md`.
 
 ### Git Flow
 
@@ -87,11 +89,11 @@ Issues e PRs citam os IDs que atendem (ex. `RF-005`, `RN-012`).
 - **Nunca incluir links de sessão ou de chat do Claude** (claude.ai, sessões, conversas) em commits, PRs, issues, comentários ou qualquer arquivo. Pode indicar que foi feito com IA (ex. a linha `Co-Authored-By` do Claude ou "Gerado com Claude Code"), mas sem link para a sessão.
 - **Nunca baixar nem instalar nada sem aprovação prévia da autora**: programas, CLIs, extensões, dependências novas no `pom.xml`, plugins, scripts ou arquivos. Antes, diga o que é, de onde vem e por quê, e espere o "sim".
 - **Só fontes oficiais e seguras**: Maven Central, site ou repositório oficial do fabricante, `winget` com o ID oficial do publicador. Nada de mirrors, binários soltos, pacotes desconhecidos ou scripts copiados de sites de terceiros.
-- **Registre decisões de projeto** em `docs/DECISOES.md` sempre que escolher uma tecnologia, um padrão, uma regra de negócio não óbvia ou mudar algo já decidido. Se a decisão for da autora, registre com as palavras dela.
+- **Registre decisões de projeto** em `docs/Decisões.md` sempre que escolher uma tecnologia, um padrão, uma regra de negócio não óbvia ou mudar algo já decidido. Se a decisão for da autora, registre com as palavras dela.
 
 ## Segurança (obrigatório)
 
-O repositório é **público**. O checklist completo está em `docs/SEGURANCA.md`.
+O repositório é **público**. O checklist completo está em `docs/Segurança.md`.
 
 ### Segredos
 - Nunca commitar `.env`, senhas, chaves de API, tokens, certificados ou credenciais da AWS ou do Google. Antes de cada commit, confira o `git status` e o diff à procura de segredos.
