@@ -18,6 +18,7 @@ Checklist de segurança do Blog-API, que é um repositório público de portfól
   - Push protection (bloqueia o push quando detecta um segredo)
   - Dependabot alerts
   - Dependabot security updates
+- [x] **No repositório:** nenhum link de sessão ou de chat do Claude vai para commits, PRs, issues ou arquivos. O `.claude/settings.json` desliga o link de sessão automático (`sessionUrl: false`) e troca a assinatura dos PRs por "🤖 Gerado com Claude Code", sem link. O hook `.claude/hooks/bloquear-links-de-sessao.sh` bloqueia qualquer tentativa que escape. Ele não depende do `jq` e foi testado em 2026-11-15.
 - [ ] **Lembrete:** ninguém altera os seus arquivos sem você aprovar um PR. Os `.md` e o código só mudam por commits seus ou por PRs que você aceitar.
 
 ## 📋 Issues
