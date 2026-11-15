@@ -1,0 +1,33 @@
+name: Bug
+description: Comportamento incorreto da API
+title: "[Bug] Descrição curta"
+labels: ["type:bug"]
+body:
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que acontece
+      description: Descreva o comportamento atual.
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que deveria acontecer
+    validations:
+      required: true
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      description: Requisição (.http), payload, cabeçalhos e resposta recebida.
+      render: http
+    validations:
+      required: true
+  - type: textarea
+    id: notas
+    attributes:
+      label: Notas
+      description: Logs, stack trace, hipóteses.
+    validations:
+      required: false
