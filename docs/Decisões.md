@@ -111,3 +111,19 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** issues públicas, mas travadas automaticamente quando abertas pela autora (workflow `lock-own-issues.yml`, que usa só o `gh` dos runners); quadro do GitHub Projects privado; `.gitignore` reforçado para chaves e credenciais; token do `gh` com escopos mínimos; checklist em `docs/Segurança.md` e regras para o Claude no `CLAUDE.md`.
 - **Alternativas consideradas:** desativar as issues (`gh repo edit --enable-issues=false`), que esconde o planejamento do portfólio; deixar as issues abertas a comentários, que expõe a spam.
 - **Consequências:** terceiros não comentam nas issues da autora. O workflow só passa a valer depois de chegar à `main`; até lá, as issues são travadas manualmente ou pelo script de criação.
+
+## D-012: Testes no mesmo pacote da classe testada e teste para toda classe
+
+- **Data:** 2026-11-15
+- **Status:** Aceita
+- **Contexto:** os testes estavam nos pacotes antigos (`modules.user.controllers` e `modules.user.services`), que não existem mais em `src/main` depois da reorganização para a Clean Architecture. Isso quebra a navegação da IDE e deixa ambíguo onde criar testes novos.
+- **Decisão:** uma classe de produção → uma classe de teste com o mesmo nome + `Test`, no mesmo pacote. **Toda** classe tem teste unitário, mesmo as simples, e cada tipo de classe tem também os testes do seu tipo (Mockito para casos de uso, `@WebMvcTest` para controllers, handler para exceções). Testes manuais são feitos com o Cliente HTTP do IntelliJ (arquivos `.http`), não com Postman.
+- **Consequências:** os 6 testes existentes foram movidos sem mudar a lógica e continuam passando (27/27). Há 29 classes sem teste, listadas no Plano_de_Testes.md.
+
+## D-013: DTOs obrigatórios e hierarquia própria de exceções
+
+- **Data:** 2026-11-15
+- **Status:** Aceita
+- **Contexto:** formalizar dois padrões que o código já segue, para que nenhuma funcionalidade nova fuja deles.
+- **Decisão:** toda entrada e saída da API é um `record` DTO, validado com Bean Validation e convertido por mappers, e entidades nunca saem da API. Erros usam só a hierarquia de `core/exceptions` (`DomainException` / `InfrastructureException`), com chave de i18n, e o `GlobalExceptionHandler` é o único lugar que monta a resposta de erro.
+- **Consequências:** regras detalhadas nas seções *DTOs* e *Exceções* do CLAUDE.md. Uma exceção nova exige handler e testes.
