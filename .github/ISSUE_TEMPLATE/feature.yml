@@ -10,6 +10,14 @@ body:
       description: O que essa tarefa entrega e por que ela importa.
     validations:
       required: true
+  - type: input
+    id: rastreabilidade
+    attributes:
+      label: Requisitos e regras atendidos
+      description: IDs de docs/REQUISITOS.md e docs/REGRAS_DE_NEGOCIO.md.
+      placeholder: "RF-005, RN-011, RN-012"
+    validations:
+      required: false
   - type: textarea
     id: regras
     attributes:
