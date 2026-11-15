@@ -127,3 +127,11 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Contexto:** formalizar dois padrões que o código já segue, para que nenhuma funcionalidade nova fuja deles.
 - **Decisão:** toda entrada e saída da API é um `record` DTO, validado com Bean Validation e convertido por mappers, e entidades nunca saem da API. Erros usam só a hierarquia de `core/exceptions` (`DomainException` / `InfrastructureException`), com chave de i18n, e o `GlobalExceptionHandler` é o único lugar que monta a resposta de erro.
 - **Consequências:** regras detalhadas nas seções *DTOs* e *Exceções* do CLAUDE.md. Uma exceção nova exige handler e testes.
+
+## D-014: Scrum com documentação de Engenharia de Software
+
+- **Data:** 2026-11-15
+- **Status:** Aceita
+- **Contexto:** nas palavras da autora: "Estou usando Engenharia de Software, método SCRUM, mas com documentação também."
+- **Decisão:** o trabalho segue o Scrum adaptado a uma desenvolvedora (Product Backlog em Issues, Sprints no GitHub Projects, Definição de Preparado e de Pronto), e cada etapa de Engenharia de Software tem um documento em `docs/`, escrito com detalhes para explicar o projeto. Os Requisitos são listas simples (RF e RNF); as histórias de usuário e os critérios de aceite ficam nas issues.
+- **Consequências:** o processo está descrito em `Processo_de_Desenvolvimento.md`. Os campos *Iteration* e *Story Points* e as colunas do quadro precisam ser configurados no Projects.
