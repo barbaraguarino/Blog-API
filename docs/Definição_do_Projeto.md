@@ -74,7 +74,7 @@ O detalhe e a ordem atual estão no [Roadmap.md](Roadmap.md) e nas Issues do Git
 | [Requisitos.md](Requisitos.md) | Requisitos funcionais e não funcionais |
 | [Regras_de_Negócio.md](Regras_de_Negócio.md) | Regras de negócio numeradas |
 | [Arquitetura.md](Arquitetura.md) | Documento de Arquitetura de Software |
-| [testes/Plano_de_Testes.md](testes/Plano_de_Testes.md) | Plano de testes |
-| [testes/relatorios/](testes/relatorios/) | Relatórios de execução dos testes |
+| [Testes/Plano_de_Testes.md](Testes/Plano_de_Testes.md) | Plano de testes |
+| [Testes/Relatórios/](Testes/Relatórios/) | Relatórios de execução dos testes |
 | [Decisões.md](Decisões.md) | Registro de decisões |
 | [Roadmap.md](Roadmap.md) | Fases e fluxo de trabalho |

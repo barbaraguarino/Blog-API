@@ -49,8 +49,8 @@ Toda a documentação fica em `docs/`, em Markdown. Mantenha-a atualizada no mes
 | `docs/Requisitos.md` | um requisito (RF/RNF) for criado ou mudar de status |
 | `docs/Regras_de_Negócio.md` | uma regra (RN) for criada, alterada ou implementada, ou uma divergência for corrigida |
 | `docs/Arquitetura.md` | mudar estrutura, fluxo, modelo de dados, segurança ou stack |
-| `docs/testes/Plano_de_Testes.md` | mudar a estratégia de testes ou a matriz de rastreabilidade |
-| `docs/testes/relatorios/` | ao fechar um Milestone (novo relatório, sem editar os antigos) |
+| `docs/Testes/Plano_de_Testes.md` | mudar a estratégia de testes ou a matriz de rastreabilidade |
+| `docs/Testes/Relatórios/` | ao fechar um Milestone (novo relatório, sem editar os antigos) |
 | `docs/Decisões.md` | for tomada qualquer decisão de projeto |
 | `docs/Segurança.md` | mudar algo de segurança do repositório, da conta ou do `.gitignore` |
 

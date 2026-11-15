@@ -74,5 +74,5 @@ Garantir que cada regra de negócio ([Regras_de_Negócio.md](../Regras_de_Negóc
 ## 8. Execução e relatórios
 
 - Antes de abrir PR: `./mvnw test`.
-- A cada fechamento de Milestone, ou quando houver mudança relevante, registre um relatório em [`relatorios/`](relatorios/) com o modelo do [README dos relatórios](relatorios/README.md).
+- A cada fechamento de Milestone, ou quando houver mudança relevante, registre um relatório em [`Relatórios/`](Relatórios/) com o modelo do [README dos relatórios](Relatórios/README.md).
 - *(Planejado)* CI com GitHub Actions rodando `./mvnw test` em todo PR para a `develop`.

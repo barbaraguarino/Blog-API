@@ -164,4 +164,4 @@ Hoje só existe o ambiente local. Um perfil de produção (`Secure=true`, `show-
 | Login Google não checa conta bloqueada ou desativada | RN-010 / D3 |
 | `Secure=false` e `maxAge` fixos no cookie | RNF-004 / D4 |
 | Sem Swagger, embora a Definição de Pronto o exija | RNF-010 |
-| Sem CI: os testes não rodam automaticamente nos PRs | ver [Plano_de_Testes.md](testes/Plano_de_Testes.md) |
+| Sem CI: os testes não rodam automaticamente nos PRs | ver [Plano_de_Testes.md](Testes/Plano_de_Testes.md) |

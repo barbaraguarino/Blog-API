@@ -73,8 +73,8 @@ src/main/
 | [Requisitos](docs/Requisitos.md) | Requisitos funcionais e não funcionais |
 | [Regras de Negócio](docs/Regras_de_Negócio.md) | Regras numeradas e divergências conhecidas |
 | [Arquitetura](docs/Arquitetura.md) | Documento de Arquitetura de Software |
-| [Plano de Testes](docs/testes/Plano_de_Testes.md) | Estratégia, critérios e matriz de rastreabilidade |
-| [Relatórios de Testes](docs/testes/relatorios/README.md) | Resultado das execuções |
+| [Plano de Testes](docs/Testes/Plano_de_Testes.md) | Estratégia, critérios e matriz de rastreabilidade |
+| [Relatórios de Testes](docs/Testes/Relatórios/README.md) | Resultado das execuções |
 | [Decisões](docs/Decisões.md) | Registro de decisões de arquitetura e processo |
 | [Roadmap](docs/Roadmap.md) | Fases (Milestones) e fluxo de trabalho |
 | [Segurança](docs/Segurança.md) | Checklist de segurança do repositório e da conta |
