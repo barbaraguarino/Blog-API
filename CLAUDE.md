@@ -42,19 +42,36 @@ Pragmatic Clean Architecture, organizada por funcionalidade (package by feature)
 ## Fluxo de trabalho
 
 - Tarefas vivem em **GitHub Issues**, agrupadas em Milestones (fases do `docs/ROADMAP.md`) e no quadro do GitHub Projects "Blog-API". Não recrie um backlog em `.md`.
-- Branches saem da `develop`: `feature/`, `fix/`, `refactor/`, `docs/` + descrição curta em inglês e kebab-case.
-- PRs vão para a `develop`, usam `Closes #N` e seguem o checklist da Definição de Pronto em `.github/pull_request_template.md`.
-- A `main` só recebe a `develop` ao fechar um Milestone.
+- Decisões de projeto ficam registradas em `docs/DECISOES.md`.
+
+### Git Flow
+
+| Branch | Sai de | PR para | Uso |
+|---|---|---|---|
+| `main` | — | — | Código em produção/versões fechadas. Só recebe `release/*` e `hotfix/*`. |
+| `develop` | `main` | — | Integração do que está pronto para a próxima versão. |
+| `feature/<nome>` | `develop` | `develop` | Funcionalidade nova. Variações aceitas para o mesmo papel: `refactor/`, `docs/`, `test/`, `chore/`. |
+| `bugfix/<nome>` | `develop` | `develop` | Correção de bug ainda não lançado. |
+| `release/vX.Y.Z` | `develop` | `main` **e** `develop` | Fechamento de um Milestone: só ajustes finais, versão e documentação. |
+| `hotfix/<nome>` | `main` | `main` **e** `develop` | Correção urgente do que já está na `main`. |
+
+- Nome do branch: descrição curta em inglês, kebab-case (ex. `feature/refresh-token-rotation`).
+- **Um PR por branch** e **um branch por issue**. Não reaproveite branch para outra tarefa nem misture issues no mesmo PR.
+- O PR usa `Closes #N` e segue o checklist da Definição de Pronto em `.github/pull_request_template.md`.
 
 ### Regras para o Claude (obrigatórias)
 
-- **Nunca mesclar nada.** Não rode `git merge`, não faça merge de PR (`gh pr merge`), não ative auto-merge e não faça rebase/push que leve mudanças para a `develop` ou a `main`. O merge é sempre feito pela autora.
-- **Pode abrir PR**, sempre para a `develop`, a partir de um branch próprio.
+- **Nunca mesclar nada.** Não rode `git merge` entre branches, não faça merge de PR (`gh pr merge`), não ative auto-merge e não faça push direto que leve mudanças para a `develop` ou a `main`. O merge é sempre feito pela autora.
+- **Pode abrir PR**, seguindo a tabela do Git Flow, sempre a partir de um branch próprio.
 - **Pode fazer commits**, mas **curtos e passo a passo**: um commit por mudança lógica (ex. migration, depois entidade, depois caso de uso, depois testes), nunca tudo de uma vez em um commit só.
 - Mensagens de commit em português, curtas e descritivas (ex. "Adiciona migration da tabela de sessões").
 - Nunca commitar direto na `develop` ou na `main`.
+- **Só feche uma issue (ou marque como concluída) se ela cumprir todos os critérios de aceite e a Definição de Pronto.** Se algum critério falhar ou não puder ser verificado, deixe a issue aberta e explique o que falta em um comentário.
 - **Nunca incluir links de sessão ou de chat do Claude** (claude.ai, sessões, conversas) em commits, PRs, issues, comentários ou qualquer arquivo. Pode indicar que foi feito com IA (ex. a linha `Co-Authored-By` do Claude ou "Gerado com Claude Code"), mas sem link para a sessão.
+- **Nunca baixar nem instalar nada sem aprovação prévia da autora**: programas, CLIs, extensões, dependências novas no `pom.xml`, plugins, scripts ou arquivos. Antes, diga o que é, de onde vem e por quê, e espere o "sim".
+- **Só fontes oficiais e seguras**: Maven Central, site ou repositório oficial do fabricante, `winget` com o ID oficial do publicador. Nada de mirrors, binários soltos, pacotes desconhecidos ou scripts copiados de sites de terceiros.
+- **Registre decisões de projeto** em `docs/DECISOES.md` sempre que escolher uma tecnologia, um padrão, uma regra de negócio não óbvia ou mudar algo já decidido. Se a decisão for da autora, registre com as palavras dela.
 
 ## Definição de Pronto
 
-Uma tarefa só está pronta quando: compila sem warnings, tem testes das regras centrais, os endpoints foram validados via `.http`, o README e o Swagger estão atualizados, e o PR foi mergeado na `develop`.
+Uma tarefa só está pronta quando: compila sem warnings, tem testes das regras centrais, os endpoints foram validados via `.http`, o README e o Swagger estão atualizados, todos os critérios de aceite da issue foram cumpridos, e o PR foi mergeado na `develop`.
