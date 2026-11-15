@@ -53,6 +53,7 @@ Pragmatic Clean Architecture, organizada por funcionalidade (package by feature)
 - **Pode fazer commits**, mas **curtos e passo a passo**: um commit por mudança lógica (ex. migration, depois entidade, depois caso de uso, depois testes), nunca tudo de uma vez em um commit só.
 - Mensagens de commit em português, curtas e descritivas (ex. "Adiciona migration da tabela de sessões").
 - Nunca commitar direto na `develop` ou na `main`.
+- **Nunca incluir links de sessão ou de chat do Claude** (claude.ai, sessões, conversas) em commits, PRs, issues, comentários ou qualquer arquivo. Pode indicar que foi feito com IA (ex. a linha `Co-Authored-By` do Claude ou "Gerado com Claude Code"), mas sem link para a sessão.
 
 ## Definição de Pronto
 
