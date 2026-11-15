@@ -77,6 +77,7 @@ src/main/
 | [Relatórios de Testes](docs/testes/relatorios/README.md) | Resultado das execuções |
 | [Decisões](docs/DECISOES.md) | Registro de decisões de arquitetura e processo |
 | [Roadmap](docs/ROADMAP.md) | Fases (Milestones) e fluxo de trabalho |
+| [Segurança](docs/SEGURANCA.md) | Checklist de segurança do repositório e da conta |
 
 ## Endpoints Disponíveis
 
