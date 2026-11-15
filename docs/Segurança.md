@@ -19,6 +19,8 @@ Checklist de segurança do Blog-API, que é um repositório público de portfól
   - Dependabot alerts
   - Dependabot security updates
 - [x] **No repositório:** nenhum link de sessão ou de chat do Claude vai para commits, PRs, issues ou arquivos. O `.claude/settings.json` desliga o link de sessão automático (`sessionUrl: false`) e troca a assinatura dos PRs por "🤖 Gerado com Claude Code", sem link. O hook `.claude/hooks/bloquear-links-de-sessao.sh` bloqueia qualquer tentativa que escape. Ele não depende do `jq` e foi testado em 2026-11-15.
+- [x] **No repositório:** o workflow [`verificar-links-claude.yml`](../.github/workflows/verificar-links-claude.yml) roda em todo PR e falha se o título, a descrição, as mensagens de commit ou as linhas adicionadas tiverem link do Claude. Ele usa o script [`.github/scripts/verificar-links-claude.sh`](../.github/scripts/verificar-links-claude.sh), que também pode ser rodado localmente: `bash .github/scripts/verificar-links-claude.sh < arquivo`.
+- [ ] **Manual:** em *Settings → Branches* (ou *Rules*), proteja a `develop` e a `main` exigindo o check **Verificar links do Claude** antes do merge. Sem isso, o check aparece vermelho, mas não impede o merge.
 - [ ] **Lembrete:** ninguém altera os seus arquivos sem você aprovar um PR. Os `.md` e o código só mudam por commits seus ou por PRs que você aceitar.
 
 ## 📋 Issues
