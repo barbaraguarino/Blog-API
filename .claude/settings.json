@@ -4,6 +4,9 @@
     "sessionUrl": false
   },
   "permissions": {
+    "allow": [
+      "Bash(bash .claude/scripts/github-leitura.sh *)"
+    ],
     "deny": [
       "Bash(gh repo delete *)",
       "Bash(gh repo archive *)",
