@@ -14,7 +14,7 @@ body:
     id: rastreabilidade
     attributes:
       label: Requisitos e regras atendidos
-      description: IDs de docs/REQUISITOS.md e docs/REGRAS_DE_NEGOCIO.md.
+      description: IDs de docs/Requisitos.md e docs/Regras_de_Negócio.md.
       placeholder: "RF-005, RN-011, RN-012"
     validations:
       required: false

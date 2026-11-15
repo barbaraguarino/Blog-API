@@ -10,7 +10,7 @@ Visão geral das fases do Blog-API. O detalhe de cada tarefa (objetivo, regras d
 4. Cada branch tem um único PR para a `develop`, com `Closes #N` e o checklist da **Definição de Pronto** do template de PR. A issue só fecha se todos os critérios de aceite forem cumpridos.
 5. Ao fechar um Milestone, um branch `release/vX.Y.Z` leva a `develop` para a `main`.
 
-Decisões de arquitetura e de processo ficam em [DECISOES.md](DECISOES.md).
+Decisões de arquitetura e de processo ficam em [Decisões.md](Decisões.md).
 
 ## Fases
 

@@ -65,7 +65,7 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Data:** 2026-11-15
 - **Status:** Aceita
 - **Contexto:** o `Backlog_Sequencial.md` exigia commits e PRs só para mover tarefas, e sua numeração (#01, #02…) colidia com a numeração de issues e PRs do GitHub.
-- **Decisão:** cada tarefa vira uma Issue com template padrão, agrupada em Milestones (fases v0.1 a v0.4) e acompanhada em um quadro do GitHub Projects. O backlog virou o `docs/ROADMAP.md`, só com a visão geral.
+- **Decisão:** cada tarefa vira uma Issue com template padrão, agrupada em Milestones (fases v0.1 a v0.4) e acompanhada em um quadro do GitHub Projects. O backlog virou o `docs/Roadmap.md`, só com a visão geral.
 - **Alternativas consideradas:** manter o `.md`, que funciona offline mas não tem rastreabilidade nem fechamento automático das tarefas.
 - **Consequências:** PRs usam `Closes #N`. Uma issue só é fechada quando cumpre todos os critérios de aceite.
 
@@ -108,6 +108,6 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Data:** 2026-11-15
 - **Status:** Aceita
 - **Contexto:** o repositório é público (portfólio) e será operado também pelo Claude via `gh`. É preciso proteger segredos e a conta, evitar spam e impedir que conteúdo de terceiros seja tratado como instrução.
-- **Decisão:** issues públicas, mas travadas automaticamente quando abertas pela autora (workflow `lock-own-issues.yml`, que usa só o `gh` dos runners); quadro do GitHub Projects privado; `.gitignore` reforçado para chaves e credenciais; token do `gh` com escopos mínimos; checklist em `docs/SEGURANCA.md` e regras para o Claude no `CLAUDE.md`.
+- **Decisão:** issues públicas, mas travadas automaticamente quando abertas pela autora (workflow `lock-own-issues.yml`, que usa só o `gh` dos runners); quadro do GitHub Projects privado; `.gitignore` reforçado para chaves e credenciais; token do `gh` com escopos mínimos; checklist em `docs/Segurança.md` e regras para o Claude no `CLAUDE.md`.
 - **Alternativas consideradas:** desativar as issues (`gh repo edit --enable-issues=false`), que esconde o planejamento do portfólio; deixar as issues abertas a comentários, que expõe a spam.
 - **Consequências:** terceiros não comentam nas issues da autora. O workflow só passa a valer depois de chegar à `main`; até lá, as issues são travadas manualmente ou pelo script de criação.

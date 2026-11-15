@@ -26,13 +26,13 @@ Para gerar o próximo relatório com resultado real, rode `./mvnw test` com aces
 
 ## Cobertura de regras
 
-As regras cobertas e as lacunas estão na matriz do [PLANO_DE_TESTES.md §6](../PLANO_DE_TESTES.md#6-matriz-de-rastreabilidade-regras-implementadas). Resumo das lacunas:
+As regras cobertas e as lacunas estão na matriz do [Plano_de_Testes.md §6](../Plano_de_Testes.md#6-matriz-de-rastreabilidade-regras-implementadas). Resumo das lacunas:
 
 - Sem testes de domínio para `User` (RN-003, RN-005).
 - Política de senha e limites de campos testados só de forma genérica (RN-002, RN-004).
 - Sem testes de `CustomUserDetailsService`, `TokenService` e `SecurityFilter`.
 - Sem teste de conta desativada ou bloqueada → 403 (RN-009).
-- Nenhum teste cobre as divergências D1–D4 do REGRAS_DE_NEGOCIO.md.
+- Nenhum teste cobre as divergências D1–D4 do Regras_de_Negócio.md.
 
 ## Conclusão
 
