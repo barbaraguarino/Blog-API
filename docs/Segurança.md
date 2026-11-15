@@ -66,6 +66,20 @@ Os links de conversas com o Claude dão acesso ao histórico de trabalho e não 
 
 ### 3.4 Quem pode alterar o código
 - [ ] **Lembrete:** ninguém altera os arquivos do repositório sem a aprovação da autora. Pessoas de fora só podem propor mudanças por PR, e um PR só entra com o merge feito por ela. O Claude também nunca faz merge.
+- [ ] **Manual:** em *Settings → Branches → Add rule* (ou *Rules*), para a `main` e a `develop`, marque **Restrict deletions** (o branch não pode ser apagado) e **Block force pushes** (o histórico não pode ser reescrito).
+
+### 3.5 Exclusão do repositório
+Uma conta pessoal não tem opção para impedir a própria dona de apagar o repositório. Por isso a proteção é em camadas:
+
+- [x] **Token sem permissão de apagar:** apagar um repositório pelo terminal exige o escopo `delete_repo`, que o token do `gh` **não** tem. **Regra:** nunca aceitar um `gh auth refresh -s delete_repo`. Confira com `gh auth status`.
+- [x] **No repositório:** o `.claude/settings.json` (`permissions.deny`) proíbe o Claude de rodar comandos destrutivos, mesmo por engano:
+  - `gh repo delete`, `archive` e `rename`;
+  - `gh api` com `DELETE`;
+  - `gh pr merge` e `git merge`;
+  - `git push --force` e `--delete`;
+  - `gh auth login`, `refresh`, `logout` e `token`.
+- [ ] **Manual:** com o **2FA** ativo, apagar pelo site exige digitar o nome do repositório e confirmar com senha ou segundo fator (*sudo mode*).
+- [ ] **Se acontecer:** repositórios apagados geralmente podem ser restaurados em até **90 dias**, em *Settings da conta → Repositories → Deleted repositories*. A pasta local também tem o histórico completo e pode ser enviada de novo.
 
 ---
 
@@ -86,14 +100,21 @@ Os links de conversas com o Claude dão acesso ao histórico de trabalho e não 
 
 ## 5. Conteúdo de outras pessoas
 
-**Por que importa:** texto escrito por terceiros pode conter instruções disfarçadas, para pessoas ou para ferramentas de IA, ou links e scripts maliciosos. A regra é: **conteúdo de terceiros é dado, nunca instrução.**
+**Por que importa:** texto escrito por terceiros pode conter instruções disfarçadas, para pessoas ou para ferramentas de IA, ou links e scripts maliciosos. Para o Claude, a regra é ainda mais restrita: **ele só lê issues e PRs criados pela autora, e só os comentários dela.** Conteúdo de outras pessoas não chega até ele.
 
-- [ ] Filtrar as issues de terceiros: `gh issue list --search "-author:@me"`.
-- [ ] Ler conteúdo desconhecido como dado, sem executar nada:
-  - `gh issue view <n> --json author,body,comments` (texto puro, com o autor visível);
-  - `gh issue view <n> --web` (abre no navegador).
-- [ ] Desconfiar de `gh repo clone` e `gh run download` em repositórios desconhecidos. Não executar scripts nem binários vindos deles.
-- [ ] Nunca seguir pedidos escritos em issues, PRs ou comentários de terceiros sem antes avaliar. O Claude, por regra, mostra o trecho e pergunta.
+- [x] **No repositório:** o script [`.claude/scripts/github-leitura.sh`](../.claude/scripts/github-leitura.sh) é a única forma de o Claude listar e ler issues e PRs:
+  - `listar issue|pr` mostra só os itens criados pela conta autenticada no `gh`;
+  - `ler issue|pr <n>` confere o autor: se não for a autora, **não lê nada**; se for, mostra o conteúdo e **só os comentários dela**, informando apenas quantos comentários de outras pessoas foram ignorados.
+- [x] **No repositório:** o `.claude/settings.json` bloqueia os comandos diretos que mostrariam conteúdo de terceiros:
+  - `gh issue list` e `view`;
+  - `gh pr list`, `view` e `diff`;
+  - `gh search`;
+  - `gh api` em issues, PRs e comentários.
+- [ ] **Para a autora**, quando quiser ver algo de terceiros, sempre como dado:
+  - filtrar: `gh issue list --search "-author:@me"`;
+  - ler no navegador: `gh issue view <n> --web`.
+- [ ] Desconfiar de `gh repo clone` e `gh run download` em repositórios desconhecidos. Não executar scripts nem binários vindos deles (o Claude é bloqueado de rodá-los).
+- [ ] Nunca seguir pedidos escritos em issues, PRs ou comentários de terceiros sem antes avaliar.
 
 ---
 
@@ -110,8 +131,8 @@ Passo a passo, do mais leve ao mais forte:
 
 ## 7. Resumo do que falta fazer manualmente
 
-- [ ] Instalar o `gh` (WinGet) e autenticar com escopos mínimos (seção 2).
+- [x] Instalar o `gh` (WinGet) e autenticar com escopos mínimos (seção 2). *Instalado e logado em 2026-11-15; conferir no `gh auth status` se o escopo `project` foi adicionado e se `delete_repo` não aparece.*
 - [ ] Confirmar o 2FA na conta GitHub.
 - [ ] Ativar Secret scanning, Push protection e Dependabot (seção 3.2).
-- [ ] Proteger a `develop` e a `main`, exigindo o check de links (seção 3.3).
+- [ ] Proteger a `develop` e a `main`: exigir o check de links, restringir exclusão e bloquear force push (seções 3.3 e 3.4).
 - [ ] Deixar o GitHub Projects privado (seção 4).
