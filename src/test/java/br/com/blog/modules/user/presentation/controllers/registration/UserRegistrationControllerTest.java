@@ -1,4 +1,4 @@
-package br.com.blog.modules.user.controllers.registration;
+package br.com.blog.modules.user.presentation.controllers.registration;
 
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
@@ -11,7 +11,6 @@ import br.com.blog.modules.user.application.dtos.registration.RegisterUserReques
 import br.com.blog.modules.user.application.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.application.usecases.registration.RegisterGoogleUserService;
 import br.com.blog.modules.user.application.usecases.registration.RegisterLocalUserService;
-import br.com.blog.modules.user.presentation.controllers.registration.UserRegistrationController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

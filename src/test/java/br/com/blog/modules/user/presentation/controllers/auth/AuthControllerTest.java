@@ -1,4 +1,4 @@
-package br.com.blog.modules.user.controllers.auth;
+package br.com.blog.modules.user.presentation.controllers.auth;
 
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
@@ -12,7 +12,6 @@ import br.com.blog.modules.user.application.dtos.auth.LoginRequestDTO;
 import br.com.blog.modules.user.application.dtos.shared.UserProfileResponseDTO;
 import br.com.blog.modules.user.application.usecases.auth.AuthenticateGoogleUserService;
 import br.com.blog.modules.user.application.usecases.auth.AuthenticateLocalUserService;
-import br.com.blog.modules.user.presentation.controllers.auth.AuthController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

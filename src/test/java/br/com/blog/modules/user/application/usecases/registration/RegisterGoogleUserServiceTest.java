@@ -1,9 +1,8 @@
-package br.com.blog.modules.user.services.registration;
+package br.com.blog.modules.user.application.usecases.registration;
 
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.infrastructure.providers.google.GoogleAuthGateway;
-import br.com.blog.modules.user.application.usecases.registration.RegisterGoogleUserService;
 import br.com.blog.modules.user.domain.models.User;
 import br.com.blog.modules.user.application.dtos.auth.GoogleAuthRequestDTO;
 import br.com.blog.modules.user.application.dtos.auth.internal.GoogleUserInfoDTO;

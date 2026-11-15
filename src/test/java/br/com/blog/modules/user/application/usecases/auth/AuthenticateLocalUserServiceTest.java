@@ -1,8 +1,7 @@
-package br.com.blog.modules.user.services.auth;
+package br.com.blog.modules.user.application.usecases.auth;
 
 import br.com.blog.core.security.jwt.TokenService;
 import br.com.blog.core.security.userdetails.CustomUserDetails;
-import br.com.blog.modules.user.application.usecases.auth.AuthenticateLocalUserService;
 import br.com.blog.modules.user.domain.models.User;
 import br.com.blog.modules.user.application.dtos.auth.internal.AuthResultDTO;
 import br.com.blog.modules.user.application.dtos.auth.LoginRequestDTO;

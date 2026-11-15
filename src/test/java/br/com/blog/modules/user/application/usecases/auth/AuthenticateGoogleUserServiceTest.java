@@ -1,10 +1,9 @@
-package br.com.blog.modules.user.services.auth;
+package br.com.blog.modules.user.application.usecases.auth;
 
 import br.com.blog.core.exceptions.domain.ResourceNotFoundException;
 import br.com.blog.core.exceptions.infrastructure.ExternalProviderAuthException;
 import br.com.blog.infrastructure.providers.google.GoogleAuthGateway;
 import br.com.blog.core.security.jwt.TokenService;
-import br.com.blog.modules.user.application.usecases.auth.AuthenticateGoogleUserService;
 import br.com.blog.modules.user.domain.models.User;
 import br.com.blog.modules.user.application.dtos.auth.internal.AuthResultDTO;
 import br.com.blog.modules.user.application.dtos.auth.GoogleAuthRequestDTO;

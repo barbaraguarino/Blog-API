@@ -1,7 +1,6 @@
-package br.com.blog.modules.user.services.registration;
+package br.com.blog.modules.user.application.usecases.registration;
 
 import br.com.blog.core.exceptions.domain.ResourceAlreadyExistsException;
-import br.com.blog.modules.user.application.usecases.registration.RegisterLocalUserService;
 import br.com.blog.modules.user.domain.models.User;
 import br.com.blog.modules.user.application.dtos.registration.RegisterUserRequestDTO;
 import br.com.blog.modules.user.application.dtos.shared.UserProfileResponseDTO;
