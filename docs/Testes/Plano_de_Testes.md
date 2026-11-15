@@ -19,15 +19,21 @@ Garantir que cada regra de negócio ([Regras_de_Negócio.md](../Regras_de_Negóc
 
 | Nível | Ferramentas | O que cobre | Onde fica |
 |---|---|---|---|
-| **Unitário: domínio** | JUnit 5, AssertJ | Fábricas e regras das entidades (ex. geração de nickname) | `src/test/.../modules/<m>/domain/` |
-| **Unitário: caso de uso** | JUnit 5, Mockito, AssertJ | Cada regra de negócio, com repositórios e gateways simulados | `src/test/.../modules/<m>/services/` |
-| **Controller (fatia web)** | `@WebMvcTest`, `MockMvc`, `@MockitoBean`, `SecurityConfig` importado | Status HTTP, validação, formato de erro, cookies, rotas públicas e protegidas | `src/test/.../modules/<m>/controllers/` |
-| **Integração** | `@SpringBootTest` + PostgreSQL de teste | Fluxos ponta a ponta, migrations, consultas JPA | `src/test/.../integration/` *(a criar)* |
-| **Manual** | Arquivos `.http` (HTTP Client do IntelliJ) | Validação exploratória dos endpoints | `requests/<modulo>/` |
+| **Unitário** (toda classe) | JUnit 5, AssertJ, Mockito | Comportamento de cada classe isolada: entidades, enums, DTOs (validações), mappers, exceções, segurança, gateways | Mesmo pacote da classe, em `src/test/java` |
+| **Caso de uso** | JUnit 5, Mockito, AssertJ | Cada regra de negócio, com repositórios e gateways simulados | Mesmo pacote: `.../application/usecases/<contexto>/` |
+| **Controller (fatia web)** | `@WebMvcTest`, `MockMvc`, `@MockitoBean`, `SecurityConfig` importado | Status HTTP, validação, formato de erro, cookies, rotas públicas e protegidas | Mesmo pacote: `.../presentation/controllers/<contexto>/` |
+| **Exceções / handler** | `@WebMvcTest` ou unitário com `MessageSource` | Status HTTP, tradução da chave, formato do `ErrorResponseDTO` | Mesmo pacote: `core/exceptions/` |
+| **Integração** | `@SpringBootTest` / `@DataJpaTest` + PostgreSQL de teste | Fluxos ponta a ponta, migrations, consultas JPA | Pacote do módulo, sufixo `IT` *(a criar)* |
+| **Manual** | Cliente HTTP do IntelliJ (arquivos `.http`). Não usamos Postman nem similares | Validação exploratória de cada endpoint, um bloco por cenário | `requests/<modulo>/<funcionalidade>/` |
+
+**Regra de organização:** uma classe → uma classe de teste com o mesmo nome + `Test`, **no mesmo pacote** da classe testada. O caminho do teste é o da classe trocando `src/main` por `src/test` (ex. `.../presentation/controllers/auth/AuthController.java` → `.../presentation/controllers/auth/AuthControllerTest.java`). Fixtures ficam em `src/test/java/br/com/blog/support/`.
 
 ## 4. Critérios
 
 ### Quando um teste é obrigatório
+- **Toda classe de produção tem uma classe de teste unitário**, mesmo as mais simples (entidades, enums, DTOs, mappers, exceções).
+- **Cada tipo de classe tem também os testes do seu tipo** (tabela da seção 3): casos de uso com Mockito, controllers com `@WebMvcTest`, exceções com o handler.
+- **Todo endpoint** tem um arquivo `.http` com os cenários de sucesso e de erro.
 - **Toda RN implementada** tem pelo menos um teste de caso de uso que a comprova. O nome do teste (`@DisplayName`) ou um comentário cita o ID, ex. `RN-001`.
 - **Todo endpoint** tem testes de controller para: sucesso, validação (400), cada erro de negócio que pode retornar e acesso sem autenticação quando a rota é protegida (401/403).
 - **Todo bug corrigido** ganha um teste que falhava antes da correção.
@@ -63,6 +69,20 @@ Garantir que cada regra de negócio ([Regras_de_Negócio.md](../Regras_de_Negóc
 | RN-009 login por e-mail ou nickname | `AuthenticateLocalUserServiceTest`, `AuthControllerTest` | 🟡 falta testar `CustomUserDetailsService` (ramo e-mail vs nickname) e conta inativa/bloqueada → 403 |
 | RN-010 login Google | `AuthenticateGoogleUserServiceTest`, `AuthControllerTest` | ✅ |
 | Segurança: `TokenService` e `SecurityFilter` | — | ⬜ falta teste de geração, validação, expiração e emissor |
+
+### Cobertura por classe (2026-11-15)
+
+Pela regra "toda classe tem teste", **6 de 35 classes** de produção têm teste hoje. Faltam:
+
+| Área | Classes sem teste |
+|---|---|
+| Domínio | `User`, `UserRole` |
+| DTOs | `RegisterUserRequestDTO` (validações), `LoginRequestDTO`, `GoogleAuthRequestDTO`, `UserProfileResponseDTO`, `AuthResultDTO`, `GoogleUserInfoDTO` |
+| Mapper | `UserMapper` |
+| Exceções | `GlobalExceptionHandler`, `ErrorResponseDTO`, `DomainException`, `BusinessRuleException`, `ResourceNotFoundException`, `ResourceAlreadyExistsException`, `InfrastructureException`, `ExternalProviderAuthException`, `SecurityInfrastructureException` |
+| Segurança | `SecurityConfig`, `SecurityFilter`, `TokenService`, `CustomUserDetails`, `CustomUserDetailsService` |
+| Infraestrutura | `GoogleAuthGateway`, `GoogleAuthConfig`, `UserRepository` (integração com banco de teste) |
+| Configuração | `I18nConfiguration`, `BlogApiApplication` (coberta pelo `BlogApiApplicationTests`, que exige banco) |
 
 ## 7. Ambiente
 
