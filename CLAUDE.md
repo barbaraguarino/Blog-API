@@ -6,7 +6,7 @@ Regras para trabalhar neste repositório. Projeto de estudo de backend: API REST
 
 - Testes: `./mvnw test` (no Windows/PowerShell: `.\mvnw.cmd test`)
 - Rodar a API: `./mvnw spring-boot:run`
-- Requisições manuais: arquivos `.http` em `requests/<modulo>/<funcionalidade>/`
+- Requisições manuais: arquivos `.http` em `requests/<modulo>/<funcionalidade>/`, executados pelo **Cliente HTTP do IntelliJ** (ver *Testes manuais*)
 
 Configuração sensível fica no `.env` da raiz (carregado por `spring.config.import`). Ele está no `.gitignore`: **nunca** leia valores dele para o chat nem commite segredos.
 
@@ -25,19 +25,61 @@ Pragmatic Clean Architecture, organizada por funcionalidade (package by feature)
 ## Convenções de código
 
 - **Casos de uso:** uma classe por ação, nomeada `<Verbo><Objeto>Service` (ex. `RegisterLocalUserService`), com um único método público `execute(...)`, `@Service` + `@RequiredArgsConstructor`, e `@Transactional` quando escreve no banco.
-- **DTOs:** `record` com sufixo `DTO`. Os que nunca saem da API ficam em `dtos/.../internal/`.
-- **Erros:** lance as exceções de `core/exceptions/domain` (`BusinessRuleException`, `ResourceNotFoundException`, `ResourceAlreadyExistsException`) ou de `core/exceptions/infrastructure`, passando uma **chave de i18n**, nunca um texto fixo. O `GlobalExceptionHandler` formata a resposta.
+- **DTOs (obrigatório):** veja a seção *DTOs*.
+- **Erros (obrigatório):** veja a seção *Exceções*.
 - **i18n:** toda chave nova vai nos três arquivos: `messages.properties`, `messages_pt_BR.properties` e `messages_en.properties`. Padrão de chave: `error.<area>.<motivo>`.
 - **Banco:** só via Flyway, com uma nova migration `V<n>__descricao.sql`. Nunca edite uma migration já aplicada.
 - **Segurança:** JWT em cookie `HttpOnly`. Endpoints novos são protegidos por padrão; liberar rota pública exige ajuste explícito no `SecurityConfig`.
 
+## DTOs
+
+- **Toda entrada e saída da API é um DTO.** Controllers nunca recebem nem devolvem entidades JPA (`User` etc.), nem `Map` ou `Object` soltos.
+- DTO é `record` com sufixo `DTO`, organizado por contexto em `application/dtos/<contexto>/` (ex. `dtos/auth/LoginRequestDTO`). Os compartilhados ficam em `dtos/shared/`, e os que trafegam só entre camadas internas (nunca saem na resposta) ficam em `dtos/<contexto>/internal/`.
+- Nomes: `<Ação>RequestDTO` para entrada e `<Objeto>ResponseDTO` para saída.
+- Validação de entrada fica no DTO, com Bean Validation e mensagens como chaves de i18n (`message = "error.validation.<area>.<campo>.<regra>"`). O controller usa `@Valid`.
+- A conversão entidade → DTO fica nos mappers (`application/mappers/`), nunca no controller.
+- Dados sensíveis (senha, hash, tokens, `googleId`) nunca vão para um DTO de resposta.
+
+## Exceções
+
+- **Nunca lance `RuntimeException`, `IllegalArgumentException` ou outra exceção genérica para regra de negócio.** Use a hierarquia de `core/exceptions/`:
+  - **Domínio** (estendem `DomainException`): `BusinessRuleException` → 422, `ResourceNotFoundException` → 404, `ResourceAlreadyExistsException` → 409.
+  - **Infraestrutura** (estendem `InfrastructureException`, sempre com a `cause` original): `ExternalProviderAuthException` → 401, `SecurityInfrastructureException` e outras → 500.
+- Toda exceção recebe uma **chave de i18n** (`error.<area>.<motivo>`) e argumentos opcionais, nunca um texto fixo. A chave vai nos três arquivos de mensagens.
+- O `GlobalExceptionHandler` é o único lugar que transforma exceção em resposta HTTP, sempre no formato `ErrorResponseDTO`. Controllers e casos de uso não montam respostas de erro.
+- Uma exceção nova só é criada se nenhuma existente servir. Ela estende `DomainException` ou `InfrastructureException`, ganha um handler no `GlobalExceptionHandler` com o status HTTP correto, e testes da exceção e do handler.
+- Erros de infraestrutura são logados com a causa; a resposta ao cliente é sempre genérica e traduzida, sem stack trace nem detalhes internos.
+
 ## Testes
 
-- Ficam em `src/test/java/br/com/blog/modules/<modulo>/services/...` (casos de uso) e `.../controllers/...` (controllers).
-- Casos de uso: testes unitários com JUnit 5 + Mockito (`@ExtendWith(MockitoExtension.class)`) e AssertJ.
-- Controllers: `@WebMvcTest` + `MockMvc`, importando `SecurityConfig` e mockando dependências com `@MockitoBean`.
+### Regras
+- **Toda classe de produção tem uma classe de teste unitário**, mesmo as mais simples: entidades, enums, DTOs (validações), mappers, exceções, configurações com lógica, filtros, serviços de segurança, gateways e casos de uso.
+- **Além do unitário, cada tipo de classe tem os testes do seu tipo**, seguindo os que já existem:
+  - **Casos de uso:** unitário com JUnit 5 + Mockito (`@ExtendWith(MockitoExtension.class)`) + AssertJ, com repositórios e gateways simulados.
+  - **Controllers:** `@WebMvcTest` + `MockMvc`, importando `SecurityConfig` e simulando dependências com `@MockitoBean`. Cubra sucesso, validação (400), cada erro de negócio e acesso sem autenticação quando a rota é protegida.
+  - **Exceções e `GlobalExceptionHandler`:** status HTTP, chave de i18n traduzida e formato do `ErrorResponseDTO`.
+  - **Repositórios com consulta própria e migrations:** teste de integração (quando o ambiente de banco de teste existir).
+- Cubra o caminho feliz e **cada** regra de negócio (cite o ID, ex. `RN-005`) e cada erro possível.
+- Um bug corrigido ganha um teste que falhava antes da correção.
+
+### Organização
+- **Uma classe → uma classe de teste**, com o mesmo nome + `Test`, **no mesmo pacote** da classe testada. O caminho do teste é o da classe trocando `src/main` por `src/test`:
+  - `src/main/java/br/com/blog/modules/user/presentation/controllers/auth/AuthController.java`
+  - `src/test/java/br/com/blog/modules/user/presentation/controllers/auth/AuthControllerTest.java`
+- Como o teste está no mesmo pacote, não importe a classe testada.
+- Testes de integração de fluxo (vários componentes) usam o sufixo `IT` e ficam no pacote do módulo que testam.
+- Classes de apoio (fábricas de dados, fixtures) ficam em `src/test/java/br/com/blog/support/` e não são testes.
+
+### Estilo
 - Use `@DisplayName` em português descrevendo o comportamento, e `@Nested` para agrupar cenários.
-- Cubra o caminho feliz e cada erro de regra de negócio.
+- Estrutura Arrange / Act / Assert, com um comportamento por teste.
+- Nunca chame serviços reais (Google, e-mail, AWS) em testes unitários ou de controller.
+
+### Testes manuais (Cliente HTTP do IntelliJ)
+- A autora **não usa Postman, Insomnia nem similares**: os testes manuais são feitos com o **Cliente HTTP do IntelliJ**, em arquivos `.http`. Não sugira instalar outras ferramentas.
+- Todo endpoint novo ou alterado ganha ou atualiza um `.http` em `requests/<modulo>/<funcionalidade>/`, com um bloco `###` por cenário: sucesso e cada erro esperado (400, 401, 403, 404, 409…), com o status no título (ex. `### Cadastrar Usuário Já Cadastrado (Conflito)`).
+- Inclua `Content-Type` e `Accept-Language` em cada requisição.
+- Use só dados fictícios. Tokens e valores sensíveis entram como variáveis (`{{token}}`) definidas em `http-client.private.env.json`, que está no `.gitignore`.
 
 ## Documentação do projeto
 
