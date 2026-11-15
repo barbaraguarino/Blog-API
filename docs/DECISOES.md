@@ -85,3 +85,20 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Contexto:** o backlog antigo tinha quatro tarefas seguidas de autenticação antes de qualquer funcionalidade de blog.
 - **Decisão:** a v0.1 fica com o essencial de identidade (sessões, e-mail, ativação, recuperação e troca de senha). A 2FA com TOTP foi para a v0.4, depois de Artigos e Social.
 - **Consequências:** o núcleo do blog (artigos) é entregue antes. Para voltar à ordem original, basta mover a issue de milestone.
+
+## D-009: Documentação do projeto em Markdown dentro do repositório
+
+- **Data:** 2026-11-15
+- **Status:** Aceita
+- **Contexto:** o projeto precisava de definição, requisitos, regras de negócio, arquitetura e plano de testes formalizados, versionados junto com o código.
+- **Decisão:** documentos `.md` em `docs/`, com IDs rastreáveis (RF-xxx, RNF-xxx, RN-xxx) citados nas issues e nos PRs. Relatórios de teste são datados e nunca editados depois de publicados.
+- **Alternativas consideradas:** Wiki do GitHub ou Notion, que ficam fora do versionamento e do review dos PRs.
+- **Consequências:** cada PR que muda comportamento também atualiza os documentos afetados.
+
+## D-010: Licença MIT
+
+- **Data:** 2026-11-15
+- **Status:** Aceita
+- **Contexto:** a licença anterior era privada (todos os direitos reservados), o que impedia o uso do código por terceiros.
+- **Decisão:** adotar a licença MIT.
+- **Consequências:** qualquer pessoa pode usar, modificar e distribuir o código, desde que mantenha o aviso de copyright. O software é fornecido sem garantia.
