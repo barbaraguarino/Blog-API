@@ -6,9 +6,11 @@ Visão geral das fases do Blog-API. O detalhe de cada tarefa (objetivo, regras d
 
 1. Toda tarefa nasce como uma **Issue**, usando o template de funcionalidade ou de bug.
 2. A Issue entra em um **Milestone** (fase abaixo) e no quadro do Projects.
-3. O branch segue o padrão `tipo/descricao-curta` (`feature/`, `refactor/`, `fix/`, `docs/`) a partir da `develop`.
-4. O PR para a `develop` usa `Closes #N` e cumpre o checklist da **Definição de Pronto** do template de PR.
-5. A `main` recebe a `develop` ao final de cada Milestone.
+3. O trabalho segue o **Git Flow**: um branch `feature/*` ou `bugfix/*` por issue, saindo da `develop` (regras completas no `CLAUDE.md`).
+4. Cada branch tem um único PR para a `develop`, com `Closes #N` e o checklist da **Definição de Pronto** do template de PR. A issue só fecha se todos os critérios de aceite forem cumpridos.
+5. Ao fechar um Milestone, um branch `release/vX.Y.Z` leva a `develop` para a `main`.
+
+Decisões de arquitetura e de processo ficam em [DECISOES.md](DECISOES.md).
 
 ## Fases
 
