@@ -1,0 +1,67 @@
+# Falha o PR se o título, a descrição, as mensagens de commit ou as linhas
+# adicionadas nos arquivos tiverem link do Claude (sessão, chat ou site).
+# Regra do CLAUDE.md: pode dizer que foi feito com IA, mas sem link.
+#
+# Sem actions de terceiros nem checkout: usa só o gh e o jq que já vêm no runner.
+# Nunca imprime o link encontrado, apenas onde ele está.
+name: Verificar links do Claude
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO: ${{ github.repository }}
+      HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      PR: ${{ github.event.pull_request.number }}
+      PR_TITULO: ${{ github.event.pull_request.title }}
+      PR_CORPO: ${{ github.event.pull_request.body }}
+    steps:
+      - name: Baixar o script de verificação do próprio PR
+        run: |
+          gh api -H "Accept: application/vnd.github.raw" \
+            "repos/$HEAD_REPO/contents/.github/scripts/verificar-links-claude.sh?ref=$HEAD_SHA" > verificar.sh
+
+      - name: Verificar título e descrição
+        run: |
+          falhou=0
+          printf '%s' "$PR_TITULO" | bash verificar.sh || { echo "::error::O título do PR contém link do Claude."; falhou=1; }
+          printf '%s' "$PR_CORPO"  | bash verificar.sh || { echo "::error::A descrição do PR contém link do Claude."; falhou=1; }
+          exit $falhou
+
+      - name: Verificar mensagens de commit
+        run: |
+          gh api --paginate "repos/$REPO/pulls/$PR/commits" \
+            --jq '.[] | {sha: .sha, mensagem: .commit.message}' | jq -s '.' > commits.json
+          falhou=0
+          total=$(jq 'length' commits.json)
+          for ((i = 0; i < total; i++)); do
+            sha=$(jq -r ".[$i].sha" commits.json)
+            jq -r ".[$i].mensagem" commits.json | bash verificar.sh \
+              || { echo "::error::A mensagem do commit ${sha:0:7} contém link do Claude."; falhou=1; }
+          done
+          exit $falhou
+
+      - name: Verificar linhas adicionadas nos arquivos
+        run: |
+          gh api --paginate "repos/$REPO/pulls/$PR/files" \
+            --jq '.[] | {nome: .filename, patch: (.patch // "")}' | jq -s '.' > arquivos.json
+          falhou=0
+          total=$(jq 'length' arquivos.json)
+          for ((i = 0; i < total; i++)); do
+            nome=$(jq -r ".[$i].nome" arquivos.json)
+            jq -r ".[$i].patch" arquivos.json \
+              | { grep '^+' || true; } | { grep -v '^+++' || true; } \
+              | bash verificar.sh \
+              || { echo "::error file=$nome::O arquivo $nome tem link do Claude em linhas adicionadas."; falhou=1; }
+          done
+          exit $falhou

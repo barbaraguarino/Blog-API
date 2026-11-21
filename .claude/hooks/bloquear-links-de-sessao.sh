@@ -9,7 +9,7 @@
 entrada="$(cat)"
 
 # Links de sessão, chat, compartilhamento ou artefato e identificadores de sessão.
-padrao_sessao='claude\.ai/[A-Za-z0-9_./?=#-]+|claude\.com/[A-Za-z0-9_./?=#-]*(session|chat|share|artifact)|#local_[A-Za-z0-9_-]+|session_[A-Za-z0-9]{8,}|Claude-Session:'
+padrao_sessao='claude\.ai/[A-Za-z0-9_./?=#-]+|claude\.com/[A-Za-z0-9_./?=#-]*(session|chat|share|artifact)|#local_[A-Za-z0-9_-]+|session_[A-Za-z0-9]{8,}|Claude-Session[:]'
 
 # Em mensagens de commit, PR, issue e release, nenhum link do Claude é permitido.
 padrao_qualquer_link='https?://[A-Za-z0-9.-]*claude\.(ai|com)'
