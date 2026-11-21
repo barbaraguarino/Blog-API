@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 3.1 · **Última modificação:** 21/11/2026
+**Versão:** 3.2 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -200,7 +200,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 - **RNF-017** – O sistema deve usar o PostgreSQL como banco de dados, com o esquema versionado exclusivamente por migrations do Flyway.
 - **RNF-018** – O sistema deve prefixar todas as rotas com a versão da API (`/api/v1`).
-- **RNF-019** – O sistema deve ser executável localmente com Java 25 e PostgreSQL, sem depender de contêineres.
+- **RNF-019** – O sistema deve ser executável localmente, na versão do Java definida na [Arquitetura](Arquitetura.md) e com PostgreSQL, sem depender de contêineres.
 
 ### 2.8 Operação
 
