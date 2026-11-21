@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 5.1 · **Última modificação:** 21/11/2026
+**Versão:** 5.2 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -21,7 +21,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google cujo e-mail tenha sido verificado pelo Google, aceitando os termos de uso e a política de privacidade.
 - **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
 - **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
-- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub e a Apple, e permitir que o dono escolha quais provedores ficam ativos na plataforma.
+- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub e a Apple, desde que o e-mail tenha sido verificado pelo provedor, e permitir que o dono escolha quais provedores ficam ativos na plataforma.
 - **RF-054** – O sistema deve permitir que o usuário cadastre, use e remova passkeys para entrar sem senha.
 - **RF-055** – O sistema deve permitir que o usuário entre sem senha, com um código de uso único enviado ao e-mail cadastrado.
 - **RF-051** – O sistema deve impedir o acesso de contas não ativadas ou suspensas, em qualquer forma de login.
@@ -142,7 +142,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-104** – O sistema deve permitir que o dono defina a identidade da plataforma: nome, descrição, logo, idioma padrão e links.
 - **RF-105** – O sistema deve permitir que o dono crie e edite páginas institucionais, como Sobre, Contato e Regras da comunidade.
 - **RF-106** – O sistema deve permitir que o dono publique novas versões dos termos de uso e da política de privacidade.
-- **RF-107** – O sistema deve permitir que a administração convide pessoas por e-mail para a plataforma ou diretamente para um perfil.
+- **RF-107** – O sistema deve permitir que a administração convide pessoas por e-mail para a plataforma ou diretamente para um perfil, respeitando as regras de concessão e de promoção de cada perfil.
 - **RF-108** – O sistema deve permitir que o dono faça e baixe um backup dos dados da plataforma.
 - **RF-132** – O sistema deve permitir que o dono restaure a plataforma a partir de um backup.
 - **RF-109** – O sistema deve permitir que a administração liste e gerencie os usuários e os papéis deles, conforme os limites de cada perfil.
@@ -158,7 +158,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-140** – O sistema deve mostrar ao dono o uso das funcionalidades de IA e dos e-mails: quantidade de traduções, correções, sugestões, resumos e triagens, os idiomas mais pedidos nas traduções e os e-mails enviados e recusados.
 - **RF-113** – O sistema deve permitir que o dono, e só ele, consulte os logs técnicos e de segurança.
 - **RF-114** – O sistema deve registrar todas as ações administrativas, com quem fez, o quê e quando, e mostrar esse registro ao dono.
-- **RF-126** – O sistema deve permitir que o dono coloque a plataforma em modo de manutenção, em que só a equipe consegue acessá-la.
+- **RF-126** – O sistema deve permitir que o dono coloque a plataforma em modo de manutenção, em que só os moderadores e a administração conseguem acessá-la.
 - **RF-127** – O sistema deve permitir que o dono publique anúncios para todos os usuários, enviados como aviso dentro da plataforma.
 
 ---
@@ -201,14 +201,14 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 ### 2.5 Desempenho
 
 - **RNF-012** – O sistema deve paginar todas as listagens, com um tamanho máximo de página.
-- **RNF-030** – O sistema deve entregar os avisos dentro da plataforma em tempo real, sem que o cliente precise consultar a API repetidamente.
+- **RNF-030** – O sistema deve entregar os avisos dentro da plataforma em tempo real, sem que o front-end precise consultar a API repetidamente.
 
 ### 2.6 Manutenibilidade e qualidade
 
 - **RNF-013** – O sistema deve seguir a Pragmatic Clean Architecture, com o código organizado por funcionalidade e dividido nas camadas de domínio, aplicação, infraestrutura e apresentação.
-- **RNF-014** – O sistema deve trocar dados com os clientes apenas por meio de DTOs, sem expor as entidades do banco.
+- **RNF-014** – O sistema deve trocar dados com o front-end apenas por meio de DTOs, sem expor as entidades do banco.
 - **RNF-015** – O sistema deve ter um teste automatizado para cada classe de produção.
-- **RNF-016** – O sistema deve registrar em log os erros internos com a causa original e responder ao cliente com uma mensagem genérica, sem detalhes técnicos.
+- **RNF-016** – O sistema deve registrar em log os erros internos com a causa original e responder ao front-end com uma mensagem genérica, sem detalhes técnicos.
 - **RNF-031** – O sistema deve ser testado sem chamar serviços externos de verdade.
 - **RNF-028** – O sistema deve acessar cada serviço externo por meio de um gateway, para que o provedor possa ser trocado sem mudar o resto do sistema.
 
@@ -221,5 +221,5 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 ### 2.8 Operação
 
 - **RNF-032** – O sistema deve ter configurações separadas por ambiente, com a de produção pronta para uso, mesmo sem a publicação.
-- **RNF-033** – O sistema deve expor métricas de uso e de desempenho e o estado de saúde, acessíveis só ao superadministrador.
+- **RNF-033** – O sistema deve expor as métricas técnicas e o estado de saúde do sistema, acessíveis só ao superadministrador.
 - **RNF-034** – O sistema deve poder ser executado, com o banco de dados, em contêineres Docker.
