@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 3.2 · **Última modificação:** 21/11/2026
+**Versão:** 4.0 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -34,7 +34,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-050** – O sistema deve exigir o código do aplicativo autenticador, ou um código de recuperação, no login dos usuários que ativaram a verificação em duas etapas.
 - **RF-057** – O sistema deve permitir que o usuário marque um dispositivo como confiável, dispensando o código da verificação em duas etapas nele por um período limitado, e desfaça essa marcação.
 - **RF-059** – O sistema deve exigir que moderadores, administradores e o superadministrador tenham a verificação em duas etapas ativa para usar as funções desses papéis.
-- **RF-058** – O sistema deve pedir a senha ou um código de verificação de novo antes de ações sensíveis, como trocar o e-mail, desativar a verificação em duas etapas ou excluir a conta, mesmo com o usuário autenticado.
+- **RF-058** – O sistema deve pedir de novo a senha ou um código de verificação antes de ações sensíveis, como trocar o e-mail, desativar a verificação em duas etapas ou excluir a conta, mesmo com o usuário autenticado.
 - **RF-012** – O sistema deve permitir que o usuário vincule e desvincule uma conta Google, ou de outro provedor social ativo, à sua conta.
 - **RF-052** – O sistema deve permitir que o usuário edite o próprio perfil: nome, foto, descrição e nickname, com um limite de frequência para a troca do nickname.
 - **RF-053** – O sistema deve permitir que o usuário troque o e-mail da conta, confirmando o novo endereço com um código e avisando o endereço antigo.
@@ -57,6 +57,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-020** – O sistema deve permitir que o leitor solicite permissão para se tornar autor, quando a plataforma estiver no modo por pedido.
 - **RF-021** – O sistema deve permitir que a administração aprove ou recuse as solicitações de autoria, conforme as regras de aprovação da plataforma.
 - **RF-069** – O sistema deve permitir que a administração nomeie autores diretamente, quando a plataforma estiver no modo fechado.
+- **RF-128** – O sistema deve permitir que a administração retire o papel de autor de um usuário, que volta a ser leitor.
 - **RF-070** – O sistema deve permitir que um administrador conceda e retire o papel de moderador.
 - **RF-071** – O sistema deve permitir a promoção de um moderador a administrador, com a aprovação de outros administradores, ou do superadministrador quando houver poucos administradores, conforme as regras da plataforma.
 - **RF-072** – O sistema deve permitir que o superadministrador rebaixe administradores.
@@ -66,21 +67,22 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 ### 1.4 Conteúdo
 
 - **RF-115** – O sistema deve permitir que qualquer pessoa, mesmo sem login, liste e leia os artigos publicados.
+- **RF-080** – O sistema deve mostrar a cada leitor a versão do artigo no idioma dele, quando existir.
+- **RF-026** – O sistema deve permitir a busca de artigos publicados por texto, categoria, tag e autor.
+- **RF-116** – O sistema deve informar o tempo estimado de leitura de cada artigo.
+- **RF-079** – O sistema deve permitir que o leitor salve artigos em listas privadas para ler depois.
 - **RF-023** – O sistema deve permitir que o autor crie, edite, salve como rascunho, publique e arquive os próprios artigos.
 - **RF-075** – O sistema deve aceitar o conteúdo dos artigos em Markdown, LaTeX, HTML com CSS ou texto puro, guardando o formato de cada artigo.
 - **RF-076** – O sistema deve permitir que o autor agende a data e a hora de publicação de um artigo.
 - **RF-077** – O sistema deve guardar o histórico de revisões de cada artigo e permitir que o autor compare e restaure versões anteriores.
 - **RF-078** – O sistema deve permitir que o autor publique várias versões de idioma do mesmo artigo, que compartilham o mesmo endereço, os mesmos comentários e as mesmas reações.
-- **RF-022** – O sistema deve permitir que a administração cadastre, edite e remova categorias e subcategorias.
-- **RF-024** – O sistema deve permitir que o autor associe tags aos artigos e que qualquer pessoa filtre os artigos por tag.
-- **RF-025** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário, para a capa e para o corpo dos artigos.
-- **RF-026** – O sistema deve permitir a busca de artigos publicados por texto, categoria, tag e autor.
-- **RF-079** – O sistema deve permitir que o leitor salve artigos em listas privadas para ler depois.
 - **RF-117** – O sistema deve permitir que o autor convide outros autores como coautores de um artigo, que passam a editá-lo e aparecem como autores dele.
 - **RF-119** – O sistema deve permitir que o autor agrupe os próprios artigos em séries ordenadas.
-- **RF-118** – O sistema deve permitir que o autor gere um link privado, com validade e revogável, para outra pessoa ler um rascunho antes da publicação.
-- **RF-116** – O sistema deve informar o tempo estimado de leitura de cada artigo.
-- **RF-080** – O sistema deve mostrar a cada leitor a versão do artigo no idioma dele, quando existir.
+- **RF-118** – O sistema deve permitir que o autor gere um link privado, com prazo de validade e que pode ser revogado, para outra pessoa ler um rascunho antes da publicação.
+- **RF-024** – O sistema deve permitir que o autor associe tags aos artigos e que qualquer pessoa filtre os artigos por tag.
+- **RF-025** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário, para a capa e para o corpo dos artigos.
+- **RF-133** – O sistema deve permitir que o autor exporte os próprios artigos em um arquivo.
+- **RF-022** – O sistema deve permitir que a administração cadastre, edite e remova categorias e subcategorias.
 
 ### 1.5 Inteligência artificial
 
@@ -97,7 +99,9 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 ### 1.6 Social
 
 - **RF-030** – O sistema deve permitir que o usuário autenticado comente artigos publicados, responda comentários e edite ou remova os próprios comentários.
-- **RF-120** – O sistema deve permitir que o usuário mencione outra pessoa com @nickname num comentário, avisando a pessoa mencionada, exceto quando um bloqueio impedir.
+- **RF-130** – O sistema deve permitir que o autor feche e reabra os comentários de um artigo.
+- **RF-131** – O sistema deve permitir que o autor fixe um comentário no topo do artigo.
+- **RF-120** – O sistema deve permitir que o usuário mencione outra pessoa com @nickname em um comentário, avisando a pessoa mencionada, exceto quando um bloqueio impedir.
 - **RF-031** – O sistema deve permitir que o usuário autenticado reaja aos artigos publicados.
 - **RF-121** – O sistema deve permitir que o usuário autenticado reaja aos comentários.
 - **RF-032** – O sistema deve permitir que o usuário autenticado siga e deixe de seguir autores.
@@ -111,6 +115,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-093** – O sistema deve enviar esses avisos também por e-mail.
 - **RF-094** – O sistema deve permitir que o usuário escolha, para cada tipo de aviso, por quais canais quer recebê-lo.
 - **RF-095** – O sistema deve permitir que o usuário liste os próprios avisos e os marque como lidos.
+- **RF-129** – O sistema deve permitir que o usuário escolha receber os avisos por e-mail reunidos em um resumo diário, em vez de um e-mail por evento.
 
 ### 1.8 Moderação
 
@@ -137,10 +142,15 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-106** – O sistema deve permitir que o dono publique novas versões dos termos de uso e da política de privacidade.
 - **RF-107** – O sistema deve permitir que a administração convide pessoas por e-mail para a plataforma ou diretamente para um perfil.
 - **RF-108** – O sistema deve permitir que o dono faça e baixe um backup dos dados da plataforma.
+- **RF-132** – O sistema deve permitir que o dono restaure a plataforma a partir de um backup.
 - **RF-109** – O sistema deve permitir que a administração liste e gerencie os usuários e os papéis deles, conforme os limites de cada perfil.
 - **RF-110** – O sistema deve permitir que a administração suspenda e reative contas.
 - **RF-111** – O sistema deve permitir que o dono ajuste as regras da plataforma, como prazos, quantidade de aprovações e limites de uso, dentro de limites seguros, guardando o histórico de cada mudança.
 - **RF-112** – O sistema deve mostrar ao dono métricas agregadas de uso e de desempenho e a saúde do sistema.
+- **RF-134** – O sistema deve mostrar ao dono estatísticas agregadas de acesso por período: número de visitas e de visitantes, páginas e artigos mais acessados, horários de pico e idiomas e regiões aproximadas de quem acessa.
+- **RF-135** – O sistema deve mostrar ao dono estatísticas agregadas da comunidade por período: novos usuários, usuários ativos, artigos publicados, comentários e reações, autores, categorias e tags mais lidos e termos mais buscados.
+- **RF-136** – O sistema deve mostrar ao dono o uso e o custo estimado de cada serviço pago no mês (inteligência artificial, e-mails, armazenamento de imagens), comparados ao teto de custos.
+- **RF-137** – O sistema deve mostrar ao dono métricas técnicas: endpoints mais usados, tempo de resposta, taxa de erros e uso de recursos.
 - **RF-113** – O sistema deve permitir que o dono, e só ele, consulte os logs técnicos e de segurança.
 - **RF-114** – O sistema deve registrar todas as ações administrativas, com quem fez, o quê e quando, e mostrar esse registro ao dono.
 - **RF-126** – O sistema deve permitir que o dono coloque a plataforma em modo de manutenção, em que só a equipe consegue acessá-la.
@@ -160,13 +170,14 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RNF-006** – O sistema deve armazenar os tokens de renovação, os códigos enviados por e-mail e os códigos de recuperação apenas na forma de hash.
 - **RNF-007** – O sistema deve limitar o número de tentativas e a frequência de login, de verificação de códigos e de reenvio de e-mails.
 - **RNF-008** – O sistema não deve expor, em nenhuma resposta, senhas, hashes, tokens, identificadores de provedores externos ou dados privados de outros usuários.
-- **RNF-020** – O sistema deve limpar o HTML e o CSS dos artigos de qualquer código perigoso antes de salvá-los, aceitando só o que estiver numa lista de elementos permitidos.
+- **RNF-020** – O sistema deve limpar o HTML e o CSS dos artigos de qualquer código perigoso antes de salvá-los, aceitando só o que estiver em uma lista de elementos permitidos.
+- **RNF-035** – O sistema deve limitar a frequência de requisições em toda a API, inclusive nos endpoints públicos, para proteger a plataforma contra abuso e robôs.
 
 ### 2.2 Privacidade e proteção de dados
 
 - **RNF-021** – O sistema deve coletar só os dados pessoais necessários para cada funcionalidade e seguir os princípios da LGPD.
 - **RNF-022** – O sistema deve enviar à IA só o conteúdo necessário para cada tarefa, nunca os dados das contas. A triagem da moderação recebe o texto sem nome, e-mail ou qualquer identificador de quem o escreveu.
-- **RNF-023** – O sistema deve mostrar as estatísticas dos painéis sempre de forma agregada, sem revelar quem leu ou reagiu a um conteúdo.
+- **RNF-023** – O sistema deve mostrar as estatísticas dos painéis e da plataforma sempre de forma agregada, sem rastrear pessoas individualmente e sem revelar quem leu, acessou ou reagiu a um conteúdo.
 - **RNF-024** – O sistema deve mascarar os dados pessoais nos logs, apagá-los depois de um prazo de retenção definido e registrar cada consulta feita aos logs.
 - **RNF-025** – O sistema deve guardar os registros de acesso pelo prazo exigido pela lei e apagá-los depois dele.
 
@@ -178,7 +189,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 ### 2.4 Usabilidade e padronização
 
-- **RNF-009** – O sistema deve responder com mensagens em português do Brasil (padrão) ou em inglês, conforme o cabeçalho `Accept-Language` da requisição, com a estrutura pronta para receber novos idiomas.
+- **RNF-009** – O sistema deve responder com mensagens em português do Brasil ou em inglês, conforme o cabeçalho `Accept-Language` da requisição, usando o idioma padrão definido pelo dono quando o cabeçalho não indicar um idioma disponível, com a estrutura pronta para receber novos idiomas.
 - **RNF-010** – O sistema deve devolver todos os erros em um formato único, contendo data e hora, status HTTP, descrição, mensagem traduzida, caminho da requisição e, quando houver, os erros por campo.
 - **RNF-011** – O sistema deve disponibilizar documentação interativa da API no padrão OpenAPI (Swagger).
 - **RNF-029** – O sistema deve preservar a formatação de cada artigo (Markdown, LaTeX, HTML com CSS ou texto puro) na tradução e na correção feitas pela IA.

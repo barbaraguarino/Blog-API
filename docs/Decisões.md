@@ -247,3 +247,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** entram tempo estimado de leitura, coautoria, prévia do rascunho por link privado, séries de artigos, menções com @nickname, reações em comentários, desativação temporária da conta, prazo de carência para a exclusão, recurso do autor contra ocultações e penalidades, lista de palavras bloqueadas, modo de manutenção e anúncios da plataforma (RF-116 a RF-127).
 - **Alternativas consideradas:** ficar só no mínimo da Definição.
 - **Consequências:** as séries, que tinham ficado de fora da Definição (D-023), entram como requisito além do mínimo; o feed RSS continua de fora. Os prazos (validade da prévia, carência da exclusão) e as listas (palavras bloqueadas) ficam nas Regras de Negócio e são ajustáveis pelo dono.
+
+## D-027: Estatísticas para o dono e novas funcionalidades nos Requisitos
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** na revisão dos Requisitos, a autora aceitou as ideias sugeridas e perguntou: "onde fica as ideias do dono ter acesso a numero de acessos, paginas mais usadas, e etc".
+- **Decisão:** entram a retirada do papel de autor, o resumo diário de avisos por e-mail, fechar e fixar comentários, restaurar backups, exportar os próprios artigos e o limite de requisições em toda a API. O dono ganha estatísticas agregadas de acesso, da comunidade, do uso e do custo dos serviços pagos e métricas técnicas (RF-128 a RF-137, RNF-035).
+- **Alternativas consideradas:** deixar as métricas do dono só no nível genérico do RF-112.
+- **Consequências:** as estatísticas são sempre agregadas e não rastreiam pessoas (RNF-023). Contar visitantes sem identificar ninguém e estimar regiões a partir do IP são decisões da Arquitetura. O painel de custos ajuda a manter o teto de US$ 15 por mês (D-022).
