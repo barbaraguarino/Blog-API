@@ -1,6 +1,6 @@
 # Definição do Projeto
 
-**Versão:** 2.0 · **Última modificação:** 21/11/2026
+**Versão:** 2.1 · **Última modificação:** 21/11/2026
 
 Este documento define o escopo mínimo do Blog-API, escrito como um acordo com um cliente. Neste projeto de estudo não há um cliente de verdade: a própria autora faz esse papel. Tudo o que está aqui deve ser entregue; o projeto pode ter mais, nunca menos. Uma mudança neste documento exige uma nova versão, aprovada pela autora.
 
@@ -99,9 +99,9 @@ Todo cadastro começa como leitor. O dono escolhe como a plataforma trata a auto
 
 O papel de moderador é concedido por um administrador. Já a promoção a administrador exige um período na função de moderador sem denúncias procedentes contra ele e a aprovação de outros administradores, o que evita favoritismo.
 
-O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado na instalação da plataforma. É ele quem define, no painel do dono, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
+O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado na instalação da plataforma. É ele quem define, no painel do dono, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros que não podem ser ultrapassados, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
-## 6. Principais funcionalidades
+## 6. Funcionalidades
 
 | Módulo | Funcionalidades |
 |---|---|
@@ -129,7 +129,7 @@ Cada perfil cadastrado tem o seu painel na API, com o que precisa para trabalhar
 
 As estatísticas dos painéis são sempre agregadas: o autor vê quantas pessoas leram um artigo, nunca quem leu.
 
-A lista completa e formal está em [Requisitos.md](Requisitos.md), e as regras de cada funcionalidade em [Regras_de_Negócio.md](Regras_de_Negócio.md).
+Os [Requisitos](Requisitos.md) detalham cada funcionalidade e podem acrescentar outras, e as [Regras de Negócio](Regras_de_Negócio.md) definem as regras de cada uma.
 
 ## 7. Escopo
 
@@ -153,7 +153,7 @@ O projeto não inclui:
 Premissas e restrições:
 
 - o projeto é desenvolvido por uma pessoa, com o apoio de um assistente de IA e sem prazo fixo;
-- os serviços pagos, como a inteligência artificial, o armazenamento de imagens e o envio de e-mails, custam, somados, no máximo US$ 15 por mês. Para não passar desse valor, a API limita o uso da IA e o envio de e-mails, e as contas dos provedores têm alertas de gasto;
+- os serviços pagos, como a inteligência artificial, o armazenamento de imagens e o envio de e-mails, custam, somados, no máximo US$ 15 por mês. Para não passar desse valor, a API limita o uso desses serviços;
 - o código é distribuído sob a licença MIT.
 
 ## 8. Tecnologias
