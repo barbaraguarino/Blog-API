@@ -10,9 +10,9 @@ Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, r
 
 Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso de inteligência artificial a serviço da leitura e da escrita.
 
-A segurança e a privacidade não são um complemento: a API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
+A segurança e a privacidade não são um complemento: a API coleta só os dados necessários, nunca expõe a outras pessoas as informações privadas de um usuário e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
 
-Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê, ajuda os autores a escrever, sugerindo correções e melhorias no texto, e ajuda a moderação a decidir o que analisar primeiro.
+Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê, ajuda os autores a escrever, sugerindo correções e melhorias no texto, e indica à moderação o que analisar primeiro.
 
 O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, entregue em versões incrementais e acompanhado de documentação de Engenharia de Software.
 
@@ -40,13 +40,13 @@ Para proteger os dados, a API pede só o necessário no cadastro, mostra nos per
 
 Para vencer a barreira do idioma, cada artigo pode ter várias versões escritas pelo próprio autor, que compartilham o mesmo endereço, os mesmos comentários e as mesmas reações. Quando não existe uma versão na língua do leitor, a plataforma oferece uma tradução automática feita com IA.
 
-Para apoiar a escrita, o autor pode pedir à IA a correção de ortografia e gramática, sugestões para melhorar o texto, tags e uma categoria para o artigo e descrições das imagens para leitores de tela, sempre decidindo o que aceitar. Cada artigo também ganha um resumo automático, usado nas listagens e na busca.
+Para apoiar a escrita, o autor pode pedir à IA a correção de ortografia e gramática, sugestões para melhorar o texto, tags e uma categoria para o artigo e descrições das imagens para leitores de tela, sempre decidindo o que aceitar. Cada artigo também ganha um resumo automático, que o autor pode revisar, usado nas listagens e na busca.
 
 Para ajudar o leitor a encontrar o que ler, a plataforma recomenda artigos a partir de sinais que ele mesmo dá, como os autores que segue, as reações e as tags de interesse, com um histórico que ele pode ver, limpar ou desligar. Também há a busca por texto, categoria, tag e autor e o feed com os autores seguidos.
 
 Para quem quer criar uma comunidade, o Blog-API é uma base pronta e genérica. O dono define a identidade da plataforma, como o nome, o logo e o idioma padrão, escolhe o tema pelo front-end e pelas categorias, mantém páginas institucionais, convida pessoas por e-mail, ajusta as regras de autoria e de promoção, faz backup dos dados e acompanha a plataforma por métricas agregadas e logs que respeitam a privacidade dos usuários.
 
-Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho, agendamento, publicação e histórico de revisões, categorias e tags, listas para ler depois, autoria aberta, fechada ou por pedido, comentários, reações, seguidores, moderação do conteúdo denunciado, com triagem feita pela IA, notificações configuráveis e um painel para cada perfil.
+Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho, agendamento, publicação e histórico de revisões; categorias e tags; listas para ler depois; autoria aberta, fechada ou por pedido; comentários, reações e seguidores; moderação do conteúdo denunciado, com triagem feita pela IA; notificações configuráveis; e um painel para cada perfil.
 
 ## 4. Objetivos
 
@@ -54,13 +54,13 @@ O objetivo geral é desenvolver uma API REST segura, testada e documentada para 
 
 Para isso, o projeto deve:
 
-1. oferecer cadastro e login com e-mail e senha ou com conta Google, com as contas protegidas por confirmação de e-mail, recuperação de senha, sessões revogáveis e verificação em duas etapas;
-2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público, consultar, exportar e excluir os próprios dados;
+1. oferecer cadastro e login com e-mail e senha ou com conta Google, com as contas protegidas por confirmação de e-mail, recuperação de senha, sessões revogáveis, alerta de acesso em dispositivo novo e verificação em duas etapas;
+2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público, registrar o aceite dos termos de uso e consultar, exportar e excluir os próprios dados;
 3. permitir que autores, conforme o modo de autoria escolhido pelo dono, criem, editem, agendem e publiquem artigos organizados por categorias e tags, com imagens, versões em vários idiomas e histórico de revisões;
 4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões de texto, tags, categoria e descrições de imagens, gerar resumos dos artigos, ajudar a moderação a priorizar o que analisar e recomendar artigos a partir dos sinais que cada leitor dá, sob o controle dele;
 5. permitir que leitores busquem, comentem, reajam, sigam autores, bloqueiem usuários, salvem artigos para ler depois, acompanhem um feed e recebam notificações pelos canais que escolherem;
 6. oferecer ferramentas de moderação para tratar denúncias;
-7. oferecer a cada perfil um painel com o que ele precisa para trabalhar e, ao dono, uma administração completa da plataforma, com identidade e páginas da plataforma, convites, usuários e papéis, regras ajustáveis, backup, métricas e logs que respeitam a privacidade;
+7. oferecer a cada perfil um painel com o que ele precisa para trabalhar e, ao dono, uma administração completa da plataforma, com a identidade e as páginas institucionais, convites, usuários e papéis, regras ajustáveis, backup, métricas e logs que respeitam a privacidade;
 8. responder em português e em inglês, conforme o idioma indicado em cada requisição, com a estrutura pronta para receber novos idiomas;
 9. manter todo o código testado e a documentação de acordo com o que está implementado.
 
@@ -78,7 +78,7 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 
 ## 5. Público e perfis de usuário
 
-O Blog-API atende a dois públicos: quem instala e administra uma plataforma, e as pessoas que a usam, nos perfis abaixo.
+O Blog-API atende a dois públicos: quem instala e administra uma plataforma e as pessoas que a usam. Quem usa a plataforma tem um destes perfis:
 
 | Perfil | Quem é | O que pode fazer |
 |---|---|---|
@@ -91,11 +91,11 @@ O Blog-API atende a dois públicos: quem instala e administra uma plataforma, e 
 
 Todo cadastro começa como leitor. O dono escolhe como a plataforma trata a autoria, entre três modos:
 
-- por pedido, o padrão: o leitor pede para ser autor depois de um tempo mínimo de conta, e a administração analisa o pedido;
+- por pedido, o padrão: o leitor pede para ser autor depois de um tempo mínimo de conta, o que evita contas criadas só para publicar spam, e a administração analisa o pedido;
 - fechado: só escreve quem a administração nomear, e não existem pedidos;
 - aberto: todo leitor já pode escrever.
 
-Os outros perfis são conquistados por promoções que passam pela aprovação da administração, com exigências de tempo e de histórico que evitam favoritismo e contas criadas só para abusar da plataforma. O papel de moderador é concedido por um administrador. Um moderador só se torna administrador depois de um período na função sem denúncias procedentes contra ele, e com a aprovação de outros administradores.
+O papel de moderador é concedido por um administrador. Já a promoção a administrador exige um período na função de moderador sem denúncias procedentes contra ele e a aprovação de outros administradores, o que evita favoritismo.
 
 O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. É ele quem define, no painel do dono, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
@@ -104,17 +104,17 @@ O superadministrador é o dono e o responsável final pela plataforma. Há apena
 | Módulo | Funcionalidades |
 |---|---|
 | Identidade e acesso | Cadastro e login com e-mail e senha ou com conta Google, login por e-mail ou nickname, ativação da conta por e-mail, recuperação e troca de senha, sessões revogáveis e verificação em duas etapas. |
-| Privacidade | Escolha do que aparece no perfil público, consulta, exportação e exclusão dos próprios dados, aceite registrado dos termos de uso e da política de privacidade, alerta por e-mail de acesso em dispositivo novo, bloqueio de usuários e controle do histórico de interesses usado nas recomendações. |
+| Privacidade | Escolha do que aparece no perfil público, consulta, exportação e exclusão dos próprios dados, aceite registrado dos termos de uso e da política de privacidade, alerta por e-mail de acesso em dispositivo novo e controle do histórico de interesses usado nas recomendações. |
 | Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
 | Conteúdo | Artigos em Markdown, LaTeX, HTML com CSS ou texto puro, com rascunho, agendamento, publicação e histórico de revisões, versões do mesmo artigo em vários idiomas, categorias, tags, imagens, listas privadas para ler depois e busca. |
 | Inteligência artificial | Tradução de artigos, correção e sugestões de escrita, sugestão de tags e de categoria, resumo automático, texto alternativo para imagens, triagem de comentários e denúncias para a moderação e recomendação de artigos. |
-| Social | Comentários com respostas, reações, seguidores e feed. |
+| Social | Comentários com respostas, reações, seguidores, feed e bloqueio de usuários. |
 | Notificações | Avisos dentro da plataforma, em tempo real, e por e-mail, como novos comentários, novos seguidores e respostas a pedidos, com o usuário escolhendo os canais de cada tipo de aviso. |
 | Moderação | Denúncias, triagem feita pela IA e ações de moderação. A IA só prioriza: quem decide é sempre uma pessoa. |
 | Administração da plataforma | Tudo o que um painel do dono precisa: identidade da plataforma (nome, descrição, logo, idioma padrão e links), páginas institucionais, termos de uso e política de privacidade, convites por e-mail, backup da plataforma, gestão de usuários e papéis, bloqueio de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
 | Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API (Swagger). |
 
-Cada perfil tem o seu painel na API, com o que precisa para trabalhar. A tela de cada painel fica a cargo do front-end.
+Cada perfil cadastrado tem o seu painel na API, com o que precisa para trabalhar. A tela de cada painel fica a cargo do front-end.
 
 | Painel | Quem vê | O que mostra |
 |---|---|---|
