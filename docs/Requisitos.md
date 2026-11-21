@@ -17,7 +17,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google cujo e-mail tenha sido verificado pelo Google, aceitando os termos de uso e a política de privacidade.
 - **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
 - **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
-- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub, e o dono deve escolher quais provedores ficam ativos na plataforma.
+- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub e a Apple, e o dono deve escolher quais provedores ficam ativos na plataforma.
 - **RF-054** – O sistema deve permitir que o usuário cadastre, use e remova passkeys para entrar sem senha.
 - **RF-055** – O sistema deve permitir que o usuário entre sem senha, com um código de uso único enviado ao e-mail cadastrado.
 - **RF-051** – O sistema deve impedir o acesso de contas não ativadas ou suspensas, em qualquer forma de login.

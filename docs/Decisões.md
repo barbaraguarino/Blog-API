@@ -229,3 +229,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** a Definição do Projeto (versão 2.0) é o acordo de escopo mínimo, e a autora faz o papel do cliente. Ela guarda só decisões de produto. Escolhas que podem mudar, como versões de tecnologias, nomes de provedores, ferramentas, ordem de entrega e processo de trabalho, saem dela e ficam na Arquitetura, no Roadmap, no Processo de Desenvolvimento e nestas Decisões.
 - **Alternativas consideradas:** manter a Definição como um documento vivo, atualizado a cada mudança, o que a tornava instável e misturava produto com implementação.
 - **Consequências:** a Definição só muda com um pedido explícito da autora, em uma nova versão. Os outros documentos podem detalhar e ir além dela, nunca entregar menos. O provedor de IA (D-021), o S3 e o SES (D-022), o Kanban (D-015) e o momento do Docker (D-016) continuam valendo, mas como decisões revisáveis fora da Definição.
+
+## D-025: Login com Apple dentro do teto de custos
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** a autora escolheu oferecer outros logins sociais além do Google (RF-056). Entrar com Apple exige o programa de desenvolvedor da Apple, que custa US$ 99 por ano, cerca de US$ 8 por mês.
+- **Decisão:** a autora pediu para incluir a Apple mesmo assim ("Adicionar isso"). O GitHub e a Apple são os exemplos de provedores, e o dono escolhe quais ficam ativos.
+- **Alternativas consideradas:** oferecer só o GitHub, que é gratuito.
+- **Consequências:** o custo da Apple entra no teto de US$ 15 por mês (D-022), deixando cerca de US$ 7 por mês para a IA, as imagens e os e-mails. Como o provedor é opcional, a Apple pode ficar desativada enquanto o custo não couber.
