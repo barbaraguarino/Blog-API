@@ -131,7 +131,16 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 ## D-014: Scrum com documentação de Engenharia de Software
 
 - **Data:** 2026-11-15
-- **Status:** Aceita
+- **Status:** Substituída por D-015
 - **Contexto:** nas palavras da autora: "Estou usando Engenharia de Software, método SCRUM, mas com documentação também."
 - **Decisão:** o trabalho segue o Scrum adaptado a uma desenvolvedora (Product Backlog em Issues, Sprints no GitHub Projects, Definição de Preparado e de Pronto), e cada etapa de Engenharia de Software tem um documento em `docs/`, escrito com detalhes para explicar o projeto. Os Requisitos são listas simples (RF e RNF); as histórias de usuário e os critérios de aceite ficam nas issues.
 - **Consequências:** o processo está descrito em `Processo_de_Desenvolvimento.md`. Os campos *Iteration* e *Story Points* e as colunas do quadro precisam ser configurados no Projects.
+
+## D-015: Kanban simples no lugar do Scrum
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** nas palavras da autora: "O desenvolvimento não vai ser com SCRUM, eu queria, mas como é um projeto sozinha (bem eu e você), não tem porque usar SCRUM." O Scrum pressupõe uma equipe, com papéis, Sprints e cerimônias que, para uma pessoa só, viram burocracia.
+- **Decisão:** "Um Kanban simples." O trabalho flui por um quadro no GitHub Projects, puxando uma issue de cada vez, sem Sprints, sem Story Points e sem cerimônias. As versões continuam sendo os Milestones do Roadmap, e a documentação de Engenharia de Software continua em `docs/`.
+- **Alternativas consideradas:** manter o Scrum adaptado (D-014), que exigia planejar Sprints, estimar pontos e fazer reuniões consigo mesma; usar só issues e milestones, sem quadro, que perde a visão do que está em andamento.
+- **Consequências:** o `Processo_de_Desenvolvimento.md` foi reescrito para Kanban. Os campos *Iteration* e *Story Points* deixam de ser necessários no Projects. A Definição de Preparado e a Definição de Pronto continuam valendo, como regras das colunas do quadro.
