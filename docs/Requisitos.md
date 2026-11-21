@@ -5,7 +5,7 @@ Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 - **Requisitos funcionais (RF):** descrevem **o que** o sistema deve fazer, ou seja, os serviços que ele oferece aos usuários.
 - **Requisitos não funcionais (RNF):** descrevem **como** o sistema deve se comportar: as qualidades e restrições que ele deve cumprir, como segurança, desempenho e manutenibilidade.
 
-Cada requisito tem um identificador único, que é citado nas issues, nas [Regras de Negócio](Regras_de_Negócio.md) e nos testes. Os identificadores nunca são reaproveitados. As histórias de usuário e os critérios de aceite de cada entrega ficam nas issues do GitHub.
+Cada requisito tem um identificador único, que é citado nas issues, nas [Regras de Negócio](Regras_de_Negócio.md) e nos testes. Os identificadores nunca são reaproveitados: um requisito que muda de sentido ganha um identificador novo, e o antigo fica marcado como substituído. Um requisito novo recebe o próximo número livre, por isso os números não seguem a ordem dentro de cada seção. As histórias de usuário e os critérios de aceite de cada entrega ficam nas issues do GitHub.
 
 ---
 
@@ -13,18 +13,22 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 ### 1.1 Identidade e acesso
 
-- **RF-001** – O sistema deve permitir que o visitante se cadastre informando nome, e-mail e senha.
-- **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google.
+- **RF-001** – O sistema deve permitir que o visitante se cadastre informando nome, e-mail e senha e aceitando os termos de uso e a política de privacidade.
+- **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google cujo e-mail tenha sido verificado pelo Google, aceitando os termos de uso e a política de privacidade.
 - **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
 - **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
-- **RF-005** – O sistema deve renovar o acesso do usuário autenticado por meio de um token de renovação (Refresh Token), sem exigir um novo login.
+- **RF-051** – O sistema deve impedir o acesso de contas não ativadas ou suspensas, em qualquer forma de login.
+- **RF-005** – O sistema deve renovar o acesso do usuário autenticado, sem exigir um novo login, enquanto a sessão dele for válida.
 - **RF-006** – O sistema deve permitir que o usuário encerre a sessão atual (logout).
 - **RF-007** – O sistema deve permitir que o usuário visualize as próprias sessões ativas e encerre qualquer uma delas.
-- **RF-008** – O sistema deve exigir que o usuário confirme o e-mail, por meio de um código enviado a ele, para ativar uma conta criada com e-mail e senha.
+- **RF-008** – O sistema deve exigir que o usuário confirme o e-mail, por meio de um código enviado a ele, para ativar uma conta criada com e-mail e senha, e permitir que ele peça um novo código.
 - **RF-009** – O sistema deve permitir que o usuário redefina a senha esquecida por meio de um código enviado ao e-mail cadastrado.
 - **RF-010** – O sistema deve permitir que o usuário autenticado altere a própria senha, informando a senha atual e um código enviado ao e-mail.
-- **RF-011** – O sistema deve permitir que o usuário ative a verificação em duas etapas com um aplicativo autenticador.
+- **RF-011** – O sistema deve permitir que o usuário ative e desative a verificação em duas etapas com um aplicativo autenticador, recebendo códigos de recuperação de uso único.
+- **RF-050** – O sistema deve exigir o código do aplicativo autenticador, ou um código de recuperação, no login dos usuários que ativaram a verificação em duas etapas.
 - **RF-012** – O sistema deve permitir que o usuário vincule e desvincule uma conta Google à sua conta.
+- **RF-052** – O sistema deve permitir que o usuário edite o próprio perfil: nome, foto, descrição e nickname, com um limite de frequência para a troca do nickname.
+- **RF-053** – O sistema deve permitir que o usuário troque o e-mail da conta, confirmando o novo endereço com um código e avisando o endereço antigo.
 
 ### 1.2 Autoria e conteúdo
 
