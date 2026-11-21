@@ -84,7 +84,7 @@ timeline
   - tags;
   - upload de avatar e capa no AWS S3;
   - listagens paginadas.
-- **Requisitos:** RF-034, RF-035, RF-048, RF-056, RF-057 e RF-059 · RNF-022.
+- **Requisitos:** RF-034, RF-035, RF-051, RF-062, RF-063 e RF-065 · RNF-022.
 - **Novo na arquitetura:** módulo `article`, `StorageGateway` e autorização por papel com `@PreAuthorize`.
 - **Concluída quando:** um autor aprovado conseguir publicar um artigo com capa, categoria e tags, e um visitante conseguir lê-lo nas listagens públicas.
 
@@ -92,7 +92,7 @@ timeline
 
 - **Objetivo:** transformar leitores em comunidade.
 - **Entregas:** comentários com respostas, reações, seguidores, feed e busca de artigos.
-- **Requisitos:** RF-045, RF-069, RF-073, RF-075 e RF-076.
+- **Requisitos:** RF-048, RF-077, RF-081, RF-083 e RF-085.
 - **Novo na arquitetura:** módulo `social` e busca textual no PostgreSQL.
 - **Concluída quando:** um leitor conseguir encontrar um artigo pela busca, comentá-lo, reagir, seguir o autor e ver os próximos artigos dele no feed.
 
@@ -100,7 +100,7 @@ timeline
 
 - **Objetivo:** manter a comunidade saudável e oferecer proteção extra às contas.
 - **Entregas:** denúncias, painel de moderação com ações e registro, 2FA com app autenticador e vínculo e desvínculo de conta Google.
-- **Requisitos:** RF-016, RF-021, RF-084, RF-085.
+- **Requisitos:** RF-016, RF-021, RF-093, RF-094.
 - **Novo na arquitetura:** módulo `moderation` e segundo fator no fluxo de login.
 - **Concluída quando:** um conteúdo denunciado puder ser ocultado por um moderador, e um usuário conseguir entrar exigindo o código do app autenticador.
 

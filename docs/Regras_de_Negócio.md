@@ -224,17 +224,17 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 
 #### RN-033 – Categorias ⬜
 - **Regra:** a categoria tem nome, **slug único** e uma categoria pai opcional, formando uma árvore. Uma categoria não pode ser pai dela mesma, nem de um ancestral. Só o `ADMIN` gerencia categorias.
-- **Requisito:** RF-059.
+- **Requisito:** RF-065.
 
 #### RN-034 – Remoção de categorias ⬜
 - **Regra:** não é possível remover uma categoria que tenha artigos ou subcategorias.
 - **Por quê:** evita artigos sem categoria e árvores quebradas.
 - **Erro (proposto):** `422` · `error.category.in_use`.
-- **Requisito:** RF-059.
+- **Requisito:** RF-065.
 
 #### RN-035 – Quem escreve artigos ⬜
 - **Regra:** só `AUTHOR` ou `ADMIN` criam artigos, e só o próprio autor os edita.
-- **Requisito:** RF-048.
+- **Requisito:** RF-051.
 
 #### RN-036 – Ciclo de vida do artigo ⬜
 - **Regra:** o artigo tem o status `RASCUNHO`, `PUBLICADO` ou `ARQUIVADO`. As transições permitidas são:
@@ -243,28 +243,28 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
   - arquivado → rascunho.
 
   A **data de publicação** é registrada na primeira publicação. O **slug** é gerado a partir do título e é único.
-- **Requisito:** RF-048.
+- **Requisito:** RF-051.
 
 #### RN-037 – Rascunhos são privados ⬜
 - **Regra:** os rascunhos só são visíveis para o autor. Para os demais, o rascunho "não existe" (`404`).
-- **Requisito:** RF-048.
+- **Requisito:** RF-051.
 
 #### RN-038 – Listagens públicas ⬜
 - **Regra:** as listagens públicas mostram só artigos **publicados**, paginados (padrão 10, máximo 50 por página) e ordenados por data de publicação, do mais recente para o mais antigo.
-- **Requisito:** RF-048.
+- **Requisito:** RF-051.
 
 #### RN-039 – Tags ⬜
 - **Regra:** as tags são **normalizadas** (minúsculas, sem espaços nas pontas) e **únicas**. Uma tag inexistente é criada ao ser usada. Cada artigo tem no máximo 10 tags.
-- **Requisito:** RF-056.
+- **Requisito:** RF-062.
 
 #### RN-040 – Imagens ⬜
 - **Regra:** são aceitos só os formatos JPEG, PNG e WebP, com até 5 MB. Ao trocar uma imagem, a anterior é removida do armazenamento.
 - **Erro (proposto):** `400` · `error.upload.invalid_type` / `error.upload.too_large`.
-- **Requisito:** RF-057.
+- **Requisito:** RF-063.
 
 #### RN-041 – Busca ⬜
 - **Regra:** a busca considera só artigos publicados e procura no título e no resumo, ignorando maiúsculas e acentos. Pode ser combinada com filtros de categoria, tag e autor.
-- **Requisito:** RF-045.
+- **Requisito:** RF-048.
 
 ---
 
@@ -272,28 +272,28 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 
 #### RN-050 – Comentários ⬜
 - **Regra:** só é possível comentar artigos publicados. Há respostas em **um único nível** (comentário → resposta). Responder uma resposta não é permitido.
-- **Requisito:** RF-069.
+- **Requisito:** RF-077.
 
 #### RN-051 – Quem altera comentários ⬜
 - **Regra:** o autor do comentário edita e remove o próprio comentário. `ADMIN` e `MODERATOR` removem qualquer comentário.
-- **Requisito:** RF-069.
+- **Requisito:** RF-077.
 
 #### RN-052 – Uma reação por artigo ⬜
 - **Regra:** cada usuário tem no máximo **uma** reação por artigo. Uma nova reação substitui a anterior.
-- **Requisito:** RF-073.
+- **Requisito:** RF-081.
 
 #### RN-053 – Seguir autores ⬜
 - **Regra:** não é possível seguir a si mesmo, e seguir alguém que já é seguido não duplica.
-- **Requisito:** RF-075.
+- **Requisito:** RF-083.
 
 #### RN-054 – Feed ⬜
 - **Regra:** o feed mostra só artigos publicados de autores seguidos, paginados, do mais recente para o mais antigo.
-- **Requisito:** RF-076.
+- **Requisito:** RF-085.
 
 #### RN-060 – Denúncias ⬜
 - **Regra:** um usuário denuncia o mesmo conteúdo **uma única vez**, escolhendo um motivo de uma lista fixa (spam, assédio, conteúdo impróprio, desinformação, outro) e com uma descrição opcional.
 - **Erro (proposto):** `409` · `error.report.already_exists`.
-- **Requisito:** RF-084.
+- **Requisito:** RF-093.
 
 #### RN-061 – Ações de moderação ⬜
 - **Regra:** uma denúncia pode ser:
@@ -302,7 +302,7 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
   - resolvida com a **penalização do autor**, que pode chegar ao bloqueio da conta (`locked = true`).
 
   Toda ação registra quem a tomou e quando.
-- **Requisito:** RF-085.
+- **Requisito:** RF-094.
 
 ---
 
