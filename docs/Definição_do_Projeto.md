@@ -44,7 +44,7 @@ Para ajudar o leitor a encontrar o que ler, a plataforma recomenda artigos a par
 
 Para quem quer criar uma comunidade, o Blog-API é uma base pronta e genérica. O dono escolhe o tema pelo front-end e pelas categorias, ajusta as regras de autoria e de promoção e acompanha a plataforma por métricas agregadas e logs que respeitam a privacidade dos usuários.
 
-Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho e publicação, categorias e tags, autoria aberta, fechada ou por pedido, comentários, reações, seguidores, moderação do conteúdo denunciado e um painel para cada perfil.
+Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho e publicação, categorias e tags, autoria aberta, fechada ou por pedido, comentários, reações, seguidores, moderação do conteúdo denunciado, notificações configuráveis e um painel para cada perfil.
 
 ## 4. Objetivos
 
@@ -56,7 +56,7 @@ Para isso, o projeto deve:
 2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público e consultar e excluir os próprios dados;
 3. permitir que autores, conforme o modo de autoria escolhido pelo dono, criem, editem e publiquem artigos organizados por categorias e tags, com imagens e com versões em vários idiomas;
 4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões e recomendar artigos a partir dos sinais que cada leitor dá, sob o controle dele;
-5. permitir que leitores busquem, comentem, reajam, sigam autores e acompanhem um feed;
+5. permitir que leitores busquem, comentem, reajam, sigam autores, acompanhem um feed e recebam notificações pelos canais que escolherem;
 6. oferecer ferramentas de moderação para tratar denúncias;
 7. oferecer a cada perfil um painel com o que ele precisa para trabalhar e, ao dono, uma administração completa da plataforma, com usuários e papéis, regras ajustáveis, métricas e logs que respeitam a privacidade;
 8. responder em português e em inglês, conforme o idioma indicado em cada requisição, com a estrutura pronta para receber novos idiomas;
@@ -104,9 +104,10 @@ O superadministrador é o dono e o responsável final pela plataforma. Há apena
 | Identidade e acesso | Cadastro e login com e-mail e senha ou com conta Google, login por e-mail ou nickname, ativação da conta por e-mail, recuperação e troca de senha, sessões revogáveis e verificação em duas etapas. |
 | Privacidade | Escolha do que aparece no perfil público, consulta e exclusão dos próprios dados e controle do histórico de interesses usado nas recomendações. |
 | Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
-| Conteúdo | Artigos com rascunho e publicação, versões do mesmo artigo em vários idiomas, categorias, tags, imagens e busca. |
+| Conteúdo | Artigos em Markdown, LaTeX, HTML com CSS ou texto puro, com rascunho e publicação, versões do mesmo artigo em vários idiomas, categorias, tags, imagens e busca. |
 | Inteligência artificial | Tradução de artigos, correção e sugestões de escrita e recomendação de artigos. |
 | Social | Comentários com respostas, reações, seguidores e feed. |
+| Notificações | Avisos dentro da plataforma, em tempo real, e por e-mail, como novos comentários, novos seguidores e respostas a pedidos, com o usuário escolhendo os canais de cada tipo de aviso. |
 | Moderação | Denúncias e ações de moderação. |
 | Administração da plataforma | Tudo o que um painel do dono precisa: gestão de usuários e papéis, bloqueio de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
 | Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API (Swagger). |
@@ -128,18 +129,30 @@ A lista completa e formal está em [Requisitos.md](Requisitos.md), e as regras d
 
 ## 7. Escopo
 
-### 7.1 O projeto inclui
-- A API REST completa dos módulos acima.
-- A documentação do projeto e a documentação interativa da API.
-- Os testes automatizados de todas as classes.
-- A execução da API e do banco com Docker, como a última tarefa do projeto. Até lá, os dois rodam diretamente na máquina.
+O projeto inclui:
 
-### 7.2 O projeto não inclui
-- **Front-end:** o foco é o backend. Isso inclui o painel de administração: a API oferece os endpoints que um painel usaria, mas não a tela.
-- **Vários blogs na mesma instalação:** cada instalação da API é um único blog, com o próprio banco de dados.
-- **Editor de texto rico:** o conteúdo chega pronto do cliente.
-- **Monetização, anúncios, newsletter, notificações push ou chat.**
-- **Publicação em produção:** o projeto roda em ambiente local.
+- a API REST completa dos módulos acima, com os endpoints dos painéis de cada perfil;
+- artigos escritos em Markdown, LaTeX, HTML com CSS ou texto puro. O HTML e o CSS são limpos de qualquer código perigoso antes de serem salvos, e a tradução e a correção feitas pela IA preservam a formatação;
+- notificações dentro da plataforma, entregues em tempo real, e por e-mail. Cada usuário escolhe, para cada tipo de aviso, por quais canais quer recebê-lo;
+- a configuração pronta para produção, como cookies seguros e perfis separados por ambiente, mesmo sem a publicação;
+- a documentação do projeto e a documentação interativa da API;
+- os testes automatizados de todas as classes;
+- a execução da API e do banco com Docker, como a última tarefa do projeto. Até lá, os dois rodam diretamente na máquina.
+
+O projeto não inclui:
+
+- front-end, nem mesmo as telas dos painéis ou os pop-ups de notificação: a API oferece tudo o que essas telas usariam;
+- vários blogs na mesma instalação: cada instalação da API é uma única plataforma, com o próprio banco de dados;
+- editor de texto: o conteúdo chega pronto do cliente, em um dos formatos aceitos;
+- notificações push para o celular, monetização, anúncios, newsletter e chat;
+- a publicação em produção: o projeto roda em ambiente local.
+
+Premissas e restrições:
+
+- o projeto é desenvolvido por uma pessoa, com o apoio de um assistente de IA e sem prazo fixo;
+- o orçamento é mínimo: a inteligência artificial usa o modelo mais barato do Claude, e os demais serviços externos (e-mail e armazenamento de imagens) precisam ter uma opção gratuita ou local para o desenvolvimento;
+- todo serviço externo fica atrás de um gateway, para poder ser trocado sem mudar o resto do sistema;
+- os testes automatizados nunca chamam serviços externos de verdade.
 
 ## 8. Tecnologias
 
@@ -151,6 +164,7 @@ A lista completa e formal está em [Requisitos.md](Requisitos.md), e as regras d
 | **Flyway** | Versionamento das tabelas do banco. |
 | **Spring Security + JWT** | Autenticação stateless com token em cookie seguro. |
 | **Google Sign-In** | Cadastro e login com conta Google. |
+| **Claude Haiku 5.5** *(planejado)* | Inteligência artificial: tradução, correção e sugestões de escrita e recomendação de artigos. É o modelo mais barato do Claude. |
 | **AWS S3** *(planejado)* | Armazenamento de imagens. |
 | **Swagger / OpenAPI** *(planejado)* | Documentação interativa da API. |
 | **JUnit 5, Mockito, AssertJ** | Testes automatizados. |

@@ -171,3 +171,30 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** o dono escolhe o modo de autoria: "o dono escolhe o modo", entre por pedido (padrão), fechado e aberto. Cada perfil ganha um painel na API: minha conta, do autor, dos autores, da moderação, do moderador e do dono. O painel dos autores tem as duas faces pedidas pela autora: "visão da administração e um espaço comum". As regras de perfis aparecem na Definição sem números; os valores padrão ficam nas Regras de Negócio.
 - **Alternativas consideradas:** manter sempre a autoria por pedido, que não serve a blogs pessoais nem a comunidades abertas; um único painel de administração, que deixaria autores e moderadores sem visão do próprio trabalho.
 - **Consequências:** as estatísticas dos painéis são sempre agregadas, para respeitar a privacidade dos leitores. Os painéis são endpoints da API; as telas continuam fora do escopo.
+
+## D-019: Vários formatos para o conteúdo dos artigos
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** era preciso definir em que formato o conteúdo dos artigos chega à API, já que o editor de texto fica no front-end.
+- **Decisão:** nas palavras da autora: "Pode ser markdown, latex ou em HTML CSS, ou txt." Cada artigo guarda o formato junto com o conteúdo.
+- **Alternativas consideradas:** aceitar só Markdown, mais simples e seguro, mas limitado para quem quer fórmulas ou um layout próprio.
+- **Consequências:** o HTML e o CSS precisam ser limpos de código perigoso antes de serem salvos (lista do que é permitido), por causa do risco de XSS e de CSS malicioso. A tradução e a correção feitas pela IA precisam preservar a formatação de cada formato. A renderização, inclusive a do LaTeX, fica com o front-end.
+
+## D-020: Notificações configuráveis por canal
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** as notificações estavam fora do escopo, como ideia para depois da v0.4.
+- **Decisão:** nas palavras da autora: "Entram, pode ser email, popup, site, o que for, e a pessoa pode configurar cada um das notificações." A API entrega avisos dentro da plataforma, em tempo real, e por e-mail, e cada usuário escolhe os canais de cada tipo de aviso.
+- **Alternativas consideradas:** deixar as notificações para depois da v0.4; enviar só por e-mail.
+- **Consequências:** os pop-ups e a lista de avisos são telas do front-end, fora do escopo. Notificações push para o celular continuam fora, porque dependem de serviços da Apple e do Google.
+
+## D-021: Claude Haiku 5.5 como modelo de IA
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** a tradução, a correção de escrita e a recomendação precisam de um modelo de IA, e o projeto não tem orçamento.
+- **Decisão:** nas palavras da autora: "Usa Claude mais barato." Hoje esse modelo é o Claude Haiku 5.5 (`claude-haiku-5-5`), por US$ 0,10 por milhão de tokens de entrada e US$ 0,50 por milhão de saída.
+- **Alternativas consideradas:** um modelo local e gratuito, que exige uma máquina mais forte e tem qualidade menor; modelos mais caros do Claude, desnecessários para essas tarefas.
+- **Consequências:** a IA fica atrás de um gateway, para que o modelo ou o provedor possam ser trocados. O SDK Java da Anthropic é uma dependência nova e só entra com aprovação. Os testes nunca chamam a API de verdade, e a chave fica só no `.env`.
