@@ -63,7 +63,7 @@ src/main/
 
 ## Status do Projeto
 
-**Em Desenvolvimento**
+**Em Desenvolvimento**: veja as fases no [Roadmap](docs/ROADMAP.md) e as tarefas em [Issues](https://github.com/barbaraguarino/Blog-API/issues).
 
 O projeto Blog-API encontra-se em suas fases iniciais de arquitetura estrutural e modelagem de domínio. No momento, o repositório não está pronto para ser clonado ou executado localmente por terceiros.
 

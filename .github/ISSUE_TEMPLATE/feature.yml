@@ -1,0 +1,46 @@
+name: Funcionalidade
+description: Nova funcionalidade ou evolução de uma existente
+title: "[Módulo] Descrição curta"
+labels: ["type:feature"]
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: Objetivo
+      description: O que essa tarefa entrega e por que ela importa.
+    validations:
+      required: true
+  - type: textarea
+    id: regras
+    attributes:
+      label: Regras de negócio
+      description: Comportamentos, restrições e casos especiais.
+      placeholder: |
+        - Regra 1
+        - Regra 2
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Critérios de aceite
+      description: Como saber que está pronto (endpoints, respostas, erros esperados).
+      placeholder: |
+        - [ ] POST /... retorna 201 quando...
+        - [ ] Retorna 409 quando...
+    validations:
+      required: true
+  - type: textarea
+    id: dependencias
+    attributes:
+      label: Dependências
+      description: Issues que precisam estar prontas antes (ex. "Depende de #12").
+    validations:
+      required: false
+  - type: textarea
+    id: notas
+    attributes:
+      label: Notas técnicas
+      description: Ideias de implementação, links, decisões em aberto.
+    validations:
+      required: false
