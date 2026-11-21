@@ -28,13 +28,17 @@ Por fim, encontrar o que ler também é difícil. Com muitos autores e temas, os
 
 ## 3. A proposta
 
-Unir os dois mundos em uma única plataforma:
+O Blog-API responde a esses problemas com uma plataforma de publicação que trata a privacidade como requisito, e não como detalhe, e que usa a inteligência artificial para aproximar autores e leitores.
 
-- **Conteúdo organizado:** artigos com rascunho e publicação, categorias em árvore, tags, imagens e busca.
-- **Autoria com curadoria:** nem todo usuário publica. Quem quer publicar faz um pedido, que é analisado por um administrador.
-- **Comunidade:** comentários, reações, seguidores e um feed com os autores seguidos.
-- **Moderação:** denúncias de conteúdo abusivo e ações para tratá-las.
-- **Identidade segura:** cadastro com e-mail e senha ou com conta Google, confirmação de e-mail, recuperação de senha, sessões revogáveis e verificação em duas etapas.
+Para proteger os dados, a API pede só o necessário no cadastro, mostra nos perfis públicos apenas o que o usuário escolher, permite ver e encerrar as sessões ativas, oferece verificação em duas etapas e deixa o usuário consultar e excluir os próprios dados. A IA recebe apenas o texto dos artigos, nunca dados pessoais dos usuários.
+
+Para vencer a barreira do idioma, cada artigo pode ter várias versões escritas pelo próprio autor, que compartilham o mesmo endereço, os mesmos comentários e as mesmas reações. Quando não existe uma versão na língua do leitor, a plataforma oferece uma tradução automática feita com IA.
+
+Para apoiar a escrita, o autor pode pedir à IA a correção de ortografia e gramática e sugestões para melhorar o texto, sempre decidindo o que aceitar.
+
+Para ajudar o leitor a encontrar o que ler, a plataforma recomenda artigos de acordo com os interesses dele, além da busca por texto, categoria, tag e autor e do feed com os autores seguidos.
+
+Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho e publicação, categorias e tags, pedido e aprovação de autoria, comentários, reações, seguidores e moderação do conteúdo denunciado.
 
 ## 4. Objetivos
 
