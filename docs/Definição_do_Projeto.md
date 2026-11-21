@@ -65,6 +65,7 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 - modelagem de domínio e regras de negócio;
 - integração com serviços externos (Google, e-mail e armazenamento de imagens);
 - arquitetura limpa e testes automatizados;
+- monitoramento e observabilidade (métricas, logs e saúde do sistema);
 - um processo de desenvolvimento com Kanban e documentação de Engenharia de Software;
 - conteinerização com Docker, como a última etapa do projeto.
 
@@ -77,7 +78,7 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 | Autor | Leitor com o pedido de autoria aprovado. | Tudo do leitor, mais escrever, publicar e gerenciar os próprios artigos. |
 | Moderador | Usuário escolhido por um administrador. | Tudo do leitor, mais analisar denúncias, ocultar conteúdo e remover comentários. Só escreve artigos se também for autor. |
 | Administrador | Moderador promovido. | Tudo do autor e do moderador, mais aprovar autores, conceder o papel de moderador, aprovar novos administradores, gerenciar categorias e aplicar penalidades. |
-| Superadministrador | O dono e o responsável final pela plataforma. | Tudo, inclusive rebaixar administradores e ajustar as regras da plataforma. Nenhum outro perfil pode alterar ou bloquear a conta dele. |
+| Superadministrador | O dono e o responsável final pela plataforma. | Tudo, inclusive rebaixar administradores, ajustar as regras da plataforma e acessar as métricas e os logs. Nenhum outro perfil pode alterar ou bloquear a conta dele. |
 
 Todo cadastro começa como leitor. Para virar autor, o leitor precisa ter a conta há pelo menos dois meses e fazer um pedido, que é aprovado por dois administradores, ou por um só se a plataforma tiver apenas um.
 
@@ -94,11 +95,15 @@ Os prazos e as quantidades desta seção são os valores padrão. O superadminis
 
 | Módulo | Funcionalidades |
 |---|---|
-| **Identidade e acesso** | Cadastro e login (local e com Google), login por e-mail ou nickname, sessões e dispositivos, ativação de conta por e-mail, recuperação e troca de senha, verificação em duas etapas. |
-| **Autoria e conteúdo** | Pedido e aprovação de autoria, artigos e rascunhos, categorias, tags, imagens e busca. |
-| **Social** | Comentários com respostas, reações, seguidores e feed. |
-| **Moderação** | Denúncias e ações de moderação. |
-| **Transversal** | Mensagens em pt-BR e en, erros padronizados e documentação interativa da API (Swagger). |
+| Identidade e acesso | Cadastro e login com e-mail e senha ou com conta Google, login por e-mail ou nickname, ativação da conta por e-mail, recuperação e troca de senha, sessões revogáveis e verificação em duas etapas. |
+| Privacidade | Escolha do que aparece no perfil público, consulta e exclusão dos próprios dados e controle do histórico de interesses usado nas recomendações. |
+| Perfis | Pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
+| Conteúdo | Artigos com rascunho e publicação, versões do mesmo artigo em vários idiomas, categorias, tags, imagens e busca. |
+| Inteligência artificial | Tradução de artigos, correção e sugestões de escrita e recomendação de artigos, com um histórico de interesses que o leitor pode ver, limpar ou desligar. |
+| Social | Comentários com respostas, reações, seguidores e feed. |
+| Moderação | Denúncias e ações de moderação. |
+| Administração da plataforma | Tudo o que um painel do dono precisa: gestão de usuários e papéis, bloqueio de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
+| Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API (Swagger). |
 
 A lista completa e formal está em [Requisitos.md](Requisitos.md), e as regras de cada funcionalidade em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
