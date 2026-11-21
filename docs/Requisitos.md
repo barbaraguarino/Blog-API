@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 5.3 · **Última modificação:** 21/11/2026
+**Versão:** 5.4 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -122,7 +122,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 ### 1.8 Moderação
 
 - **RF-040** – O sistema deve permitir que o usuário autenticado denuncie artigos e comentários.
-- **RF-041** – O sistema deve permitir que o moderador e o administrador analisem as denúncias e apliquem ações de moderação, como arquivar a denúncia, ocultar o conteúdo, remover comentários ou penalizar o autor.
+- **RF-041** – O sistema deve permitir que os moderadores e a administração analisem as denúncias e apliquem ações de moderação, como arquivar a denúncia, ocultar o conteúdo, remover comentários ou penalizar o autor.
 - **RF-096** – O sistema deve informar a quem denunciou o resultado da análise.
 - **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e garantir que o recurso seja analisado por outro moderador ou administrador.
 - **RF-125** – O sistema deve permitir que o dono configure uma lista de palavras bloqueadas, que impede a publicação de comentários que as contenham.
