@@ -8,7 +8,7 @@ Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, r
 
 Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso de inteligência artificial a serviço da leitura e da escrita.
 
-As contas são protegidas com confirmação de e-mail, sessões revogáveis, verificação em duas etapas e senhas guardadas apenas como hash. A API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
+A segurança e a privacidade não são um complemento: a API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
 
 Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto.
 
@@ -72,7 +72,7 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 - arquitetura limpa e testes automatizados;
 - monitoramento e observabilidade (métricas, logs e saúde do sistema);
 - um processo de desenvolvimento com Kanban e documentação de Engenharia de Software;
-- conteinerização com Docker, como a última etapa do projeto.
+- conteinerização com Docker.
 
 ## 5. Público e perfis de usuário
 
@@ -97,6 +97,20 @@ Os outros perfis são conquistados por promoções que passam pela aprovação d
 
 O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. É ele quem define, no painel do dono, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
+## 6. Principais funcionalidades
+
+| Módulo | Funcionalidades |
+|---|---|
+| Identidade e acesso | Cadastro e login com e-mail e senha ou com conta Google, login por e-mail ou nickname, ativação da conta por e-mail, recuperação e troca de senha, sessões revogáveis e verificação em duas etapas. |
+| Privacidade | Escolha do que aparece no perfil público, consulta e exclusão dos próprios dados e controle do histórico de interesses usado nas recomendações. |
+| Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
+| Conteúdo | Artigos com rascunho e publicação, versões do mesmo artigo em vários idiomas, categorias, tags, imagens e busca. |
+| Inteligência artificial | Tradução de artigos, correção e sugestões de escrita e recomendação de artigos. |
+| Social | Comentários com respostas, reações, seguidores e feed. |
+| Moderação | Denúncias e ações de moderação. |
+| Administração da plataforma | Tudo o que um painel do dono precisa: gestão de usuários e papéis, bloqueio de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
+| Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API (Swagger). |
+
 Cada perfil tem o seu painel na API, com o que precisa para trabalhar. A tela de cada painel fica a cargo do front-end.
 
 | Painel | Quem vê | O que mostra |
@@ -109,21 +123,6 @@ Cada perfil tem o seu painel na API, com o que precisa para trabalhar. A tela de
 | Do dono | Superadministrador. | Usuários e papéis, regras da plataforma, métricas, logs e o registro das ações administrativas. |
 
 As estatísticas dos painéis são sempre agregadas: o autor vê quantas pessoas leram um artigo, nunca quem leu.
-
-## 6. Principais funcionalidades
-
-| Módulo | Funcionalidades |
-|---|---|
-| Identidade e acesso | Cadastro e login com e-mail e senha ou com conta Google, login por e-mail ou nickname, ativação da conta por e-mail, recuperação e troca de senha, sessões revogáveis e verificação em duas etapas. |
-| Privacidade | Escolha do que aparece no perfil público, consulta e exclusão dos próprios dados e controle do histórico de interesses usado nas recomendações. |
-| Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
-| Painéis | Um painel para cada perfil: minha conta, do autor, dos autores (visão da administração e espaço comum), da moderação, do moderador e do dono, com estatísticas sempre agregadas. |
-| Conteúdo | Artigos com rascunho e publicação, versões do mesmo artigo em vários idiomas, categorias, tags, imagens e busca. |
-| Inteligência artificial | Tradução de artigos, correção e sugestões de escrita e recomendação de artigos. |
-| Social | Comentários com respostas, reações, seguidores e feed. |
-| Moderação | Denúncias e ações de moderação. |
-| Administração da plataforma | Tudo o que um painel do dono precisa: gestão de usuários e papéis, bloqueio de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
-| Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API (Swagger). |
 
 A lista completa e formal está em [Requisitos.md](Requisitos.md), e as regras de cada funcionalidade em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
