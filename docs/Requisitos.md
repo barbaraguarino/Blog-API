@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 5.0 · **Última modificação:** 21/11/2026
+**Versão:** 5.1 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -9,9 +9,11 @@ Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
 Cada requisito tem um identificador único, que é citado nas issues, nas [Regras de Negócio](Regras_de_Negócio.md) e nos testes. Os identificadores nunca são reaproveitados: um requisito que muda de sentido ganha um identificador novo, e o antigo fica marcado como substituído. Um requisito novo recebe o próximo número livre, por isso os números não seguem a ordem dentro de cada seção. As histórias de usuário e os critérios de aceite de cada entrega ficam nas issues do GitHub.
 
+Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_do_Projeto.md): o dono é o superadministrador, e a administração reúne os administradores e o dono.
+
 ---
 
-## 1. Requisitos Funcionais
+## 1. Requisitos funcionais
 
 ### 1.1 Identidade e acesso
 
@@ -19,7 +21,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google cujo e-mail tenha sido verificado pelo Google, aceitando os termos de uso e a política de privacidade.
 - **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
 - **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
-- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub e a Apple, e o dono deve escolher quais provedores ficam ativos na plataforma.
+- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub e a Apple, e permitir que o dono escolha quais provedores ficam ativos na plataforma.
 - **RF-054** – O sistema deve permitir que o usuário cadastre, use e remova passkeys para entrar sem senha.
 - **RF-055** – O sistema deve permitir que o usuário entre sem senha, com um código de uso único enviado ao e-mail cadastrado.
 - **RF-051** – O sistema deve impedir o acesso de contas não ativadas ou suspensas, em qualquer forma de login.
@@ -122,7 +124,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-040** – O sistema deve permitir que o usuário autenticado denuncie artigos e comentários.
 - **RF-041** – O sistema deve permitir que o moderador e o administrador analisem as denúncias e apliquem ações de moderação, como arquivar a denúncia, ocultar o conteúdo, remover comentários ou penalizar o autor.
 - **RF-096** – O sistema deve informar a quem denunciou o resultado da análise.
-- **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e o recurso deve ser analisado por outra pessoa da equipe de moderação.
+- **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e garantir que o recurso seja analisado por outra pessoa da equipe de moderação.
 - **RF-125** – O sistema deve permitir que o dono configure uma lista de palavras bloqueadas, que impede a publicação de comentários que as contenham.
 
 ### 1.9 Painéis
@@ -146,10 +148,10 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-109** – O sistema deve permitir que a administração liste e gerencie os usuários e os papéis deles, conforme os limites de cada perfil.
 - **RF-110** – O sistema deve permitir que a administração suspenda e reative contas.
 - **RF-111** – O sistema deve permitir que o dono ajuste as regras da plataforma, como prazos, quantidade de aprovações e limites de uso, dentro de limites seguros, guardando o histórico de cada mudança.
-- **RF-112** – O sistema deve mostrar ao dono métricas agregadas de uso e de desempenho e a saúde do sistema.
+- **RF-112** – O sistema deve mostrar ao dono a saúde do sistema, como a disponibilidade da API, do banco de dados e dos serviços externos.
 - **RF-134** – O sistema deve mostrar ao dono estatísticas agregadas de acesso por período: número de visitas e de visitantes, páginas e artigos mais acessados, horários de pico e idiomas e regiões aproximadas de quem acessa.
 - **RF-135** – O sistema deve mostrar ao dono estatísticas agregadas da comunidade por período: novos usuários, usuários ativos, artigos publicados, comentários e reações, autores, categorias e tags mais lidos e termos mais buscados.
-- **RF-136** – O sistema deve mostrar ao dono o uso e o custo estimado de cada serviço pago no mês (inteligência artificial, e-mails, armazenamento de imagens), comparados ao teto de custos.
+- **RF-136** – O sistema deve mostrar ao dono o uso e o custo estimado de cada serviço pago no mês (inteligência artificial, e-mails, armazenamento de imagens e login com Apple), comparados ao teto de custos.
 - **RF-137** – O sistema deve mostrar ao dono métricas técnicas: endpoints mais usados, tempo de resposta, taxa de erros e uso de recursos.
 - **RF-138** – O sistema deve mostrar ao dono métricas de crescimento por período: conversão de visitantes em cadastros e de leitores em autores, e a retenção dos usuários.
 - **RF-139** – O sistema deve mostrar ao dono métricas de segurança: tentativas de login que falharam, bloqueios por limite de requisições, acessos de dispositivos novos e a porcentagem de contas com verificação em duas etapas.
@@ -161,7 +163,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 ---
 
-## 2. Requisitos Não Funcionais
+## 2. Requisitos não funcionais
 
 ### 2.1 Segurança
 
@@ -179,7 +181,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 ### 2.2 Privacidade e proteção de dados
 
 - **RNF-021** – O sistema deve coletar só os dados pessoais necessários para cada funcionalidade e seguir os princípios da LGPD.
-- **RNF-022** – O sistema deve enviar à IA só o conteúdo necessário para cada tarefa, nunca os dados das contas. A triagem da moderação recebe o texto sem nome, e-mail ou qualquer identificador de quem o escreveu.
+- **RNF-022** – O sistema deve enviar à IA só o conteúdo necessário para cada tarefa, nunca os dados das contas, e enviar à triagem da moderação o texto sem nome, e-mail ou qualquer identificador de quem o escreveu.
 - **RNF-023** – O sistema deve mostrar as estatísticas dos painéis e da plataforma sempre de forma agregada, sem rastrear pessoas individualmente e sem revelar quem leu, acessou ou reagiu a um conteúdo.
 - **RNF-024** – O sistema deve mascarar os dados pessoais nos logs, apagá-los depois de um prazo de retenção definido e registrar cada consulta feita aos logs.
 - **RNF-025** – O sistema deve guardar os registros de acesso pelo prazo exigido pela lei e apagá-los depois dele.
@@ -188,7 +190,6 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 - **RNF-026** – O sistema deve manter o custo somado dos serviços pagos (inteligência artificial, armazenamento de imagens, envio de e-mails e login com Apple) em no máximo US$ 15 por mês.
 - **RNF-027** – O sistema deve limitar o uso da IA e o envio de e-mails, por usuário e no total da plataforma, com limites que o dono pode ajustar.
-- **RNF-028** – O sistema deve acessar cada serviço externo por meio de um gateway, para que o provedor possa ser trocado sem mudar o resto do sistema.
 
 ### 2.4 Usabilidade e padronização
 
@@ -209,6 +210,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RNF-015** – O sistema deve ter um teste automatizado para cada classe de produção.
 - **RNF-016** – O sistema deve registrar em log os erros internos com a causa original e responder ao cliente com uma mensagem genérica, sem detalhes técnicos.
 - **RNF-031** – O sistema deve ser testado sem chamar serviços externos de verdade.
+- **RNF-028** – O sistema deve acessar cada serviço externo por meio de um gateway, para que o provedor possa ser trocado sem mudar o resto do sistema.
 
 ### 2.7 Dados e compatibilidade
 
