@@ -156,21 +156,9 @@ Premissas e restrições:
 
 ## 8. Tecnologias
 
-| Tecnologia | Papel no projeto |
-|---|---|
-| **Java 25** | Linguagem do backend. |
-| **Spring Boot 4** | Framework da API (Web MVC, Data JPA, Validation, Security). |
-| **PostgreSQL** | Banco de dados relacional. |
-| **Flyway** | Versionamento das tabelas do banco. |
-| **Spring Security + JWT** | Autenticação stateless com token em cookie seguro. |
-| **Google Sign-In** | Cadastro e login com conta Google. |
-| **Claude Haiku 5.5** *(planejado)* | Inteligência artificial: tradução, correção e sugestões de escrita e recomendação de artigos. É o modelo mais barato do Claude. |
-| **AWS S3** *(planejado)* | Armazenamento de imagens. |
-| **AWS SES** *(planejado)* | Envio de e-mails. |
-| **Swagger / OpenAPI** *(planejado)* | Documentação interativa da API. |
-| **JUnit 5, Mockito, AssertJ** | Testes automatizados. |
+O Blog-API é construído com Java 25 e Spring Boot 4 e usa o PostgreSQL como banco de dados, com as tabelas versionadas pelo Flyway. Os testes automatizados usam JUnit 5, Mockito e AssertJ.
 
-Os detalhes técnicos estão em [Arquitetura.md](Arquitetura.md).
+As bibliotecas, os serviços externos (como Google, Claude e AWS) e os detalhes técnicos de cada escolha estão em [Arquitetura.md](Arquitetura.md). O motivo de cada decisão está em [Decisões.md](Decisões.md).
 
 ## 9. Entregas
 
