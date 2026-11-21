@@ -4,7 +4,7 @@
 
 O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada instalação vira um blog diferente, como um blog de tecnologia, de livros ou de culinária, de acordo com o front-end e as categorias escolhidas por quem a administra. O dono de cada plataforma conta com uma área de administração completa, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
 
-Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem quer escrever pede autorização e passa a publicar depois de aprovado. Uma equipe de moderação cuida para que o ambiente continue saudável.
+Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem pode escrever depende da plataforma: o dono escolhe se a autoria é aberta a todos, fechada ou concedida por pedido aprovado pela administração. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
 Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso de inteligência artificial a serviço da leitura e da escrita.
 
@@ -44,7 +44,7 @@ Para ajudar o leitor a encontrar o que ler, a plataforma recomenda artigos a par
 
 Para quem quer criar uma comunidade, o Blog-API é uma base pronta e genérica. O dono escolhe o tema pelo front-end e pelas categorias, ajusta as regras de autoria e de promoção e acompanha a plataforma por métricas agregadas e logs que respeitam a privacidade dos usuários.
 
-Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho e publicação, categorias e tags, pedido e aprovação de autoria, comentários, reações, seguidores e moderação do conteúdo denunciado.
+Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho e publicação, categorias e tags, autoria aberta, fechada ou por pedido, comentários, reações, seguidores, moderação do conteúdo denunciado e um painel para cada perfil.
 
 ## 4. Objetivos
 
@@ -54,11 +54,11 @@ Para isso, o projeto deve:
 
 1. oferecer cadastro e login com e-mail e senha ou com conta Google, com as contas protegidas por confirmação de e-mail, recuperação de senha, sessões revogáveis e verificação em duas etapas;
 2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público e consultar e excluir os próprios dados;
-3. permitir que autores aprovados pela administração criem, editem e publiquem artigos organizados por categorias e tags, com imagens e com versões em vários idiomas;
+3. permitir que autores, conforme o modo de autoria escolhido pelo dono, criem, editem e publiquem artigos organizados por categorias e tags, com imagens e com versões em vários idiomas;
 4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões e recomendar artigos a partir dos sinais que cada leitor dá, sob o controle dele;
 5. permitir que leitores busquem, comentem, reajam, sigam autores e acompanhem um feed;
 6. oferecer ferramentas de moderação para tratar denúncias;
-7. oferecer ao dono uma administração completa da plataforma, com usuários e papéis, regras ajustáveis, métricas e logs que respeitam a privacidade;
+7. oferecer a cada perfil um painel com o que ele precisa para trabalhar e, ao dono, uma administração completa da plataforma, com usuários e papéis, regras ajustáveis, métricas e logs que respeitam a privacidade;
 8. responder em português e em inglês, conforme o idioma do cliente, com a estrutura pronta para receber novos idiomas;
 9. manter todo o código testado e a documentação de acordo com o que está implementado.
 
@@ -85,16 +85,28 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 | Administrador | Moderador promovido. | Tudo do autor e do moderador, mais aprovar autores, conceder o papel de moderador, aprovar novos administradores, gerenciar categorias e aplicar penalidades. |
 | Superadministrador | O dono e o responsável final pela plataforma. | Tudo, inclusive rebaixar administradores, ajustar as regras da plataforma e acessar as métricas e os logs. Nenhum outro perfil pode alterar ou bloquear a conta dele. |
 
-Todo cadastro começa como leitor. Para virar autor, o leitor precisa ter a conta há pelo menos dois meses e fazer um pedido, que é aprovado por dois administradores, ou por um só se a plataforma tiver apenas um.
+Todo cadastro começa como leitor. O dono escolhe como a plataforma trata a autoria, entre três modos:
 
-O papel de moderador é concedido por um administrador. Um moderador pode se tornar administrador depois de mais de doze meses na função sem nenhuma denúncia procedente contra ele. Se a plataforma tiver três administradores ou mais, a promoção precisa da aprovação de dois deles; com menos de três, quem aprova é o superadministrador.
+- por pedido, o padrão: o leitor pede para ser autor depois de um tempo mínimo de conta, e a administração analisa o pedido;
+- fechado: só escreve quem a administração nomear, e não existem pedidos;
+- aberto: todo leitor já pode escrever.
 
-Há apenas um superadministrador, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. Nas aprovações, ele conta como administrador e segue as mesmas regras que os demais, para que não haja favoritismo. As únicas exceções existem para a plataforma começar a funcionar:
+Os outros perfis são conquistados por promoções que passam pela aprovação da administração, com exigências de tempo e de histórico que evitam favoritismo e contas criadas só para abusar da plataforma. O papel de moderador é concedido por um administrador. Um moderador só se torna administrador depois de um período na função sem denúncias procedentes contra ele, e com a aprovação de outros administradores.
 
-- quando um perfil ainda não tem ninguém, ele pode promover uma pessoa diretamente para esse perfil;
-- ele pode nomear até cinco autores no total sem passar pelo prazo e pela aprovação.
+O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. É ele quem define, no painel de administração, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
-Os prazos e as quantidades desta seção são os valores padrão. O superadministrador pode ajustá-los pela API, dentro de limites seguros definidos no código, e cada mudança fica registrada com quem a fez e quando.
+Cada perfil tem o seu painel na API, com o que precisa para trabalhar. A tela de cada painel fica a cargo do front-end.
+
+| Painel | Quem vê | O que mostra |
+|---|---|---|
+| Minha conta | Todo usuário. | Dados e privacidade, sessões, histórico de interesses, pedidos feitos e o resultado das denúncias que a pessoa fez. |
+| Do autor | Cada autor, sobre si. | Artigos e rascunhos, versões de idioma, estatísticas por artigo (leituras, reações e comentários, por idioma) e o número de seguidores. |
+| Dos autores | Administração e autores. | Para a administração, a lista de autores, a atividade de cada um e os pedidos de autoria pendentes. Para os autores, um espaço comum com avisos da administração e diretrizes de escrita. |
+| Da moderação | Moderadores e administração. | Fila de denúncias por motivo, conteúdo ocultado e tempo médio de resolução. |
+| Do moderador | Cada moderador, sobre si, e a administração. | Denúncias que ele tratou, ações tomadas e o andamento rumo à promoção, com o tempo na função e as denúncias procedentes contra ele. |
+| Do dono | Superadministrador. | Usuários e papéis, regras da plataforma, métricas, logs e o registro das ações administrativas. |
+
+As estatísticas dos painéis são sempre agregadas: o autor vê quantas pessoas leram um artigo, nunca quem leu.
 
 ## 6. Principais funcionalidades
 
@@ -102,7 +114,8 @@ Os prazos e as quantidades desta seção são os valores padrão. O superadminis
 |---|---|
 | Identidade e acesso | Cadastro e login com e-mail e senha ou com conta Google, login por e-mail ou nickname, ativação da conta por e-mail, recuperação e troca de senha, sessões revogáveis e verificação em duas etapas. |
 | Privacidade | Escolha do que aparece no perfil público, consulta e exclusão dos próprios dados e controle do histórico de interesses usado nas recomendações. |
-| Perfis | Pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
+| Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
+| Painéis | Um painel para cada perfil: minha conta, do autor, dos autores (visão da administração e espaço comum), da moderação, do moderador e do dono, com estatísticas sempre agregadas. |
 | Conteúdo | Artigos com rascunho e publicação, versões do mesmo artigo em vários idiomas, categorias, tags, imagens e busca. |
 | Inteligência artificial | Tradução de artigos, correção e sugestões de escrita e recomendação de artigos, com um histórico de interesses que o leitor pode ver, limpar ou desligar. |
 | Social | Comentários com respostas, reações, seguidores e feed. |

@@ -162,3 +162,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** o backend não tem tema próprio. Cada instalação da API é um único blog, com o próprio banco (*single-tenant*). Há um único superadministrador, o dono, criado na primeira subida da API a partir de variáveis de ambiente. Os prazos e as quantidades das regras de perfis são valores padrão, que o superadministrador ajusta pela API, dentro de limites seguros definidos no código, com registro de quem mudou e quando. Um painel de administração é front-end e fica fora do escopo; a API oferece os endpoints que ele usaria.
 - **Alternativas consideradas:** várias plataformas na mesma instalação (*multi-tenant*), que exige separar todos os dados e consultas por blog e, em caso de erro, vaza dados de um blog para outro; regras ajustadas só por arquivos de configuração ou variáveis de ambiente, que exigem reiniciar a API e não deixam histórico.
 - **Consequências:** surge um módulo de configurações da plataforma, com endpoints de administração e histórico de mudanças. Os limites de teste, como um prazo menor para pedir autoria, só valem no perfil de testes.
+
+## D-018: Modo de autoria escolhido pelo dono e um painel para cada perfil
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** com a plataforma genérica (D-017), a curadoria de autores deixou de servir para todos os casos: um blog pessoal não precisa de pedidos de autoria, e uma comunidade aberta pode querer que todos escrevam. Além disso, a autora pediu "um painel para moderação e para cada moderador e também um painel para autores e para cada autor".
+- **Decisão:** o dono escolhe o modo de autoria: "o dono escolhe o modo", entre por pedido (padrão), fechado e aberto. Cada perfil ganha um painel na API: minha conta, do autor, dos autores, da moderação, do moderador e do dono. O painel dos autores tem as duas faces pedidas pela autora: "visão da administração e um espaço comum". As regras de perfis aparecem na Definição sem números; os valores padrão ficam nas Regras de Negócio.
+- **Alternativas consideradas:** manter sempre a autoria por pedido, que não serve a blogs pessoais nem a comunidades abertas; um único painel de administração, que deixaria autores e moderadores sem visão do próprio trabalho.
+- **Consequências:** as estatísticas dos painéis são sempre agregadas, para respeitar a privacidade dos leitores. Os painéis são endpoints da API; as telas continuam fora do escopo.
