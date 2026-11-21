@@ -1,79 +1,87 @@
 # Requisitos
 
-Requisitos funcionais (RF) e não funcionais (RNF) do Blog-API. As regras detalhadas de cada requisito ficam em [Regras_de_Negócio.md](Regras_de_Negócio.md) (RN-xxx). O andamento de cada um fica nas Issues do GitHub.
+Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
-**Status:** ✅ Implementado · 🟡 Parcial · ⬜ Planejado
+- **Requisitos funcionais (RF):** descrevem **o que** o sistema deve fazer, ou seja, os serviços que ele oferece aos usuários.
+- **Requisitos não funcionais (RNF):** descrevem **como** o sistema deve se comportar: as qualidades e restrições que ele deve cumprir, como segurança, desempenho e manutenibilidade.
 
-**Como manter:** um requisito novo recebe o próximo número do grupo, e números nunca são reaproveitados. Ao abrir uma issue, cite os RF/RN que ela atende. Ao fechar a issue, atualize o status aqui.
+Cada requisito tem um identificador único, que é citado nas issues, nas [Regras de Negócio](Regras_de_Negócio.md) e nos testes. Os identificadores nunca são reaproveitados. As histórias de usuário e os critérios de aceite de cada entrega ficam nas issues do GitHub.
 
 ---
 
 ## 1. Requisitos Funcionais
 
-### 1.1 Identidade e acesso (`module:user`)
+### 1.1 Identidade e acesso
 
-| ID | Requisito | Regras | Versão | Status |
-|---|---|---|---|---|
-| RF-001 | Cadastrar usuário com nome, e-mail e senha | RN-001 a RN-005 | v0.0 | ✅ |
-| RF-002 | Cadastrar usuário com conta Google (ID Token) | RN-001, RN-003, RN-006, RN-007 | v0.0 | ✅ |
-| RF-003 | Fazer login com e-mail ou nickname e senha | RN-008, RN-009 | v0.0 | ✅ |
-| RF-004 | Fazer login com conta Google | RN-008, RN-010 | v0.0 | ✅ |
-| RF-005 | Renovar o acesso com Refresh Token, com rotação | RN-011 a RN-013 | v0.1 | ⬜ |
-| RF-006 | Fazer logout, encerrando a sessão atual | RN-011 | v0.1 | ⬜ |
-| RF-007 | Listar e revogar as próprias sessões (dispositivos) | RN-014 | v0.1 | ⬜ |
-| RF-008 | Ativar a conta local com código enviado por e-mail | RN-015 a RN-017 | v0.1 | ⬜ |
-| RF-009 | Recuperar a senha esquecida por e-mail | RN-015, RN-018, RN-019 | v0.1 | ⬜ |
-| RF-010 | Trocar a senha estando logado, com código por e-mail | RN-015, RN-020 | v0.1 | ⬜ |
-| RF-011 | Ativar e usar 2FA com app autenticador (TOTP) | RN-021 | v0.4 | ⬜ |
-| RF-012 | Vincular e desvincular conta Google | RN-022 | v0.4 | ⬜ |
+- **RF-001** – O sistema deve permitir que o visitante se cadastre informando nome, e-mail e senha.
+- **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google.
+- **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
+- **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
+- **RF-005** – O sistema deve renovar o acesso do usuário autenticado por meio de um token de renovação (Refresh Token), sem exigir um novo login.
+- **RF-006** – O sistema deve permitir que o usuário encerre a sessão atual (logout).
+- **RF-007** – O sistema deve permitir que o usuário visualize as próprias sessões ativas e encerre qualquer uma delas.
+- **RF-008** – O sistema deve exigir que o usuário confirme o e-mail, por meio de um código enviado a ele, para ativar uma conta criada com e-mail e senha.
+- **RF-009** – O sistema deve permitir que o usuário redefina a senha esquecida por meio de um código enviado ao e-mail cadastrado.
+- **RF-010** – O sistema deve permitir que o usuário autenticado altere a própria senha, informando a senha atual e um código enviado ao e-mail.
+- **RF-011** – O sistema deve permitir que o usuário ative a verificação em duas etapas com um aplicativo autenticador.
+- **RF-012** – O sistema deve permitir que o usuário vincule e desvincule uma conta Google à sua conta.
 
-### 1.2 Autoria e conteúdo (`module:article`)
+### 1.2 Autoria e conteúdo
 
-| ID | Requisito | Regras | Versão | Status |
-|---|---|---|---|---|
-| RF-020 | Leitor solicita tornar-se autor | RN-030, RN-031 | v0.2 | ⬜ |
-| RF-021 | Administrador aprova ou recusa pedidos de autoria | RN-032 | v0.2 | ⬜ |
-| RF-022 | Administrador gerencia categorias hierárquicas | RN-033, RN-034 | v0.2 | ⬜ |
-| RF-023 | Autor cria, edita, salva como rascunho, publica e arquiva artigos | RN-035 a RN-038 | v0.2 | ⬜ |
-| RF-024 | Autor associa tags aos artigos, e o público filtra por tag | RN-039 | v0.2 | ⬜ |
-| RF-025 | Upload de avatar e de capa de artigo | RN-040 | v0.2 | ⬜ |
-| RF-026 | Buscar artigos por texto, categoria, tag e autor | RN-041 | v0.3 | ⬜ |
+- **RF-020** – O sistema deve permitir que o leitor solicite permissão para se tornar autor.
+- **RF-021** – O sistema deve permitir que o administrador aprove ou recuse as solicitações de autoria.
+- **RF-022** – O sistema deve permitir que o administrador cadastre, edite e remova categorias e subcategorias.
+- **RF-023** – O sistema deve permitir que o autor crie, edite, salve como rascunho, publique e arquive os próprios artigos.
+- **RF-024** – O sistema deve permitir que o autor associe tags aos artigos e que qualquer pessoa filtre os artigos por tag.
+- **RF-025** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário e para a capa dos artigos.
+- **RF-026** – O sistema deve permitir a busca de artigos publicados por texto, categoria, tag e autor.
 
-### 1.3 Social (`module:social`)
+### 1.3 Social
 
-| ID | Requisito | Regras | Versão | Status |
-|---|---|---|---|---|
-| RF-030 | Comentar e responder comentários em artigos | RN-050, RN-051 | v0.3 | ⬜ |
-| RF-031 | Reagir a artigos | RN-052 | v0.3 | ⬜ |
-| RF-032 | Seguir e deixar de seguir autores | RN-053 | v0.3 | ⬜ |
-| RF-033 | Ver o feed com os artigos dos autores seguidos | RN-054 | v0.3 | ⬜ |
+- **RF-030** – O sistema deve permitir que o usuário autenticado comente artigos publicados e responda comentários.
+- **RF-031** – O sistema deve permitir que o usuário autenticado reaja aos artigos publicados.
+- **RF-032** – O sistema deve permitir que o usuário autenticado siga e deixe de seguir autores.
+- **RF-033** – O sistema deve exibir ao usuário autenticado um feed com os artigos recentes dos autores que ele segue.
 
-### 1.4 Moderação (`module:moderation`)
+### 1.4 Moderação
 
-| ID | Requisito | Regras | Versão | Status |
-|---|---|---|---|---|
-| RF-040 | Denunciar artigos e comentários | RN-060 | v0.4 | ⬜ |
-| RF-041 | Analisar denúncias e aplicar ações (arquivar, ocultar, penalizar) | RN-061 | v0.4 | ⬜ |
+- **RF-040** – O sistema deve permitir que o usuário autenticado denuncie artigos e comentários.
+- **RF-041** – O sistema deve permitir que o moderador e o administrador analisem as denúncias e apliquem ações de moderação.
 
 ---
 
 ## 2. Requisitos Não Funcionais
 
-| ID | Categoria | Requisito | Status |
-|---|---|---|---|
-| RNF-001 | Segurança | Senhas armazenadas apenas com hash BCrypt | ✅ |
-| RNF-002 | Segurança | Autenticação stateless com JWT assinado (HMAC256), entregue em cookie `HttpOnly` e `SameSite=Strict` | ✅ |
-| RNF-003 | Segurança | Todo endpoint é protegido por padrão; rotas públicas são listadas explicitamente | ✅ |
-| RNF-004 | Segurança | Cookies com `Secure=true` fora do ambiente local | ⬜ (hoje `false` fixo no código) |
-| RNF-005 | Segurança | Segredos (chave JWT, banco, Google, AWS, SMTP) só em variáveis de ambiente, nunca versionados | ✅ |
-| RNF-006 | Segurança | Tokens de refresh e códigos OTP guardados apenas como hash | ⬜ |
-| RNF-007 | Segurança | Limite de tentativas e de frequência em login, códigos e reenvios | ⬜ |
-| RNF-008 | Internacionalização | Mensagens de erro em pt-BR e en, escolhidas pelo `Accept-Language` | ✅ |
-| RNF-009 | Padronização | Todo erro segue o formato `ErrorResponseDTO` (status, erro, mensagem, caminho, erros de validação) | ✅ |
-| RNF-010 | Documentação | API documentada com OpenAPI/Swagger | ⬜ |
-| RNF-011 | Manutenibilidade | Pragmatic Clean Architecture por funcionalidade (ver [Arquitetura.md](Arquitetura.md)) | ✅ |
-| RNF-012 | Banco de dados | Esquema versionado só via Flyway; `ddl-auto` sem gerar tabelas | ✅ |
-| RNF-013 | Testabilidade | Testes unitários para cada caso de uso e testes de controller (`@WebMvcTest`) para cada endpoint | 🟡 |
-| RNF-014 | Desempenho | Listagens sempre paginadas | ⬜ |
-| RNF-015 | Portabilidade | Executa localmente com Java 25 e PostgreSQL, sem Docker | ✅ |
-| RNF-016 | Versionamento da API | Rotas prefixadas com `/api/v1` | ✅ |
+### 2.1 Segurança
+
+- **RNF-001** – O sistema deve armazenar as senhas apenas na forma de hash, usando o algoritmo BCrypt.
+- **RNF-002** – O sistema deve autenticar as requisições de forma stateless, com tokens JWT assinados e enviados em cookies `HttpOnly` e `SameSite=Strict`.
+- **RNF-003** – O sistema deve proteger todos os endpoints por padrão, liberando sem autenticação apenas as rotas explicitamente declaradas como públicas.
+- **RNF-004** – O sistema deve enviar os cookies de autenticação com o atributo `Secure` fora do ambiente local, com validade igual à do token.
+- **RNF-005** – O sistema deve obter senhas, chaves e credenciais apenas de variáveis de ambiente, sem armazená-las no código-fonte.
+- **RNF-006** – O sistema deve armazenar os tokens de renovação e os códigos enviados por e-mail apenas na forma de hash.
+- **RNF-007** – O sistema deve limitar o número de tentativas e a frequência de login, de verificação de códigos e de reenvio de e-mails.
+- **RNF-008** – O sistema não deve expor, em nenhuma resposta, senhas, hashes, tokens, identificadores de provedores externos ou dados privados de outros usuários.
+
+### 2.2 Usabilidade e padronização
+
+- **RNF-009** – O sistema deve responder com mensagens em português do Brasil (padrão) ou em inglês, conforme o cabeçalho `Accept-Language` da requisição.
+- **RNF-010** – O sistema deve devolver todos os erros em um formato único, contendo data e hora, status HTTP, descrição, mensagem traduzida, caminho da requisição e, quando houver, os erros por campo.
+- **RNF-011** – O sistema deve disponibilizar documentação interativa da API no padrão OpenAPI (Swagger).
+
+### 2.3 Desempenho
+
+- **RNF-012** – O sistema deve paginar todas as listagens, com um tamanho máximo de página.
+
+### 2.4 Manutenibilidade e qualidade
+
+- **RNF-013** – O sistema deve seguir a Pragmatic Clean Architecture, com o código organizado por funcionalidade e dividido nas camadas de domínio, aplicação, infraestrutura e apresentação.
+- **RNF-014** – O sistema deve trocar dados com os clientes apenas por meio de DTOs, sem expor as entidades do banco.
+- **RNF-015** – O sistema deve ter um teste automatizado para cada classe de produção.
+- **RNF-016** – O sistema deve registrar em log os erros internos com a causa original e responder ao cliente com uma mensagem genérica, sem detalhes técnicos.
+
+### 2.5 Dados e compatibilidade
+
+- **RNF-017** – O sistema deve usar o PostgreSQL como banco de dados, com o esquema versionado exclusivamente por migrations do Flyway.
+- **RNF-018** – O sistema deve prefixar todas as rotas com a versão da API (`/api/v1`).
+- **RNF-019** – O sistema deve ser executável localmente com Java 25 e PostgreSQL, sem depender de contêineres.

@@ -79,7 +79,9 @@ Em `docs/`, atualizada **no mesmo PR** da mudança. Leia o arquivo correspondent
 - `Requisitos.md` (RF/RNF) e `Regras_de_Negócio.md` (RN e divergências): status sempre em dia.
 - `Arquitetura.md`: estrutura, fluxos, dados e segurança.
 - `Testes/Plano_de_Testes.md`: estratégia e cobertura. `Testes/Relatórios/`: um relatório novo por Milestone, nunca editando os antigos.
+- `Processo_de_Desenvolvimento.md`: Scrum adaptado, Definição de Preparado e de Pronto.
 - `Decisões.md`, `Roadmap.md` e `Segurança.md` (checklist de segurança do repositório e da conta).
+- **Os documentos explicam o projeto para pessoas:** escreva-os com detalhes e em português correto. A Definição é uma introdução; os Requisitos são duas listas simples (RF e RNF) no padrão "O sistema deve…"; as histórias de usuário e os critérios de aceite ficam nas issues.
 
 **Nomes dos arquivos:** em português, com acentos, `_` no lugar de espaço, iniciais maiúsculas e preposições em minúsculo (ex. `Regras_de_Negócio.md`). Relatórios começam pela data: `AAAA-MM-DD_Contexto.md`. As exceções são `README.md`, `CLAUDE.md`, `LICENSE` e os arquivos de `.github/`.
 

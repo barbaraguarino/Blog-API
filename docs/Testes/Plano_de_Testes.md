@@ -2,97 +2,223 @@
 
 ## 1. Objetivo
 
-Garantir que cada regra de negócio ([Regras_de_Negócio.md](../Regras_de_Negócio.md)) e cada endpoint funcionem como especificado, e que mudanças futuras não quebrem o que já funciona. Este plano define **o que** testar, **como** testar e **quando** um teste é obrigatório.
+Este plano define **como o Blog-API é verificado**: quais tipos de teste existem, o que cada um cobre, onde ficam, quando são obrigatórios, como são escritos e executados e como os resultados são registrados. O objetivo é garantir que:
+
+1. cada **regra de negócio** ([Regras_de_Negócio.md](../Regras_de_Negócio.md)) funcione como especificado;
+2. cada **endpoint** responda com o status, o formato e as mensagens corretas;
+3. **mudanças futuras** não quebrem o que já funciona (testes de regressão);
+4. exista **evidência** da qualidade de cada versão entregue (relatórios de testes).
+
+---
 
 ## 2. Escopo
 
-| Dentro | Fora (por enquanto) |
+### 2.1 O que é testado
+- **Todas as classes de produção:** entidades, enums, DTOs, mappers, casos de uso, controllers, exceções, componentes de segurança, gateways e configurações com lógica.
+- **Contrato HTTP:** status, cabeçalhos (inclusive cookies), corpo e formato de erro.
+- **Segurança:** rotas públicas e protegidas, papéis, emissão e validação do token.
+- **Internacionalização:** a tradução das mensagens pelas chaves.
+- **Banco de dados** *(quando houver banco de teste)*: migrations e consultas próprias dos repositórios.
+
+### 2.2 O que não é testado (por enquanto)
+| Item | Motivo |
 |---|---|
-| Casos de uso (regras de negócio) | Testes de carga e desempenho |
-| Controllers (contrato HTTP, status, validação, erros) | Testes de interface (não há front-end) |
-| Segurança (rotas públicas e protegidas, cookie, papéis) | Testes contra os serviços reais do Google e da AWS |
-| Entidades de domínio (fábricas, regras internas) | |
-| Repositórios com consultas próprias | |
-| Migrations Flyway (sobem num banco limpo) | |
+| Testes de carga e desempenho | Fora do objetivo atual; reavaliar após a v0.3. |
+| Testes de interface | Não há front-end. |
+| Serviços reais do Google, e-mail e AWS | Instáveis e externos: são sempre **simulados** com Mockito. |
 
-## 3. Níveis de teste
+---
 
-| Nível | Ferramentas | O que cobre | Onde fica |
-|---|---|---|---|
-| **Unitário** (toda classe) | JUnit 5, AssertJ, Mockito | Comportamento de cada classe isolada: entidades, enums, DTOs (validações), mappers, exceções, segurança, gateways | Mesmo pacote da classe, em `src/test/java` |
-| **Caso de uso** | JUnit 5, Mockito, AssertJ | Cada regra de negócio, com repositórios e gateways simulados | Mesmo pacote: `.../application/usecases/<contexto>/` |
-| **Controller (fatia web)** | `@WebMvcTest`, `MockMvc`, `@MockitoBean`, `SecurityConfig` importado | Status HTTP, validação, formato de erro, cookies, rotas públicas e protegidas | Mesmo pacote: `.../presentation/controllers/<contexto>/` |
-| **Exceções / handler** | `@WebMvcTest` ou unitário com `MessageSource` | Status HTTP, tradução da chave, formato do `ErrorResponseDTO` | Mesmo pacote: `core/exceptions/` |
-| **Integração** | `@SpringBootTest` / `@DataJpaTest` + PostgreSQL de teste | Fluxos ponta a ponta, migrations, consultas JPA | Pacote do módulo, sufixo `IT` *(a criar)* |
-| **Manual** | Cliente HTTP do IntelliJ (arquivos `.http`). Não usamos Postman nem similares | Validação exploratória de cada endpoint, um bloco por cenário | `requests/<modulo>/<funcionalidade>/` |
+## 3. Estratégia: a pirâmide de testes
 
-**Regra de organização:** uma classe → uma classe de teste com o mesmo nome + `Test`, **no mesmo pacote** da classe testada. O caminho do teste é o da classe trocando `src/main` por `src/test` (ex. `.../presentation/controllers/auth/AuthController.java` → `.../presentation/controllers/auth/AuthControllerTest.java`). Fixtures ficam em `src/test/java/br/com/blog/support/`.
+```mermaid
+flowchart TB
+    M["Manuais<br/>Cliente HTTP do IntelliJ (.http)"]
+    I["Integração<br/>@SpringBootTest / @DataJpaTest + PostgreSQL (planejado)"]
+    W["Controller (fatia web)<br/>@WebMvcTest + MockMvc"]
+    U["Unitários<br/>JUnit 5 + Mockito + AssertJ: toda classe"]
+    M --- I --- W --- U
+```
 
-## 4. Critérios
+A base da pirâmide é a mais numerosa e a mais rápida: **toda classe tem teste unitário**. Acima dela ficam os testes de controller, que verificam o contrato HTTP com a configuração real de segurança. Os testes de integração serão poucos e focados em banco e fluxos completos. Os testes manuais confirmam o comportamento como um cliente veria.
 
-### Quando um teste é obrigatório
-- **Toda classe de produção tem uma classe de teste unitário**, mesmo as mais simples (entidades, enums, DTOs, mappers, exceções).
-- **Cada tipo de classe tem também os testes do seu tipo** (tabela da seção 3): casos de uso com Mockito, controllers com `@WebMvcTest`, exceções com o handler.
-- **Todo endpoint** tem um arquivo `.http` com os cenários de sucesso e de erro.
-- **Toda RN implementada** tem pelo menos um teste de caso de uso que a comprova. O nome do teste (`@DisplayName`) ou um comentário cita o ID, ex. `RN-001`.
-- **Todo endpoint** tem testes de controller para: sucesso, validação (400), cada erro de negócio que pode retornar e acesso sem autenticação quando a rota é protegida (401/403).
+---
+
+## 4. Tipos de teste
+
+### 4.1 Unitário (toda classe)
+- **Objetivo:** verificar o comportamento de uma classe isolada.
+- **Ferramentas:** JUnit 5, AssertJ e, quando há dependências, Mockito.
+- **Exemplos do que testar:**
+
+  | Classe | O que verificar |
+  |---|---|
+  | `User` | Estado inicial das fábricas (papel, ativo, desbloqueado), geração de nickname (formato, limite de 40, sufixo), `isLinkedToGoogle`. |
+  | `UserRole` | Valor `ROLE_*` de cada papel. |
+  | DTOs de entrada | Cada validação, usando um `Validator` do Bean Validation, e a chave de i18n de cada violação. |
+  | `UserMapper` | Conversão de cada campo e o retorno nulo para entrada nula. |
+  | Exceções | Chave e argumentos guardados, causa preservada nas de infraestrutura. |
+  | `TokenService` | Token gerado é validado; token adulterado, expirado ou de outro emissor devolve vazio. |
+  | `CustomUserDetailsService` | Busca por e-mail quando há `@`, por nickname quando não há, e erro quando não encontra. |
+
+### 4.2 Caso de uso
+- **Objetivo:** verificar cada **regra de negócio** do caso de uso.
+- **Ferramentas:** `@ExtendWith(MockitoExtension.class)`, `@Mock` para repositórios e gateways, `@InjectMocks` para o caso de uso, e AssertJ.
+- **Cobertura mínima:** o caminho feliz e **cada** exceção que o caso de uso pode lançar. Também o que **não** deve acontecer, por exemplo `verify(repository, never()).save(any())` quando o e-mail já existe.
+
+### 4.3 Controller (fatia web)
+- **Objetivo:** verificar o contrato HTTP sem subir a aplicação inteira.
+- **Ferramentas:** `@WebMvcTest(Controller.class)`, `MockMvc`, `@Import(SecurityConfig.class)` para usar a segurança real e `@MockitoBean` para os casos de uso e componentes de segurança.
+- **Cenários obrigatórios por endpoint:**
+  - sucesso (status, corpo e, no login, o cabeçalho `Set-Cookie`);
+  - DTO inválido → `400` com `validationErrors`;
+  - corpo ausente ou malformado → `400`;
+  - cada erro de negócio que o endpoint pode devolver (`401`, `403`, `404`, `409`, `422`);
+  - rota protegida acessada sem autenticação → `403`.
+
+### 4.4 Exceções e `GlobalExceptionHandler`
+- **Objetivo:** garantir que cada exceção vire o status correto, com a mensagem traduzida e no formato `ErrorResponseDTO`.
+- **Como:** um controller de teste que lança cada exceção, ou chamadas diretas ao handler com um `MessageSource` real, testando os idiomas `pt-BR` e `en`.
+
+### 4.5 Integração *(planejado)*
+- **Objetivo:** verificar migrations, consultas JPA e fluxos completos, como cadastro → login → acesso.
+- **Ferramentas:** `@SpringBootTest` ou `@DataJpaTest` com um PostgreSQL de teste e um `application-test.properties` próprio.
+- **Convenção:** sufixo `IT` (ex. `RegistrationFlowIT`).
+
+### 4.6 Manual (Cliente HTTP do IntelliJ)
+- **Objetivo:** validar o comportamento como um cliente real, na Sprint Review e antes de cada PR.
+- **Ferramenta:** o **Cliente HTTP do IntelliJ**, com arquivos `.http`. O projeto **não** usa Postman nem similares.
+- **Organização:**
+  - os arquivos ficam em `requests/<modulo>/<funcionalidade>/`, com um bloco `###` por cenário e o status esperado no título (ex. `### Cadastrar Usuário Já Cadastrado (Conflito)`);
+  - cada requisição traz `Content-Type` e `Accept-Language`;
+  - só dados fictícios; tokens como variáveis (`{{token}}`) em `http-client.private.env.json`, que fica fora do Git.
+
+---
+
+## 5. Organização dos testes
+
+### 5.1 Uma classe, uma classe de teste, no mesmo pacote
+Para cada classe de produção existe uma classe de teste com **o mesmo nome + `Test`**, **no mesmo pacote**. O caminho do teste é o caminho da classe trocando `src/main` por `src/test`:
+
+```text
+src/main/java/br/com/blog/modules/user/presentation/controllers/auth/AuthController.java
+src/test/java/br/com/blog/modules/user/presentation/controllers/auth/AuthControllerTest.java
+```
+
+**Por que no mesmo pacote:**
+- o IntelliJ encontra o par automaticamente (*Go to Test*);
+- o teste enxerga membros *package-private* sem precisar torná-los públicos;
+- não há dúvida sobre onde criar um teste novo.
+
+### 5.2 Estrutura atual
+
+```text
+src/test/java/br/com/blog/
+├── BlogApiApplicationTests.java                 # contexto completo (precisa do banco)
+└── modules/user/
+    ├── application/usecases/auth/               # AuthenticateLocalUserServiceTest, AuthenticateGoogleUserServiceTest
+    ├── application/usecases/registration/       # RegisterLocalUserServiceTest, RegisterGoogleUserServiceTest
+    └── presentation/controllers/
+        ├── auth/AuthControllerTest
+        └── registration/UserRegistrationControllerTest
+```
+
+### 5.3 Apoio aos testes
+- **Fixtures:** fábricas de objetos de teste (ex. um `User` com id e datas preenchidos) ficam em `src/test/java/br/com/blog/support/` e evitam repetir `ReflectionTestUtils` em cada teste.
+- **Configuração de teste:** um `src/test/resources/application-test.properties` *(planejado)* separa a configuração de teste da de desenvolvimento.
+
+---
+
+## 6. Padrões de escrita
+
+| Padrão | Regra |
+|---|---|
+| **Nome do teste** | `@DisplayName` em português, descrevendo o comportamento esperado: "Deve retornar 409 quando o e-mail já existir". |
+| **Agrupamento** | `@Nested` por endpoint, caso de uso ou cenário ("Cadastro com e-mail e senha", "Cadastro com a conta Google"). |
+| **Estrutura** | *Arrange / Act / Assert*: preparar, executar e verificar, com **um comportamento por teste**. |
+| **Asserções** | AssertJ (`assertThat(...)`) para objetos, e `jsonPath` e `header` do MockMvc para respostas. |
+| **Rastreabilidade** | Testes de regra citam o ID: `@DisplayName("RN-005: deve gerar nickname em minúsculas com sufixo de 4 dígitos")`. |
+| **Isolamento** | Nada de serviços externos reais. Um teste não depende da ordem nem do resultado de outro. |
+| **Dados** | Valores fictícios, nunca tokens ou senhas reais. |
+
+---
+
+## 7. Critérios
+
+### 7.1 Quando um teste é obrigatório
+- **Toda classe de produção** tem uma classe de teste unitário, mesmo as mais simples.
+- **Cada tipo de classe** tem também os testes do seu tipo (seção 4).
+- **Toda regra de negócio implementada** tem pelo menos um teste que a cita.
+- **Todo endpoint** tem testes de controller e um arquivo `.http` com os cenários de sucesso e de erro.
 - **Todo bug corrigido** ganha um teste que falhava antes da correção.
 
-### Entrada (para começar a testar uma issue)
-- Critérios de aceite da issue escritos.
-- RN correspondentes registradas no Regras_de_Negócio.md.
+### 7.2 Entrada (para começar a testar uma issue)
+- A issue tem critérios de aceite escritos (Definição de Preparado).
+- As regras de negócio dela estão registradas no [Regras_de_Negócio.md](../Regras_de_Negócio.md).
 
-### Saída (para considerar a issue pronta)
-- Todos os testes passando com `./mvnw test`.
-- Todos os critérios de aceite cobertos por teste automatizado ou validados via `.http`.
-- Nenhum teste desativado (`@Disabled`) sem uma issue que explique o motivo.
+### 7.3 Saída (para considerar a issue pronta)
+- Todos os testes passam (`./mvnw test` ou pelo IntelliJ).
+- Todos os critérios de aceite estão cobertos por teste automatizado ou validados via `.http`.
+- Nenhum teste está desativado (`@Disabled`) sem uma issue explicando o motivo.
+- A matriz e a cobertura deste plano estão atualizadas.
 
-## 5. Padrões de escrita
+---
 
-- `@DisplayName` em português, descrevendo o comportamento esperado ("Deve retornar 409 quando o e-mail já existir").
-- `@Nested` para agrupar cenários do mesmo endpoint ou caso de uso.
-- Estrutura **Arrange / Act / Assert**, com um comportamento por teste.
-- Nada de dependência externa real nos testes unitários e de controller: Google, e-mail e S3 sempre simulados.
-
-## 6. Matriz de rastreabilidade (regras implementadas)
+## 8. Matriz de rastreabilidade
 
 | Regra | Coberta por | Situação |
 |---|---|---|
 | RN-001 e-mail único | `RegisterLocalUserServiceTest`, `RegisterGoogleUserServiceTest`, `UserRegistrationControllerTest` | ✅ |
-| RN-002 nome/e-mail válidos | `UserRegistrationControllerTest` (DTO inválido → 400, genérico) | 🟡 não testa cada limite |
-| RN-003 papel e estado inicial | — | ⬜ falta teste de domínio |
-| RN-004 política de senha | `UserRegistrationControllerTest` (DTO inválido, genérico) | 🟡 não testa cada exigência |
-| RN-005 geração de nickname | — | ⬜ falta teste de domínio (formato, limite de 40, sufixo) |
+| RN-002 dados obrigatórios e limites | `UserRegistrationControllerTest` (DTO inválido, genérico) | 🟡 falta testar cada limite |
+| RN-003 estado inicial | — | ⬜ teste de domínio do `User` |
+| RN-004 política de senha | `UserRegistrationControllerTest` (genérico) | 🟡 falta testar cada exigência |
+| RN-005 nickname | — | ⬜ teste de domínio do `User` |
 | RN-006 cadastro Google | `RegisterGoogleUserServiceTest`, `UserRegistrationControllerTest` | ✅ |
-| RN-007 googleId único | `RegisterGoogleUserServiceTest`, `UserRegistrationControllerTest` | ✅ |
-| RN-008 JWT em cookie HttpOnly | `AuthControllerTest` | ✅ |
-| RN-009 login por e-mail ou nickname | `AuthenticateLocalUserServiceTest`, `AuthControllerTest` | 🟡 falta testar `CustomUserDetailsService` (ramo e-mail vs nickname) e conta inativa/bloqueada → 403 |
-| RN-010 login Google | `AuthenticateGoogleUserServiceTest`, `AuthControllerTest` | ✅ |
-| Segurança: `TokenService` e `SecurityFilter` | — | ⬜ falta teste de geração, validação, expiração e emissor |
+| RN-007 Google único | `RegisterGoogleUserServiceTest`, `UserRegistrationControllerTest` | ✅ |
+| RN-008 JWT em cookie | `AuthControllerTest` | ✅ (falta o `TokenService`) |
+| RN-009 login por e-mail ou nickname | `AuthenticateLocalUserServiceTest`, `AuthControllerTest` | 🟡 falta o `CustomUserDetailsService` e o 403 de conta inativa |
+| RN-010 login Google | `AuthenticateGoogleUserServiceTest`, `AuthControllerTest` | ✅ (D3 sem teste) |
 
-### Cobertura por classe (2026-11-15)
+---
 
-Pela regra "toda classe tem teste", **6 de 35 classes** de produção têm teste hoje. Faltam:
+## 9. Cobertura por classe (2026-11-15)
+
+Pela regra "toda classe tem teste", **6 de 35 classes** de produção têm teste. As que faltam:
 
 | Área | Classes sem teste |
 |---|---|
 | Domínio | `User`, `UserRole` |
-| DTOs | `RegisterUserRequestDTO` (validações), `LoginRequestDTO`, `GoogleAuthRequestDTO`, `UserProfileResponseDTO`, `AuthResultDTO`, `GoogleUserInfoDTO` |
+| DTOs | `RegisterUserRequestDTO`, `LoginRequestDTO`, `GoogleAuthRequestDTO`, `UserProfileResponseDTO`, `AuthResultDTO`, `GoogleUserInfoDTO` |
 | Mapper | `UserMapper` |
 | Exceções | `GlobalExceptionHandler`, `ErrorResponseDTO`, `DomainException`, `BusinessRuleException`, `ResourceNotFoundException`, `ResourceAlreadyExistsException`, `InfrastructureException`, `ExternalProviderAuthException`, `SecurityInfrastructureException` |
 | Segurança | `SecurityConfig`, `SecurityFilter`, `TokenService`, `CustomUserDetails`, `CustomUserDetailsService` |
-| Infraestrutura | `GoogleAuthGateway`, `GoogleAuthConfig`, `UserRepository` (integração com banco de teste) |
+| Infraestrutura | `GoogleAuthGateway`, `GoogleAuthConfig`, `UserRepository` (integração) |
 | Configuração | `I18nConfiguration`, `BlogApiApplication` (coberta pelo `BlogApiApplicationTests`, que exige banco) |
 
-## 7. Ambiente
+---
 
-- Java 25, Maven Wrapper (`./mvnw`).
-- Os testes unitários e de controller não precisam de banco.
-- O teste `BlogApiApplicationTests` (`contextLoads`) sobe o contexto completo e precisa do PostgreSQL e do `.env` configurados.
-- *(Planejado)* banco de teste dedicado para os testes de integração.
+## 10. Ambiente e execução
 
-## 8. Execução e relatórios
+| Item | Detalhe |
+|---|---|
+| **Java** | 25 |
+| **Build** | Maven Wrapper (`./mvnw test`, ou `.\mvnw.cmd test` no PowerShell) ou o botão *Run Tests* do IntelliJ. |
+| **Banco** | Os testes unitários e de controller **não** precisam de banco. O `BlogApiApplicationTests` (`contextLoads`) sobe o contexto completo e precisa do PostgreSQL e do `.env`. |
+| **Dependências** | Só as do `pom.xml`, baixadas da Maven Central. Nada é instalado sem aprovação. |
+| **Automação** *(planejado)* | Um workflow do GitHub Actions rodando `./mvnw test` em todo PR para a `develop`. |
 
-- Antes de abrir PR: `./mvnw test`.
-- A cada fechamento de Milestone, ou quando houver mudança relevante, registre um relatório em [`Relatórios/`](Relatórios/) com o modelo do [README dos relatórios](Relatórios/README.md).
-- *(Planejado)* CI com GitHub Actions rodando `./mvnw test` em todo PR para a `develop`.
+---
+
+## 11. Gestão de defeitos
+
+1. Um defeito encontrado vira uma **issue `type:bug`** (template de bug), com como reproduzir, o resultado obtido e o esperado.
+2. Se o defeito contraria uma regra de negócio, ele é listado em *Divergências conhecidas* no [Regras_de_Negócio.md](../Regras_de_Negócio.md).
+3. A correção sai em um branch `bugfix/<nome>` e **começa por um teste que reproduz o defeito** (que falha), seguido da correção (que faz o teste passar).
+4. Ao mergear, a divergência sai da lista e a matriz deste plano é atualizada.
+
+---
+
+## 12. Relatórios
+
+- A cada fechamento de Milestone, e sempre que houver uma mudança relevante, é registrado um relatório em [`Relatórios/`](Relatórios/README.md), com o modelo definido lá.
+- Os relatórios são datados (`AAAA-MM-DD_Contexto.md`) e nunca editados depois de publicados: um resultado novo gera um relatório novo.
