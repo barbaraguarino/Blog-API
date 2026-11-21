@@ -39,6 +39,22 @@ Pragmatic Clean Architecture, organizada por funcionalidade (package by feature)
 - Use `@DisplayName` em português descrevendo o comportamento, e `@Nested` para agrupar cenários.
 - Cubra o caminho feliz e cada erro de regra de negócio.
 
+## Documentação do projeto
+
+Toda a documentação fica em `docs/`, em Markdown. Mantenha-a atualizada no mesmo PR da mudança de código:
+
+| Arquivo | Atualize quando… |
+|---|---|
+| `docs/DEFINICAO_DO_PROJETO.md` | mudar escopo, papéis ou entregas |
+| `docs/REQUISITOS.md` | um requisito (RF/RNF) for criado ou mudar de status |
+| `docs/REGRAS_DE_NEGOCIO.md` | uma regra (RN) for criada, alterada ou implementada, ou uma divergência for corrigida |
+| `docs/ARQUITETURA.md` | mudar estrutura, fluxo, modelo de dados, segurança ou stack |
+| `docs/testes/PLANO_DE_TESTES.md` | mudar a estratégia de testes ou a matriz de rastreabilidade |
+| `docs/testes/relatorios/` | ao fechar um Milestone (novo relatório, sem editar os antigos) |
+| `docs/DECISOES.md` | for tomada qualquer decisão de projeto |
+
+Issues e PRs citam os IDs que atendem (ex. `RF-005`, `RN-012`).
+
 ## Fluxo de trabalho
 
 - Tarefas vivem em **GitHub Issues**, agrupadas em Milestones (fases do `docs/ROADMAP.md`) e no quadro do GitHub Projects "Blog-API". Não recrie um backlog em `.md`.

@@ -1,10 +1,12 @@
-# BLOG
+# Blog-API
+
+![Java](https://img.shields.io/badge/Java-25-orange) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4-brightgreen) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Flyway-blue) ![Licença](https://img.shields.io/badge/licen%C3%A7a-MIT-green)
 
 O Blog-API é uma plataforma de rede social e publicações projetada para conectar produtores de conteúdo e leitores por meio de artigos dinâmicos e interações sociais. O ecossistema foca em um backend robusto desenvolvido com Spring Boot e PostgreSQL, oferecendo funcionalidades que abrangem desde a moderação de conteúdo e sistemas de comentários até o gerenciamento de categorias temáticas. Utilizando AWS S3 para gestão de mídias, o projeto demonstra uma solução escalável e profissional para o gerenciamento de comunidades e compartilhamento de conhecimento.
 
 ## Principais Funcionalidades
 
-- **Gestão de Identidade e Acesso:** Cadastro, login com 2FA, recuperação de senha, gestão de papéis (Leitor, Autor, Admin) e personalização de conta.
+- **Gestão de Identidade e Acesso:** Cadastro, login com 2FA, recuperação de senha, gestão de papéis (Leitor, Autor, Moderador, Admin) e personalização de conta.
 - **Gestão de Conteúdo**: CRUD completo de publicações, com suporte a categorização hierárquica, uso de tags e sistema de busca avançada. 
 - **Sistema de Autoria**: Fluxo de aprovação de novos autores e ferramentas para criar, editar, salvar rascunhos e publicar artigos. 
 - **Interações Sociais**: Sistema de seguidores, feed de atividades dinâmico, comentários estruturados e reações nas publicações. 
@@ -17,8 +19,10 @@ O Blog-API é uma plataforma de rede social e publicações projetada para conec
 - **Spring Boot:** Framework orquestrador que simplifica a configuração da infraestrutura da API RESTful.
 - **PostgreSQL:** Banco de dados relacional robusto, escolhido para garantir a integridade das relações complexas do ecossistema da plataforma.
 - **Flyway:** Versionamento do esquema de banco de dados, garantindo um histórico automatizado e confiável das migrações (migrations) das tabelas.
-- **AWS SDK (Amazon S3):** Integração com a nuvem para armazenamento isolado e escalável de arquivos de mídia (fotos de perfil, miniaturas e imagens dos artigos).
-- **Springdoc OpenAPI (Swagger):** Ferramenta adotada para a geração automatizada e interativa da documentação dos endpoints da API, facilitando testes e integrações futuras.
+- **Spring Security + JWT:** Autenticação stateless com token assinado entregue em cookie `HttpOnly`, além de login com conta Google (validação do ID Token).
+- **JUnit 5, Mockito e AssertJ:** Testes unitários dos casos de uso e testes de controller com `MockMvc`.
+- **AWS SDK (Amazon S3)** *(planejado)*: Integração com a nuvem para armazenamento isolado e escalável de arquivos de mídia (fotos de perfil, miniaturas e imagens dos artigos).
+- **Springdoc OpenAPI (Swagger)** *(planejado)*: Geração automatizada e interativa da documentação dos endpoints da API, facilitando testes e integrações futuras.
 
 ## Arquitetura do Projeto
 
@@ -61,11 +65,35 @@ src/main/
 - **Sem Front-End:** O projeto tem foco 100% no back-end, consistindo exclusivamente na entrega de uma API RESTful robusta.
 - **Sem Docker:** Para simplificar a configuração do ambiente de desenvolvimento neste estágio, a execução da aplicação e do PostgreSQL é feita de forma local e direta.
 
+## Documentação
+
+| Documento | Conteúdo |
+|---|---|
+| [Definição do Projeto](docs/DEFINICAO_DO_PROJETO.md) | Visão, objetivos, papéis, escopo e entregas |
+| [Requisitos](docs/REQUISITOS.md) | Requisitos funcionais e não funcionais |
+| [Regras de Negócio](docs/REGRAS_DE_NEGOCIO.md) | Regras numeradas e divergências conhecidas |
+| [Arquitetura](docs/ARQUITETURA.md) | Documento de Arquitetura de Software |
+| [Plano de Testes](docs/testes/PLANO_DE_TESTES.md) | Estratégia, critérios e matriz de rastreabilidade |
+| [Relatórios de Testes](docs/testes/relatorios/README.md) | Resultado das execuções |
+| [Decisões](docs/DECISOES.md) | Registro de decisões de arquitetura e processo |
+| [Roadmap](docs/ROADMAP.md) | Fases (Milestones) e fluxo de trabalho |
+
+## Endpoints Disponíveis
+
+| Método | Rota | Descrição | Acesso |
+|---|---|---|---|
+| POST | `/api/v1/register` | Cadastro com nome, e-mail e senha | Público |
+| POST | `/api/v1/register/google` | Cadastro com Google ID Token | Público |
+| POST | `/api/v1/auth/login` | Login com e-mail ou nickname e senha | Público |
+| POST | `/api/v1/auth/login/google` | Login com Google ID Token | Público |
+
+Exemplos de requisição estão em [`requests/`](requests/) (HTTP Client do IntelliJ).
+
 ## Status do Projeto
 
-**Em Desenvolvimento**: veja as fases no [Roadmap](docs/ROADMAP.md) e as tarefas em [Issues](https://github.com/barbaraguarino/Blog-API/issues).
+**Em Desenvolvimento**: a fundação (v0.0) está concluída e a próxima fase é a **v0.1 – Identidade essencial**. Veja as fases no [Roadmap](docs/ROADMAP.md) e as tarefas em [Issues](https://github.com/barbaraguarino/Blog-API/issues).
 
-O projeto Blog-API encontra-se em suas fases iniciais de arquitetura estrutural e modelagem de domínio. No momento, o repositório não está pronto para ser clonado ou executado localmente por terceiros.
+No momento, o repositório ainda não está pronto para ser clonado e executado por terceiros.
 
 As instruções detalhadas de configuração de variáveis de ambiente, preparação do banco de dados e execução da API serão documentadas nesta seção assim que a versão **Alpha** do sistema for consolidada.
 
@@ -79,8 +107,4 @@ GitHub: @barbaraguarino
 
 ## Licença
 
-Este projeto possui licença privada e todos os direitos são reservados.
-
-O código-fonte está disponível apenas para fins de estudo, consulta e avaliação acadêmica, não sendo permitida a cópia, modificação, distribuição ou uso sem autorização prévia da autora.
-
-Consulte o arquivo LICENSE para mais detalhes.
+Este projeto está sob a licença **MIT**: você pode usar, copiar, modificar e distribuir o código, desde que mantenha o aviso de copyright e a licença. Consulte o arquivo [LICENSE](LICENSE) para mais detalhes.
