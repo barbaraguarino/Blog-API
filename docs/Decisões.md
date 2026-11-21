@@ -153,3 +153,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** nas palavras da autora: "se vamos usar Docker ele deve ser a última coisa, a última tarefa." A API e o banco passam a ter execução com Docker, entregue depois de todas as funcionalidades.
 - **Alternativas consideradas:** deixar o Docker fora do escopo, como antes; adotá-lo já no início, o que mudaria o ambiente de desenvolvimento no meio das funcionalidades.
 - **Consequências:** até a última tarefa, a API e o PostgreSQL continuam rodando diretamente na máquina (RNF-019). O Roadmap precisa reservar essa tarefa para o fim.
+
+## D-017: Plataforma genérica, um blog por instalação, com regras ajustáveis pelo dono
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** ao definir os perfis e as regras de promoção, a autora percebeu que "isso são regras que cada um gostaria de administrar no próprio sistema" e explicou: "Queria criar algo genérico pra um mesmo servidor poder virar um blog só de dev, um blog só de livros e etc. [...] quem iria criar o tema seria o front."
+- **Decisão:** o backend não tem tema próprio. Cada instalação da API é um único blog, com o próprio banco (*single-tenant*). Há um único superadministrador, o dono, criado na primeira subida da API a partir de variáveis de ambiente. Os prazos e as quantidades das regras de perfis são valores padrão, que o superadministrador ajusta pela API, dentro de limites seguros definidos no código, com registro de quem mudou e quando. Um painel de administração é front-end e fica fora do escopo; a API oferece os endpoints que ele usaria.
+- **Alternativas consideradas:** várias plataformas na mesma instalação (*multi-tenant*), que exige separar todos os dados e consultas por blog e, em caso de erro, vaza dados de um blog para outro; regras ajustadas só por arquivos de configuração ou variáveis de ambiente, que exigem reiniciar a API e não deixam histórico.
+- **Consequências:** surge um módulo de configurações da plataforma, com endpoints de administração e histórico de mudanças. Os limites de teste, como um prazo menor para pedir autoria, só valem no perfil de testes.

@@ -2,7 +2,9 @@
 
 ## 1. Apresentação
 
-O Blog-API é o backend de uma plataforma de blog com vários autores e de tema livre. Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem quer escrever pede autorização e passa a publicar depois de aprovado. Uma equipe de moderação cuida para que o ambiente continue saudável.
+O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada instalação vira um blog diferente, como um blog de tecnologia, de livros ou de culinária, de acordo com o front-end e as categorias escolhidas por quem a administra. As regras de funcionamento, como prazos e aprovações, também podem ser ajustadas pelo dono de cada plataforma.
+
+Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem quer escrever pede autorização e passa a publicar depois de aprovado. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
 Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso de inteligência artificial a serviço da leitura e da escrita.
 
@@ -70,11 +72,23 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 
 | Perfil | Quem é | O que pode fazer |
 |---|---|---|
-| **Visitante** | Pessoa sem login. | Ler e buscar artigos publicados, cadastrar-se e entrar. |
-| **Leitor** | Todo usuário cadastrado. | Comentar, reagir, seguir autores, denunciar conteúdo, gerenciar a própria conta e pedir para ser autor. |
-| **Autor** | Leitor com pedido de autoria aprovado. | Tudo do leitor, mais escrever, publicar e gerenciar os próprios artigos. |
-| **Moderador** | Membro da equipe de moderação. | Analisar denúncias, ocultar conteúdo e remover comentários. |
-| **Administrador** | Responsável pela plataforma. | Tudo, incluindo aprovar autores, gerenciar categorias e aplicar penalidades. |
+| Visitante | Pessoa sem login. | Ler e buscar artigos publicados, cadastrar-se e entrar. |
+| Leitor | Todo usuário cadastrado. | Comentar, reagir, seguir autores, denunciar conteúdo, gerenciar a própria conta e pedir para ser autor. |
+| Autor | Leitor com o pedido de autoria aprovado. | Tudo do leitor, mais escrever, publicar e gerenciar os próprios artigos. |
+| Moderador | Usuário escolhido por um administrador. | Tudo do leitor, mais analisar denúncias, ocultar conteúdo e remover comentários. Só escreve artigos se também for autor. |
+| Administrador | Moderador promovido. | Tudo do autor e do moderador, mais aprovar autores, conceder o papel de moderador, aprovar novos administradores, gerenciar categorias e aplicar penalidades. |
+| Superadministrador | O dono e o responsável final pela plataforma. | Tudo, inclusive rebaixar administradores e ajustar as regras da plataforma. Nenhum outro perfil pode alterar ou bloquear a conta dele. |
+
+Todo cadastro começa como leitor. Para virar autor, o leitor precisa ter a conta há pelo menos dois meses e fazer um pedido, que é aprovado por dois administradores, ou por um só se a plataforma tiver apenas um.
+
+O papel de moderador é concedido por um administrador. Um moderador pode se tornar administrador depois de mais de doze meses na função sem nenhuma denúncia procedente contra ele. Se a plataforma tiver três administradores ou mais, a promoção precisa da aprovação de dois deles; com menos de três, quem aprova é o superadministrador.
+
+Há apenas um superadministrador, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. Nas aprovações, ele conta como administrador e segue as mesmas regras que os demais, para que não haja favoritismo. As únicas exceções existem para a plataforma começar a funcionar:
+
+- quando um perfil ainda não tem ninguém, ele pode promover uma pessoa diretamente para esse perfil;
+- ele pode nomear até cinco autores no total sem passar pelo prazo e pela aprovação.
+
+Os prazos e as quantidades desta seção são os valores padrão. O superadministrador pode ajustá-los pela API, dentro de limites seguros definidos no código, e cada mudança fica registrada com quem a fez e quando.
 
 ## 6. Principais funcionalidades
 
@@ -97,7 +111,8 @@ A lista completa e formal está em [Requisitos.md](Requisitos.md), e as regras d
 - A execução da API e do banco com Docker, como a última tarefa do projeto. Até lá, os dois rodam diretamente na máquina.
 
 ### 7.2 O projeto não inclui
-- **Front-end:** o foco é o backend.
+- **Front-end:** o foco é o backend. Isso inclui o painel de administração: a API oferece os endpoints que um painel usaria, mas não a tela.
+- **Vários blogs na mesma instalação:** cada instalação da API é um único blog, com o próprio banco de dados.
 - **Editor de texto rico:** o conteúdo chega pronto do cliente.
 - **Monetização, anúncios, newsletter, notificações push ou chat.**
 - **Publicação em produção:** o projeto roda em ambiente local.
