@@ -238,3 +238,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** a autora pediu para incluir a Apple mesmo assim ("Adicionar isso"). O GitHub e a Apple são os exemplos de provedores, e o dono escolhe quais ficam ativos.
 - **Alternativas consideradas:** oferecer só o GitHub, que é gratuito.
 - **Consequências:** o custo da Apple entra no teto de US$ 15 por mês (D-022), deixando cerca de US$ 7 por mês para a IA, as imagens e os e-mails. Como o provedor é opcional, a Apple pode ficar desativada enquanto o custo não couber.
+
+## D-026: Funcionalidades extras nos Requisitos
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** ao completar os Requisitos, a autora perguntou "Mais alguma ideia?" e escolheu, entre as sugestões, o que entra além do mínimo da Definição.
+- **Decisão:** entram tempo estimado de leitura, coautoria, prévia do rascunho por link privado, séries de artigos, menções com @nickname, reações em comentários, desativação temporária da conta, prazo de carência para a exclusão, recurso do autor contra ocultações e penalidades, lista de palavras bloqueadas, modo de manutenção e anúncios da plataforma (RF-116 a RF-127).
+- **Alternativas consideradas:** ficar só no mínimo da Definição.
+- **Consequências:** as séries, que tinham ficado de fora da Definição (D-023), entram como requisito além do mínimo; o feed RSS continua de fora. Os prazos (validade da prévia, carência da exclusão) e as listas (palavras bloqueadas) ficam nas Regras de Negócio e são ajustáveis pelo dono.

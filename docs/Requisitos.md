@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 2.0 · **Última modificação:** 21/11/2026
+**Versão:** 3.0 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -45,6 +45,8 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-062** – O sistema deve permitir que o usuário consulte todos os dados pessoais que a plataforma guarda sobre ele.
 - **RF-063** – O sistema deve permitir que o usuário exporte os próprios dados em um arquivo.
 - **RF-064** – O sistema deve permitir que o usuário exclua a própria conta e os dados pessoais dela.
+- **RF-122** – O sistema deve permitir que o usuário desative a conta temporariamente, escondendo o perfil e os conteúdos dele, e a reative depois.
+- **RF-123** – O sistema deve aplicar a exclusão da conta só depois de um prazo de carência, durante o qual o usuário pode desistir.
 - **RF-065** – O sistema deve registrar a versão dos termos de uso e da política de privacidade aceita por cada usuário e pedir um novo aceite quando esses documentos mudarem.
 - **RF-066** – O sistema deve avisar o usuário por e-mail quando a conta for acessada de um dispositivo novo.
 - **RF-067** – O sistema deve permitir que o usuário veja, limpe e desligue o histórico de interesses usado nas recomendações.
@@ -74,6 +76,10 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-025** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário, para a capa e para o corpo dos artigos.
 - **RF-026** – O sistema deve permitir a busca de artigos publicados por texto, categoria, tag e autor.
 - **RF-079** – O sistema deve permitir que o leitor salve artigos em listas privadas para ler depois.
+- **RF-117** – O sistema deve permitir que o autor convide outros autores como coautores de um artigo, que passam a editá-lo e aparecem como autores dele.
+- **RF-119** – O sistema deve permitir que o autor agrupe os próprios artigos em séries ordenadas.
+- **RF-118** – O sistema deve permitir que o autor gere um link privado, com validade e revogável, para outra pessoa ler um rascunho antes da publicação.
+- **RF-116** – O sistema deve informar o tempo estimado de leitura de cada artigo.
 - **RF-080** – O sistema deve mostrar a cada leitor a versão do artigo no idioma dele, quando existir.
 
 ### 1.5 Inteligência artificial
@@ -91,7 +97,9 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 ### 1.6 Social
 
 - **RF-030** – O sistema deve permitir que o usuário autenticado comente artigos publicados, responda comentários e edite ou remova os próprios comentários.
+- **RF-120** – O sistema deve permitir que o usuário mencione outra pessoa com @nickname num comentário, avisando a pessoa mencionada, exceto quando um bloqueio impedir.
 - **RF-031** – O sistema deve permitir que o usuário autenticado reaja aos artigos publicados.
+- **RF-121** – O sistema deve permitir que o usuário autenticado reaja aos comentários.
 - **RF-032** – O sistema deve permitir que o usuário autenticado siga e deixe de seguir autores.
 - **RF-033** – O sistema deve exibir ao usuário autenticado um feed com os artigos recentes dos autores que ele segue.
 - **RF-089** – O sistema deve permitir que o usuário bloqueie outros usuários, que deixam de poder comentar nos artigos dele, responder a ele e segui-lo, e desfaça o bloqueio.
@@ -99,7 +107,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 ### 1.7 Notificações
 
-- **RF-092** – O sistema deve avisar o usuário, dentro da plataforma e em tempo real, sobre eventos que o envolvem, como novos comentários, novos seguidores, respostas a comentários e o resultado de pedidos e denúncias.
+- **RF-092** – O sistema deve avisar o usuário, dentro da plataforma e em tempo real, sobre eventos que o envolvem, como novos comentários, novos seguidores, respostas, menções, anúncios da plataforma e o resultado de pedidos, denúncias e recursos.
 - **RF-093** – O sistema deve enviar esses avisos também por e-mail.
 - **RF-094** – O sistema deve permitir que o usuário escolha, para cada tipo de aviso, por quais canais quer recebê-lo.
 - **RF-095** – O sistema deve permitir que o usuário liste os próprios avisos e os marque como lidos.
@@ -114,6 +122,8 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 - **RF-097** – O sistema deve oferecer a todo usuário cadastrado um painel com os próprios dados e configurações de privacidade, sessões, histórico de interesses, listas de leitura, usuários bloqueados, pedidos feitos e o resultado das denúncias que ele fez.
 - **RF-098** – O sistema deve oferecer a cada autor um painel com os próprios artigos, rascunhos e agendamentos, o histórico de revisões, as versões de idioma, estatísticas agregadas por artigo e idioma (leituras, reações e comentários) e o número de seguidores.
+- **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e o recurso deve ser analisado por outra pessoa da equipe de moderação.
+- **RF-125** – O sistema deve permitir que o dono configure uma lista de palavras bloqueadas, que impede a publicação de comentários que as contenham.
 - **RF-099** – O sistema deve oferecer à administração um painel com a lista de autores, a atividade de cada um e os pedidos de autoria pendentes.
 - **RF-100** – O sistema deve oferecer aos autores um espaço comum, em que a administração publica avisos e diretrizes de escrita.
 - **RF-101** – O sistema deve oferecer aos moderadores e à administração um painel com a fila de denúncias por motivo, o conteúdo ocultado e o tempo médio de resolução.
@@ -133,6 +143,8 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-112** – O sistema deve mostrar ao dono métricas agregadas de uso e de desempenho e a saúde do sistema.
 - **RF-113** – O sistema deve permitir que o dono consulte os logs técnicos e de segurança.
 - **RF-114** – O sistema deve registrar todas as ações administrativas, com quem fez, o quê e quando, e mostrar esse registro ao dono.
+- **RF-126** – O sistema deve permitir que o dono coloque a plataforma em modo de manutenção, em que só a equipe consegue acessá-la.
+- **RF-127** – O sistema deve permitir que o dono publique anúncios para todos os usuários, enviados como aviso dentro da plataforma.
 
 ---
 
