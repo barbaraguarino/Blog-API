@@ -2,7 +2,7 @@
 
 ## 1. Apresentação
 
-O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada plataforma, ou seja, cada instalação do Blog-API, ganha o seu, como tecnologia, livros ou culinária, de acordo com o front-end usado e as categorias que o dono cadastra. O dono de cada plataforma conta com o painel do dono, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
+O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada plataforma, ou seja, cada instalação do Blog-API, ganha o seu, como tecnologia, livros ou culinária, de acordo com o front-end usado e as categorias que o dono cadastra. Cada dono conta com um painel próprio, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
 
 Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem pode escrever depende da plataforma: o dono escolhe se a autoria é aberta a todos, fechada ou concedida por pedido aprovado pela administração. O autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
@@ -10,7 +10,7 @@ Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso
 
 A segurança e a privacidade não são um complemento: a API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
 
-Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê ajuda os autores a escrever, sugerindo correções e melhorias no texto, e ajuda a moderação a decidir o que analisar primeiro.
+Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê, ajuda os autores a escrever, sugerindo correções e melhorias no texto, e ajuda a moderação a decidir o que analisar primeiro.
 
 O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, entregue em versões incrementais e acompanhado de documentação de Engenharia de Software.
 
@@ -18,7 +18,7 @@ O Blog-API é um projeto de estudo e de portfólio. Ele é construído como um p
 
 ## 2. O problema
 
-Quem lê, quem escreve e quem quer criar um espaço de escrita na internet esbarra em alguns problemas que as plataformas de publicação costumam resolver mal.
+Quem lê, quem escreve e quem quer criar um espaço de escrita na internet esbarram em alguns problemas que as plataformas de publicação costumam resolver mal.
 
 O primeiro é a privacidade. Muitas plataformas coletam mais dados do que precisam, compartilham essas informações com terceiros e não deixam claro o que fazem com elas. A conta vira uma fonte de exposição: perfis mostram mais do que deveriam, sessões que nunca expiram facilitam invasões e o usuário raramente consegue ver ou controlar o que a plataforma guarda sobre ele.
 
@@ -34,11 +34,11 @@ Por fim, quem quer criar uma comunidade de escrita sobre um tema, como livros ou
 
 O Blog-API responde a esses problemas com uma plataforma de publicação que trata a privacidade como requisito, e não como detalhe, e que usa a inteligência artificial para aproximar autores e leitores.
 
-Para proteger os dados, a API pede só o necessário no cadastro, mostra nos perfis públicos apenas o que o usuário escolher, permite ver e encerrar as sessões ativas, avisa por e-mail sobre acessos de dispositivos novos, oferece verificação em duas etapas, registra o aceite dos termos de uso e da política de privacidade e deixa o usuário consultar, exportar e excluir os próprios dados. Cada pessoa também pode bloquear quem a incomoda. A IA nunca recebe dados que identifiquem os usuários: a recomendação usa apenas os interesses, e a triagem da moderação recebe só o texto, sem nome, e-mail ou qualquer identificador.
+Para proteger os dados, a API pede só o necessário no cadastro, mostra nos perfis públicos apenas o que o usuário escolher, permite ver e encerrar as sessões ativas, avisa por e-mail sobre acessos de dispositivos novos, oferece verificação em duas etapas, registra o aceite dos termos de uso e da política de privacidade e deixa o usuário consultar, exportar e excluir os próprios dados. Cada pessoa também pode bloquear quem a incomoda. A IA recebe só o conteúdo necessário para cada tarefa, nunca os dados das contas: a recomendação usa apenas os interesses, e a triagem da moderação recebe só o texto, sem nome, e-mail ou qualquer identificador de quem escreveu.
 
 Para vencer a barreira do idioma, cada artigo pode ter várias versões escritas pelo próprio autor, que compartilham o mesmo endereço, os mesmos comentários e as mesmas reações. Quando não existe uma versão na língua do leitor, a plataforma oferece uma tradução automática feita com IA.
 
-Para apoiar a escrita, o autor pode pedir à IA a correção de ortografia e gramática e sugestões para melhorar o texto, de tags e de categoria, além de descrições das imagens para leitores de tela, sempre decidindo o que aceitar. Cada artigo também ganha um resumo automático, usado nas listagens e na busca.
+Para apoiar a escrita, o autor pode pedir à IA a correção de ortografia e gramática, sugestões para melhorar o texto, tags e uma categoria para o artigo e descrições das imagens para leitores de tela, sempre decidindo o que aceitar. Cada artigo também ganha um resumo automático, usado nas listagens e na busca.
 
 Para ajudar o leitor a encontrar o que ler, a plataforma recomenda artigos a partir de sinais que ele mesmo dá, como os autores que segue, as reações e as tags de interesse, com um histórico que ele pode ver, limpar ou desligar. Também há a busca por texto, categoria, tag e autor e o feed com os autores seguidos.
 
@@ -53,10 +53,10 @@ O objetivo geral é desenvolver uma API REST segura, testada e documentada para 
 Para isso, o projeto deve:
 
 1. oferecer cadastro e login com e-mail e senha ou com conta Google, com as contas protegidas por confirmação de e-mail, recuperação de senha, sessões revogáveis e verificação em duas etapas;
-2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público, consultar, exportar e excluir os próprios dados e bloquear outros usuários;
+2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público, consultar, exportar e excluir os próprios dados;
 3. permitir que autores, conforme o modo de autoria escolhido pelo dono, criem, editem, agendem e publiquem artigos organizados por categorias e tags, com imagens, versões em vários idiomas e histórico de revisões;
 4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões de texto, tags, categoria e descrições de imagens, gerar resumos dos artigos, ajudar a moderação a priorizar o que analisar e recomendar artigos a partir dos sinais que cada leitor dá, sob o controle dele;
-5. permitir que leitores busquem, comentem, reajam, sigam autores, salvem artigos para ler depois, acompanhem um feed e recebam notificações pelos canais que escolherem;
+5. permitir que leitores busquem, comentem, reajam, sigam autores, bloqueiem usuários, salvem artigos para ler depois, acompanhem um feed e recebam notificações pelos canais que escolherem;
 6. oferecer ferramentas de moderação para tratar denúncias;
 7. oferecer a cada perfil um painel com o que ele precisa para trabalhar e, ao dono, uma administração completa da plataforma, com identidade e páginas da plataforma, convites, usuários e papéis, regras ajustáveis, backup, métricas e logs que respeitam a privacidade;
 8. responder em português e em inglês, conforme o idioma indicado em cada requisição, com a estrutura pronta para receber novos idiomas;
@@ -117,7 +117,7 @@ Cada perfil tem o seu painel na API, com o que precisa para trabalhar. A tela de
 | Painel | Quem vê | O que mostra |
 |---|---|---|
 | Minha conta | Todo usuário. | Dados e privacidade, sessões, histórico de interesses, listas de leitura, usuários bloqueados, pedidos feitos e o resultado das denúncias que a pessoa fez. |
-| Do autor | Cada autor, sobre si. | Artigos e rascunhos, versões de idioma, estatísticas por artigo (leituras, reações e comentários, por idioma) e o número de seguidores. |
+| Do autor | Cada autor, sobre si. | Artigos, rascunhos e agendamentos, histórico de revisões, versões de idioma, estatísticas por artigo (leituras, reações e comentários, por idioma) e o número de seguidores. |
 | Dos autores | Administração e autores. | Para a administração, a lista de autores, a atividade de cada um e os pedidos de autoria pendentes. Para os autores, um espaço comum com avisos da administração e diretrizes de escrita. |
 | Da moderação | Moderadores e administração. | Fila de denúncias por motivo, conteúdo ocultado e tempo médio de resolução. |
 | Do moderador | Cada moderador, sobre si, e a administração. | Denúncias que ele tratou, ações tomadas e o andamento rumo à promoção, com o tempo na função e as denúncias procedentes contra ele. |
