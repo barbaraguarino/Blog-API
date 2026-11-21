@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 4.0 · **Última modificação:** 21/11/2026
+**Versão:** 5.0 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -133,7 +133,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-100** – O sistema deve oferecer aos autores um espaço comum, em que a administração publica avisos e diretrizes de escrita.
 - **RF-101** – O sistema deve oferecer aos moderadores e à administração um painel com a fila de denúncias por motivo, o conteúdo ocultado e o tempo médio de resolução.
 - **RF-102** – O sistema deve oferecer a cada moderador um painel, visível também para a administração, com as denúncias que ele tratou, as ações que tomou e o andamento rumo à promoção.
-- **RF-103** – O sistema deve oferecer ao superadministrador um painel com a identidade e as páginas da plataforma, os convites, os usuários e papéis, as regras, o backup, as métricas, os logs e o registro das ações administrativas.
+- **RF-103** – O sistema deve oferecer ao superadministrador um painel com a identidade e as páginas da plataforma, os convites, os usuários e papéis, as regras, o backup, todas as estatísticas e métricas da plataforma, os logs e o registro das ações administrativas.
 
 ### 1.10 Administração da plataforma
 
@@ -151,6 +151,9 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-135** – O sistema deve mostrar ao dono estatísticas agregadas da comunidade por período: novos usuários, usuários ativos, artigos publicados, comentários e reações, autores, categorias e tags mais lidos e termos mais buscados.
 - **RF-136** – O sistema deve mostrar ao dono o uso e o custo estimado de cada serviço pago no mês (inteligência artificial, e-mails, armazenamento de imagens), comparados ao teto de custos.
 - **RF-137** – O sistema deve mostrar ao dono métricas técnicas: endpoints mais usados, tempo de resposta, taxa de erros e uso de recursos.
+- **RF-138** – O sistema deve mostrar ao dono métricas de crescimento por período: conversão de visitantes em cadastros e de leitores em autores, e a retenção dos usuários.
+- **RF-139** – O sistema deve mostrar ao dono métricas de segurança: tentativas de login que falharam, bloqueios por limite de requisições, acessos de dispositivos novos e a porcentagem de contas com verificação em duas etapas.
+- **RF-140** – O sistema deve mostrar ao dono o uso das funcionalidades de IA e dos e-mails: quantidade de traduções, correções, sugestões, resumos e triagens, os idiomas mais pedidos nas traduções e os e-mails enviados e recusados.
 - **RF-113** – O sistema deve permitir que o dono, e só ele, consulte os logs técnicos e de segurança.
 - **RF-114** – O sistema deve registrar todas as ações administrativas, com quem fez, o quê e quando, e mostrar esse registro ao dono.
 - **RF-126** – O sistema deve permitir que o dono coloque a plataforma em modo de manutenção, em que só a equipe consegue acessá-la.
