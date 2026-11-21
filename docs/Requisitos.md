@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 5.2 · **Última modificação:** 21/11/2026
+**Versão:** 5.3 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -21,7 +21,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google cujo e-mail tenha sido verificado pelo Google, aceitando os termos de uso e a política de privacidade.
 - **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
 - **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
-- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub e a Apple, desde que o e-mail tenha sido verificado pelo provedor, e permitir que o dono escolha quais provedores ficam ativos na plataforma.
+- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais que o dono ativar na plataforma, como o GitHub e a Apple, desde que o e-mail tenha sido verificado pelo provedor e, no cadastro, aceitando os termos de uso e a política de privacidade.
 - **RF-054** – O sistema deve permitir que o usuário cadastre, use e remova passkeys para entrar sem senha.
 - **RF-055** – O sistema deve permitir que o usuário entre sem senha, com um código de uso único enviado ao e-mail cadastrado.
 - **RF-051** – O sistema deve impedir o acesso de contas não ativadas ou suspensas, em qualquer forma de login.
@@ -60,7 +60,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-021** – O sistema deve permitir que a administração aprove ou recuse as solicitações de autoria, conforme as regras de aprovação da plataforma.
 - **RF-069** – O sistema deve permitir que a administração nomeie autores diretamente, quando a plataforma estiver no modo fechado.
 - **RF-128** – O sistema deve permitir que a administração retire o papel de autor de um usuário, que volta a ser leitor.
-- **RF-070** – O sistema deve permitir que um administrador conceda e retire o papel de moderador.
+- **RF-070** – O sistema deve permitir que a administração conceda e retire o papel de moderador.
 - **RF-071** – O sistema deve permitir a promoção de um moderador a administrador, com a aprovação de outros administradores, ou do superadministrador quando houver poucos administradores, conforme as regras da plataforma.
 - **RF-072** – O sistema deve permitir que o superadministrador rebaixe administradores.
 - **RF-073** – O sistema deve criar um único superadministrador na instalação da plataforma e impedir que qualquer outro perfil altere ou suspenda a conta dele.
@@ -124,7 +124,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-040** – O sistema deve permitir que o usuário autenticado denuncie artigos e comentários.
 - **RF-041** – O sistema deve permitir que o moderador e o administrador analisem as denúncias e apliquem ações de moderação, como arquivar a denúncia, ocultar o conteúdo, remover comentários ou penalizar o autor.
 - **RF-096** – O sistema deve informar a quem denunciou o resultado da análise.
-- **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e garantir que o recurso seja analisado por outra pessoa da equipe de moderação.
+- **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e garantir que o recurso seja analisado por outro moderador ou administrador.
 - **RF-125** – O sistema deve permitir que o dono configure uma lista de palavras bloqueadas, que impede a publicação de comentários que as contenham.
 
 ### 1.9 Painéis
