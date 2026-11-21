@@ -1,6 +1,8 @@
 # Definição do Projeto
 
-**Versão:** 1.2 · **Última modificação:** 21/11/2026
+**Versão:** 2.0 · **Última modificação:** 21/11/2026
+
+Este documento define o escopo mínimo do Blog-API, escrito como um acordo com um cliente. Neste projeto de estudo não há um cliente de verdade: a própria autora faz esse papel. Tudo o que está aqui deve ser entregue; o projeto pode ter mais, nunca menos. Uma mudança neste documento exige uma nova versão, aprovada pela autora.
 
 ## 1. Apresentação
 
@@ -14,7 +16,7 @@ A segurança e a privacidade não são um complemento: a API coleta só os dados
 
 Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê, ajuda os autores a escrever, sugerindo correções e melhorias no texto, e indica à moderação o que analisar primeiro.
 
-O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, entregue em versões incrementais e acompanhado de documentação de Engenharia de Software.
+O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java, com Spring Boot e PostgreSQL, e acompanhado de documentação de Engenharia de Software.
 
 O Blog-API é um projeto de estudo e de portfólio. É feito como um produto real, pronto para ser publicado, mas não será colocado em produção nem aberto ao público. O objetivo é praticar, de ponta a ponta, o desenvolvimento de um backend seguro, testado e bem documentado.
 
@@ -66,14 +68,14 @@ Para isso, o projeto deve:
 
 Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 
-- autenticação e autorização (JWT, login com Google e verificação em duas etapas);
+- autenticação e autorização, com login social e verificação em duas etapas;
 - privacidade e proteção de dados pessoais, seguindo os princípios da LGPD;
 - integração com modelos de inteligência artificial;
 - modelagem de domínio e regras de negócio;
-- integração com serviços externos (Google, AWS S3 e AWS SES);
-- arquitetura limpa e testes automatizados;
+- integração com serviços externos de login, armazenamento e e-mail;
+- arquitetura de software e testes automatizados;
 - monitoramento e observabilidade (métricas, logs e saúde do sistema);
-- um processo de desenvolvimento com Kanban e documentação de Engenharia de Software;
+- um processo de desenvolvimento com documentação de Engenharia de Software;
 - conteinerização com Docker.
 
 ## 5. Público e perfis de usuário
@@ -97,7 +99,7 @@ Todo cadastro começa como leitor. O dono escolhe como a plataforma trata a auto
 
 O papel de moderador é concedido por um administrador. Já a promoção a administrador exige um período na função de moderador sem denúncias procedentes contra ele e a aprovação de outros administradores, o que evita favoritismo.
 
-O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. É ele quem define, no painel do dono, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
+O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado na instalação da plataforma. É ele quem define, no painel do dono, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
 ## 6. Principais funcionalidades
 
@@ -112,7 +114,7 @@ O superadministrador é o dono e o responsável final pela plataforma. Há apena
 | Notificações | Avisos dentro da plataforma, em tempo real, e por e-mail, como novos comentários, novos seguidores e respostas a pedidos, com o usuário escolhendo os canais de cada tipo de aviso. |
 | Moderação | Denúncias, triagem feita pela IA e ações de moderação. A IA só prioriza: quem decide é sempre uma pessoa. |
 | Administração da plataforma | Tudo o que um painel do dono precisa: identidade da plataforma (nome, descrição, logo, idioma padrão e links), páginas institucionais, termos de uso e política de privacidade, convites por e-mail, backup da plataforma, gestão de usuários e papéis, suspensão de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
-| Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API (Swagger). |
+| Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API. |
 
 Cada perfil cadastrado tem o seu painel na API, com o que precisa para trabalhar. A tela de cada painel fica a cargo do front-end.
 
@@ -136,36 +138,26 @@ O projeto inclui:
 - a API REST completa dos módulos acima, com os endpoints dos painéis de cada perfil;
 - artigos escritos em Markdown, LaTeX, HTML com CSS ou texto puro. O HTML e o CSS são limpos de qualquer código perigoso antes de serem salvos, e a tradução e a correção feitas pela IA preservam a formatação;
 - notificações dentro da plataforma, entregues em tempo real, e por e-mail. Cada usuário escolhe, para cada tipo de aviso, por quais canais quer recebê-lo;
-- a configuração pronta para produção, como cookies seguros e perfis separados por ambiente, mesmo sem a publicação;
+- a configuração pronta para produção, mesmo sem a publicação;
 - a documentação do projeto e a documentação interativa da API;
 - os testes automatizados de todas as classes;
-- a execução da API e do banco com Docker, como a última tarefa do projeto. Até lá, os dois rodam diretamente na máquina.
+- a execução da API e do banco com Docker.
 
 O projeto não inclui:
 
 - front-end, nem mesmo as telas dos painéis ou os pop-ups de notificação: a API oferece tudo o que essas telas usariam;
 - vários blogs na mesma instalação: cada instalação da API é uma única plataforma, com o próprio banco de dados;
 - editor de texto: o conteúdo chega pronto do cliente, em um dos formatos aceitos;
-- notificações push para o celular, monetização, anúncios, newsletter e chat;
 - a publicação em produção: o projeto roda em ambiente local.
 
 Premissas e restrições:
 
 - o projeto é desenvolvido por uma pessoa, com o apoio de um assistente de IA e sem prazo fixo;
-- os serviços pagos custam, somados, no máximo US$ 15 por mês: o Claude Haiku 5.5 para a inteligência artificial, o AWS S3 para as imagens e o AWS SES para os e-mails. Para não passar desse valor, a API limita o uso da IA e o envio de e-mails, e as contas dos provedores têm alertas de gasto;
-- todo serviço externo fica atrás de um gateway, para poder ser trocado sem mudar o resto do sistema;
-- os testes automatizados nunca chamam serviços externos de verdade.
+- os serviços pagos, como a inteligência artificial, o armazenamento de imagens e o envio de e-mails, custam, somados, no máximo US$ 15 por mês. Para não passar desse valor, a API limita o uso da IA e o envio de e-mails, e as contas dos provedores têm alertas de gasto;
+- o código é distribuído sob a licença MIT.
 
 ## 8. Tecnologias
 
-O Blog-API é construído com Java 25 e Spring Boot 4 e usa o PostgreSQL como banco de dados, com as tabelas versionadas pelo Flyway. Os testes automatizados usam JUnit 5, Mockito e AssertJ.
+O Blog-API é construído em Java, com Spring Boot, e usa o PostgreSQL como banco de dados.
 
-As bibliotecas, os serviços externos (como Google, Claude e AWS) e os detalhes técnicos de cada escolha estão em [Arquitetura.md](Arquitetura.md). O motivo de cada decisão está em [Decisões.md](Decisões.md).
-
-## 9. Como o projeto é desenvolvido
-
-O produto é entregue em versões incrementais. Cada versão tem um tema, como identidade, artigos ou moderação, e só é concluída quando todas as suas tarefas estão prontas. A lista de versões, o que cada uma entrega e a situação de cada uma estão no [Roadmap.md](Roadmap.md).
-
-O trabalho segue um Kanban simples. As tarefas são GitHub Issues, organizadas em um quadro no GitHub Projects, e cada uma passa por um branch e um Pull Request próprios, no modelo Git Flow. Toda classe tem teste automatizado, e nenhuma tarefa é concluída sem cumprir a Definição de Pronto. O processo completo está em [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
-
-O código é distribuído sob a licença MIT.
+As bibliotecas, os serviços externos e os detalhes técnicos de cada escolha estão em [Arquitetura.md](Arquitetura.md), e o motivo de cada decisão está em [Decisões.md](Decisões.md).

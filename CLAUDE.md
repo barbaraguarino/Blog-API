@@ -75,7 +75,7 @@ Pragmatic Clean Architecture por funcionalidade (detalhes em `docs/Arquitetura.m
 
 Em `docs/`, atualizada **no mesmo PR** da mudança. Leia o arquivo correspondente antes de mexer no assunto:
 
-- `Definição_do_Projeto.md`: escopo e papéis.
+- `Definição_do_Projeto.md`: escopo mínimo e papéis. **Documento congelado (D-024):** só muda com pedido explícito da autora, em nova versão; os outros documentos podem ir além dele, nunca entregar menos.
 - `Requisitos.md` (RF/RNF) e `Regras_de_Negócio.md` (RN e divergências): status sempre em dia.
 - `Arquitetura.md`: estrutura, fluxos, dados e segurança.
 - `Testes/Plano_de_Testes.md`: estratégia e cobertura. `Testes/Relatórios/`: um relatório novo por Milestone, nunca editando os antigos.

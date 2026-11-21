@@ -220,3 +220,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
   - plataforma do dono: identidade da plataforma, páginas institucionais, convites por e-mail e backup da plataforma.
 - **Alternativas consideradas:** séries de artigos e feed RSS, que ficaram de fora.
 - **Consequências:** a triagem de moderação recebe só o texto do conteúdo, sem dados de quem o escreveu, e nunca remove nada sozinha. O texto alternativo usa imagens, o que custa mais tokens, e entra nos limites de uso que protegem o teto de US$ 15 por mês (D-022).
+
+## D-024: Definição do Projeto congelada como escopo mínimo
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** a Definição do Projeto mudava a cada nova ideia. A autora pediu: "imagina que esse documento deve ser congelado, ele não deve ser mexido, então tudo que tiver nele deve ser uma decisão fixa". E explicou: "isso seria um documento de requisitos mínimos, deve ter no mínimo isso tudo, pode ter mais coisas, mas não menos. [...] É como se esse documento fosse escrito junto ao cliente." Sobre o cliente: "Eu sou o cliente, [...] mas não existe cliente de verdade."
+- **Decisão:** a Definição do Projeto (versão 2.0) é o acordo de escopo mínimo, e a autora faz o papel do cliente. Ela guarda só decisões de produto. Escolhas que podem mudar, como versões de tecnologias, nomes de provedores, ferramentas, ordem de entrega e processo de trabalho, saem dela e ficam na Arquitetura, no Roadmap, no Processo de Desenvolvimento e nestas Decisões.
+- **Alternativas consideradas:** manter a Definição como um documento vivo, atualizado a cada mudança, o que a tornava instável e misturava produto com implementação.
+- **Consequências:** a Definição só muda com um pedido explícito da autora, em uma nova versão. Os outros documentos podem detalhar e ir além dela, nunca entregar menos. O provedor de IA (D-021), o S3 e o SES (D-022), o Kanban (D-015) e o momento do Docker (D-016) continuam valendo, mas como decisões revisáveis fora da Definição.
