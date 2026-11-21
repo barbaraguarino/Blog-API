@@ -29,7 +29,7 @@ Um arquivo por execução relevante (fechamento de Milestone, antes de uma relea
 
 ## Cobertura de regras
 
-<!-- Regras novas cobertas nesta versão e lacunas que continuam abertas (ver PLANO_DE_TESTES.md §6). -->
+<!-- Regras novas cobertas nesta versão e lacunas que continuam abertas (ver Plano_de_Testes.md §6). -->
 
 ## Conclusão
 
@@ -40,4 +40,4 @@ Um arquivo por execução relevante (fechamento de Milestone, antes de uma relea
 
 | Data | Contexto | Resultado |
 |---|---|---|
-| 2026-11-15 | [Linha de base (v0.0)](2026-11-15_linha-de-base.md) | Não executado: inventário apenas |
+| 2026-11-15 | [Linha de base (v0.0)](2026-11-15_Linha_de_Base.md) | Não executado: inventário apenas |

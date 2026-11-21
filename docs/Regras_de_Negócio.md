@@ -1,10 +1,10 @@
 # Regras de Negócio
 
-Regras numeradas (RN-xxx) que o sistema deve cumprir. Cada regra aponta para o requisito que atende em [REQUISITOS.md](REQUISITOS.md). As regras já implementadas descrevem o comportamento **atual** do código. As divergências conhecidas estão marcadas com ⚠️ e listadas no fim.
+Regras numeradas (RN-xxx) que o sistema deve cumprir. Cada regra aponta para o requisito que atende em [Requisitos.md](Requisitos.md). As regras já implementadas descrevem o comportamento **atual** do código. As divergências conhecidas estão marcadas com ⚠️ e listadas no fim.
 
 **Status:** ✅ Implementado · 🟡 Parcial · ⬜ Planejado
 
-**Como manter:** uma regra nova recebe o próximo número livre do bloco. Uma regra que mudar deve ser editada aqui, com a decisão registrada no [DECISOES.md](DECISOES.md). Cada regra deve ter pelo menos um teste automatizado.
+**Como manter:** uma regra nova recebe o próximo número livre do bloco. Uma regra que mudar deve ser editada aqui, com a decisão registrada no [Decisões.md](Decisões.md). Cada regra deve ter pelo menos um teste automatizado.
 
 ---
 

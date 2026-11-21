@@ -1,6 +1,6 @@
 # Requisitos
 
-Requisitos funcionais (RF) e não funcionais (RNF) do Blog-API. As regras detalhadas de cada requisito ficam em [REGRAS_DE_NEGOCIO.md](REGRAS_DE_NEGOCIO.md) (RN-xxx). O andamento de cada um fica nas Issues do GitHub.
+Requisitos funcionais (RF) e não funcionais (RNF) do Blog-API. As regras detalhadas de cada requisito ficam em [Regras_de_Negócio.md](Regras_de_Negócio.md) (RN-xxx). O andamento de cada um fica nas Issues do GitHub.
 
 **Status:** ✅ Implementado · 🟡 Parcial · ⬜ Planejado
 
@@ -71,7 +71,7 @@ Requisitos funcionais (RF) e não funcionais (RNF) do Blog-API. As regras detalh
 | RNF-008 | Internacionalização | Mensagens de erro em pt-BR e en, escolhidas pelo `Accept-Language` | ✅ |
 | RNF-009 | Padronização | Todo erro segue o formato `ErrorResponseDTO` (status, erro, mensagem, caminho, erros de validação) | ✅ |
 | RNF-010 | Documentação | API documentada com OpenAPI/Swagger | ⬜ |
-| RNF-011 | Manutenibilidade | Pragmatic Clean Architecture por funcionalidade (ver [ARQUITETURA.md](ARQUITETURA.md)) | ✅ |
+| RNF-011 | Manutenibilidade | Pragmatic Clean Architecture por funcionalidade (ver [Arquitetura.md](Arquitetura.md)) | ✅ |
 | RNF-012 | Banco de dados | Esquema versionado só via Flyway; `ddl-auto` sem gerar tabelas | ✅ |
 | RNF-013 | Testabilidade | Testes unitários para cada caso de uso e testes de controller (`@WebMvcTest`) para cada endpoint | 🟡 |
 | RNF-014 | Desempenho | Listagens sempre paginadas | ⬜ |

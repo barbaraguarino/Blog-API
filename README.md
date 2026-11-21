@@ -69,15 +69,15 @@ src/main/
 
 | Documento | Conteúdo |
 |---|---|
-| [Definição do Projeto](docs/DEFINICAO_DO_PROJETO.md) | Visão, objetivos, papéis, escopo e entregas |
-| [Requisitos](docs/REQUISITOS.md) | Requisitos funcionais e não funcionais |
-| [Regras de Negócio](docs/REGRAS_DE_NEGOCIO.md) | Regras numeradas e divergências conhecidas |
-| [Arquitetura](docs/ARQUITETURA.md) | Documento de Arquitetura de Software |
-| [Plano de Testes](docs/testes/PLANO_DE_TESTES.md) | Estratégia, critérios e matriz de rastreabilidade |
-| [Relatórios de Testes](docs/testes/relatorios/README.md) | Resultado das execuções |
-| [Decisões](docs/DECISOES.md) | Registro de decisões de arquitetura e processo |
-| [Roadmap](docs/ROADMAP.md) | Fases (Milestones) e fluxo de trabalho |
-| [Segurança](docs/SEGURANCA.md) | Checklist de segurança do repositório e da conta |
+| [Definição do Projeto](docs/Definição_do_Projeto.md) | Visão, objetivos, papéis, escopo e entregas |
+| [Requisitos](docs/Requisitos.md) | Requisitos funcionais e não funcionais |
+| [Regras de Negócio](docs/Regras_de_Negócio.md) | Regras numeradas e divergências conhecidas |
+| [Arquitetura](docs/Arquitetura.md) | Documento de Arquitetura de Software |
+| [Plano de Testes](docs/Testes/Plano_de_Testes.md) | Estratégia, critérios e matriz de rastreabilidade |
+| [Relatórios de Testes](docs/Testes/Relatórios/README.md) | Resultado das execuções |
+| [Decisões](docs/Decisões.md) | Registro de decisões de arquitetura e processo |
+| [Roadmap](docs/Roadmap.md) | Fases (Milestones) e fluxo de trabalho |
+| [Segurança](docs/Segurança.md) | Checklist de segurança do repositório e da conta |
 
 ## Endpoints Disponíveis
 
@@ -92,7 +92,7 @@ Exemplos de requisição estão em [`requests/`](requests/) (HTTP Client do Inte
 
 ## Status do Projeto
 
-**Em Desenvolvimento**: a fundação (v0.0) está concluída e a próxima fase é a **v0.1 – Identidade essencial**. Veja as fases no [Roadmap](docs/ROADMAP.md) e as tarefas em [Issues](https://github.com/barbaraguarino/Blog-API/issues).
+**Em Desenvolvimento**: a fundação (v0.0) está concluída e a próxima fase é a **v0.1 – Identidade essencial**. Veja as fases no [Roadmap](docs/Roadmap.md) e as tarefas em [Issues](https://github.com/barbaraguarino/Blog-API/issues).
 
 No momento, o repositório ainda não está pronto para ser clonado e executado por terceiros.
 

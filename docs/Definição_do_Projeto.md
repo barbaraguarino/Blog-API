@@ -52,7 +52,7 @@ O papel `MODERATOR` já existe no código, mas as permissões dele só serão us
 | v0.3 – Social | Comentários, reações, seguidores, feed e busca |
 | v0.4 – Moderação e segurança avançada | Denúncias, 2FA TOTP, vínculo de conta Google |
 
-O detalhe e a ordem atual estão no [ROADMAP.md](ROADMAP.md) e nas Issues do GitHub.
+O detalhe e a ordem atual estão no [Roadmap.md](Roadmap.md) e nas Issues do GitHub.
 
 ## 6. Critérios de sucesso
 
@@ -71,10 +71,10 @@ O detalhe e a ordem atual estão no [ROADMAP.md](ROADMAP.md) e nas Issues do Git
 
 | Documento | Conteúdo |
 |---|---|
-| [REQUISITOS.md](REQUISITOS.md) | Requisitos funcionais e não funcionais |
-| [REGRAS_DE_NEGOCIO.md](REGRAS_DE_NEGOCIO.md) | Regras de negócio numeradas |
-| [ARQUITETURA.md](ARQUITETURA.md) | Documento de Arquitetura de Software |
-| [testes/PLANO_DE_TESTES.md](testes/PLANO_DE_TESTES.md) | Plano de testes |
-| [testes/relatorios/](testes/relatorios/) | Relatórios de execução dos testes |
-| [DECISOES.md](DECISOES.md) | Registro de decisões |
-| [ROADMAP.md](ROADMAP.md) | Fases e fluxo de trabalho |
+| [Requisitos.md](Requisitos.md) | Requisitos funcionais e não funcionais |
+| [Regras_de_Negócio.md](Regras_de_Negócio.md) | Regras de negócio numeradas |
+| [Arquitetura.md](Arquitetura.md) | Documento de Arquitetura de Software |
+| [Testes/Plano_de_Testes.md](Testes/Plano_de_Testes.md) | Plano de testes |
+| [Testes/Relatórios/](Testes/Relatórios/) | Relatórios de execução dos testes |
+| [Decisões.md](Decisões.md) | Registro de decisões |
+| [Roadmap.md](Roadmap.md) | Fases e fluxo de trabalho |

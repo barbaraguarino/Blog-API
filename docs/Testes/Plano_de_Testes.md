@@ -2,7 +2,7 @@
 
 ## 1. Objetivo
 
-Garantir que cada regra de negócio ([REGRAS_DE_NEGOCIO.md](../REGRAS_DE_NEGOCIO.md)) e cada endpoint funcionem como especificado, e que mudanças futuras não quebrem o que já funciona. Este plano define **o que** testar, **como** testar e **quando** um teste é obrigatório.
+Garantir que cada regra de negócio ([Regras_de_Negócio.md](../Regras_de_Negócio.md)) e cada endpoint funcionem como especificado, e que mudanças futuras não quebrem o que já funciona. Este plano define **o que** testar, **como** testar e **quando** um teste é obrigatório.
 
 ## 2. Escopo
 
@@ -34,7 +34,7 @@ Garantir que cada regra de negócio ([REGRAS_DE_NEGOCIO.md](../REGRAS_DE_NEGOCIO
 
 ### Entrada (para começar a testar uma issue)
 - Critérios de aceite da issue escritos.
-- RN correspondentes registradas no REGRAS_DE_NEGOCIO.md.
+- RN correspondentes registradas no Regras_de_Negócio.md.
 
 ### Saída (para considerar a issue pronta)
 - Todos os testes passando com `./mvnw test`.
@@ -74,5 +74,5 @@ Garantir que cada regra de negócio ([REGRAS_DE_NEGOCIO.md](../REGRAS_DE_NEGOCIO
 ## 8. Execução e relatórios
 
 - Antes de abrir PR: `./mvnw test`.
-- A cada fechamento de Milestone, ou quando houver mudança relevante, registre um relatório em [`relatorios/`](relatorios/) com o modelo do [README dos relatórios](relatorios/README.md).
+- A cada fechamento de Milestone, ou quando houver mudança relevante, registre um relatório em [`Relatórios/`](Relatórios/) com o modelo do [README dos relatórios](Relatórios/README.md).
 - *(Planejado)* CI com GitHub Actions rodando `./mvnw test` em todo PR para a `develop`.
