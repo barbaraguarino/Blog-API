@@ -160,28 +160,15 @@ O Blog-API é construído com Java 25 e Spring Boot 4 e usa o PostgreSQL como ba
 
 As bibliotecas, os serviços externos (como Google, Claude e AWS) e os detalhes técnicos de cada escolha estão em [Arquitetura.md](Arquitetura.md). O motivo de cada decisão está em [Decisões.md](Decisões.md).
 
-## 9. Entregas
+## 9. Como o projeto é desenvolvido
 
-O produto é entregue em versões incrementais (Milestones):
+O produto é entregue em versões incrementais. Cada versão tem um tema, como identidade, artigos ou moderação, e só é concluída quando todas as suas tarefas estão prontas. A lista de versões, o que cada uma entrega e a situação de cada uma estão no [Roadmap.md](Roadmap.md).
 
-| Versão | Entrega | Situação |
-|---|---|---|
-| **v0.0 – Fundação** | Base técnica, cadastro e login local e com Google | Concluída |
-| **v0.1 – Identidade essencial** | Sessões, ativação de conta, recuperação e troca de senha, Swagger | Próxima |
-| **v0.2 – Artigos (MVP)** | Autoria, artigos, categorias, tags e imagens | Planejada |
-| **v0.3 – Social** | Comentários, reações, seguidores, feed e busca | Planejada |
-| **v0.4 – Moderação e segurança avançada** | Denúncias, moderação, 2FA e vínculo com Google | Planejada |
+O trabalho segue um Kanban simples. As tarefas são GitHub Issues, organizadas em um quadro no GitHub Projects, e cada uma passa por um branch e um Pull Request próprios, no modelo Git Flow. Toda classe tem teste automatizado, e nenhuma tarefa é concluída sem cumprir a Definição de Pronto. O processo completo está em [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
 
-Detalhes no [Roadmap.md](Roadmap.md).
+O código é distribuído sob a licença MIT.
 
-## 10. Como o projeto é desenvolvido
-
-- **Método:** Kanban simples, com o backlog no GitHub Issues e o quadro no GitHub Projects. Ver [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
-- **Versionamento:** Git Flow, com um branch e um Pull Request por tarefa.
-- **Qualidade:** toda classe tem teste automatizado, e nenhuma tarefa é concluída sem cumprir a Definição de Pronto.
-- **Licença:** MIT.
-
-## 11. Mapa da documentação
+## 10. Mapa da documentação
 
 | Documento | O que explica |
 |---|---|
