@@ -8,7 +8,7 @@ Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso
 
 As contas são protegidas com confirmação de e-mail, sessões revogáveis, verificação em duas etapas e senhas guardadas apenas como hash. A API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
 
-Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses de cada leitor, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto.
+Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses de cada leitor, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto. Além disso, o autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua.
 
 O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, em versões incrementais, e acompanhado da documentação de Engenharia de Software.
 
@@ -16,9 +16,15 @@ O Blog-API é um projeto de estudo e de portfólio. Ele é construído como um p
 
 ## 2. O problema
 
-Plataformas de blog costumam resolver bem a **publicação**, mas deixam a **comunidade** em segundo plano: identidade frágil dos usuários, nenhum controle sobre quem pode publicar, pouca interação entre leitores e autores e moderação inexistente.
+Quem escreve e quem lê na internet esbarra em alguns problemas que as plataformas de publicação costumam resolver mal.
 
-Redes sociais fazem o oposto: resolvem a interação, mas não oferecem um espaço organizado para conteúdo longo, com categorias, rascunhos e curadoria.
+O primeiro é a privacidade. Muitas plataformas coletam mais dados do que precisam, compartilham essas informações com terceiros e não deixam claro o que fazem com elas. A conta vira uma fonte de exposição: perfis mostram mais do que deveriam, sessões que nunca expiram facilitam invasões e o usuário raramente consegue ver ou controlar o que a plataforma guarda sobre ele.
+
+O segundo é o idioma. Um artigo só alcança quem lê a língua em que ele foi escrito. A saída mais comum é a tradução do navegador, como a do Chrome ou a do Safari, mas ela depende do navegador que a pessoa usa, não está disponível dentro de aplicativos e não dá ao autor nenhum controle sobre o resultado. Já o autor que escreve em mais de um idioma precisa lançar um artigo separado para cada um. Com isso, os comentários e as reações se espalham entre as cópias e o mesmo conteúdo aparece repetido nas buscas.
+
+O terceiro é a própria escrita. Muita gente tem conhecimento para compartilhar, mas trava na hora de escrever, seja por erros de ortografia e gramática, pela dificuldade de organizar as ideias ou pela insegurança com o próprio texto.
+
+Por fim, encontrar o que ler também é difícil. Com muitos autores e temas, os artigos que interessariam a cada leitor se perdem entre os demais, e as listagens por data ou por popularidade mostram a mesma coisa para todo mundo.
 
 ## 3. A proposta
 
