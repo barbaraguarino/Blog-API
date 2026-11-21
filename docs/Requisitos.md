@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 9.0 · **Última modificação:** 21/11/2026
+**Versão:** 10.0 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -22,10 +22,10 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
 - **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
 - **RF-005** – O sistema deve permitir o cadastro e o login com outros provedores sociais que o dono ativar na plataforma, como o GitHub e a Apple, desde que o e-mail tenha sido verificado pelo provedor e, no cadastro, aceitando os termos de uso e a política de privacidade.
-- **RF-006** – O sistema deve exigir no cadastro a idade mínima definida pelo dono.
+- **RF-006** – O sistema deve exigir que a pessoa tenha a idade mínima definida pelo dono para se cadastrar.
 - **RF-007** – O sistema deve permitir que o usuário cadastre, use e remova passkeys para entrar sem senha.
 - **RF-008** – O sistema deve permitir que o usuário entre sem senha, com um código de uso único enviado ao e-mail cadastrado.
-- **RF-009** – O sistema deve impedir o acesso de contas não ativadas ou suspensas, em qualquer forma de login.
+- **RF-009** – O sistema deve impedir o acesso de contas com o e-mail ainda não confirmado ou suspensas, em qualquer forma de login.
 - **RF-010** – O sistema deve renovar o acesso do usuário autenticado, sem exigir um novo login, enquanto a sessão dele for válida.
 - **RF-011** – O sistema deve permitir que o usuário encerre a sessão atual (logout).
 - **RF-012** – O sistema deve permitir que o usuário visualize as próprias sessões ativas e encerre qualquer uma delas.
@@ -81,7 +81,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-053** – O sistema deve permitir que o autor crie, edite, salve como rascunho, publique e arquive os próprios artigos.
 - **RF-054** – O sistema deve permitir que o autor exclua os próprios rascunhos e artigos.
 - **RF-055** – O sistema deve aceitar o conteúdo dos artigos em Markdown, LaTeX, HTML com CSS ou texto puro, guardando o formato de cada artigo e permitindo, nos formatos que aceitam formatação, alinhar o texto à esquerda, ao centro, à direita ou justificado.
-- **RF-056** – O sistema deve guardar, para cada fórmula de um artigo em LaTeX, uma descrição em texto para leitores de tela.
+- **RF-056** – O sistema deve exigir uma descrição em texto para leitores de tela em cada fórmula de um artigo em LaTeX antes da publicação.
 - **RF-057** – O sistema deve permitir que o autor agende a data e a hora de publicação de um artigo.
 - **RF-058** – O sistema deve guardar o histórico de revisões de cada artigo e permitir que o autor compare e restaure versões anteriores.
 - **RF-059** – O sistema deve permitir que o autor publique várias versões de idioma do mesmo artigo, que compartilham o mesmo endereço, os mesmos comentários e as mesmas reações.
@@ -193,7 +193,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RNF-008** – O sistema não deve expor, em nenhuma resposta, senhas, hashes, tokens, identificadores de provedores externos ou dados privados de outros usuários.
 - **RNF-009** – O sistema deve limpar o HTML e o CSS dos artigos de qualquer código perigoso antes de salvá-los, aceitando só o que estiver em uma lista de elementos permitidos, que inclui a formatação dos artigos, como imagens, legendas e alinhamentos.
 - **RNF-010** – O sistema deve remover os metadados das imagens enviadas, como a localização, e aceitar só formatos de imagem seguros.
-- **RNF-011** – O sistema deve bloquear nos artigos imagens e outros recursos carregados de sites externos, aceitando só as imagens enviadas à plataforma.
+- **RNF-011** – O sistema deve bloquear nos artigos imagens e outros recursos carregados de sites externos, aceitando só as imagens enviadas à plataforma; links para outros sites continuam permitidos.
 - **RNF-012** – O sistema deve tratar o conteúdo enviado à IA apenas como dado, sem que ele altere as instruções dela, e validar as respostas da IA antes de usá-las.
 - **RNF-013** – O sistema deve responder do mesmo jeito no cadastro, no login e na recuperação de senha, exista ou não a conta, para não revelar quais e-mails estão cadastrados.
 - **RNF-014** – O sistema deve guardar os backups criptografados e registrar cada download deles.
