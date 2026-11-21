@@ -167,18 +167,3 @@ O produto é entregue em versões incrementais. Cada versão tem um tema, como i
 O trabalho segue um Kanban simples. As tarefas são GitHub Issues, organizadas em um quadro no GitHub Projects, e cada uma passa por um branch e um Pull Request próprios, no modelo Git Flow. Toda classe tem teste automatizado, e nenhuma tarefa é concluída sem cumprir a Definição de Pronto. O processo completo está em [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
 
 O código é distribuído sob a licença MIT.
-
-## 10. Mapa da documentação
-
-| Documento | O que explica |
-|---|---|
-| Definição do Projeto *(este documento)* | O que é o projeto, para quem e com que objetivos. |
-| [Requisitos.md](Requisitos.md) | O que o sistema deve fazer (funcionais) e com que qualidade (não funcionais). |
-| [Regras_de_Negócio.md](Regras_de_Negócio.md) | As regras que cada funcionalidade obedece. |
-| [Arquitetura.md](Arquitetura.md) | Como o sistema é construído por dentro. |
-| [Testes/Plano_de_Testes.md](Testes/Plano_de_Testes.md) | Como o sistema é testado. |
-| [Testes/Relatórios/](Testes/Relatórios/README.md) | Os resultados das execuções de testes. |
-| [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md) | Como o trabalho é organizado (Kanban). |
-| [Roadmap.md](Roadmap.md) | Versões e ordem de entrega. |
-| [Decisões.md](Decisões.md) | Por que cada escolha foi feita. |
-| [Segurança.md](Segurança.md) | Como o repositório e a conta são protegidos. |
