@@ -2,23 +2,23 @@
 
 ## 1. Apresentação
 
-O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada instalação vira um blog diferente, como um blog de tecnologia, de livros ou de culinária, de acordo com o front-end e as categorias escolhidas por quem a administra. O dono de cada plataforma conta com uma área de administração completa, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
+O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada plataforma, ou seja, cada instalação do Blog-API, ganha o seu, como tecnologia, livros ou culinária, de acordo com o front-end usado e as categorias que o dono cadastra. O dono de cada plataforma conta com o painel do dono, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
 
-Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem pode escrever depende da plataforma: o dono escolhe se a autoria é aberta a todos, fechada ou concedida por pedido aprovado pela administração. Uma equipe de moderação cuida para que o ambiente continue saudável.
+Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem pode escrever depende da plataforma: o dono escolhe se a autoria é aberta a todos, fechada ou concedida por pedido aprovado pela administração. O autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
 Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso de inteligência artificial a serviço da leitura e da escrita.
 
 As contas são protegidas com confirmação de e-mail, sessões revogáveis, verificação em duas etapas e senhas guardadas apenas como hash. A API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
 
-Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto. Além disso, o autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua.
+Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto.
 
-O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, em versões incrementais, e acompanhado da documentação de Engenharia de Software.
+O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, entregue em versões incrementais e acompanhado de documentação de Engenharia de Software.
 
 O Blog-API é um projeto de estudo e de portfólio. Ele é construído como um produto real, pronto para ser publicado, mas não será colocado em produção nem aberto ao público. O objetivo é praticar, de ponta a ponta, o desenvolvimento de um backend seguro, testado e bem documentado.
 
 ## 2. O problema
 
-Quem escreve e quem lê na internet esbarra em alguns problemas que as plataformas de publicação costumam resolver mal.
+Quem lê, quem escreve e quem quer criar um espaço de escrita na internet esbarra em alguns problemas que as plataformas de publicação costumam resolver mal.
 
 O primeiro é a privacidade. Muitas plataformas coletam mais dados do que precisam, compartilham essas informações com terceiros e não deixam claro o que fazem com elas. A conta vira uma fonte de exposição: perfis mostram mais do que deveriam, sessões que nunca expiram facilitam invasões e o usuário raramente consegue ver ou controlar o que a plataforma guarda sobre ele.
 
@@ -26,7 +26,7 @@ O segundo é o idioma. Um artigo só alcança quem lê a língua em que ele foi 
 
 O terceiro é a própria escrita. Muita gente tem conhecimento para compartilhar, mas trava na hora de escrever, seja por erros de ortografia e gramática, pela dificuldade de organizar as ideias ou pela insegurança com o próprio texto.
 
-Encontrar o que ler também é difícil. Com muitos autores e temas, os artigos que interessariam a cada leitor se perdem entre os demais, e as listagens por data ou por popularidade mostram a mesma coisa para todo mundo.
+O quarto é encontrar o que ler. Com muitos autores e assuntos, os artigos que interessariam a cada leitor se perdem entre os demais, e as listagens por data ou por popularidade mostram a mesma coisa para todo mundo.
 
 Por fim, quem quer criar uma comunidade de escrita sobre um tema, como livros ou tecnologia, tem duas saídas ruins: usar uma plataforma que não é sua, sem controle sobre as regras, os dados e o funcionamento, ou construir tudo do zero.
 
@@ -34,7 +34,7 @@ Por fim, quem quer criar uma comunidade de escrita sobre um tema, como livros ou
 
 O Blog-API responde a esses problemas com uma plataforma de publicação que trata a privacidade como requisito, e não como detalhe, e que usa a inteligência artificial para aproximar autores e leitores.
 
-Para proteger os dados, a API pede só o necessário no cadastro, mostra nos perfis públicos apenas o que o usuário escolher, permite ver e encerrar as sessões ativas, oferece verificação em duas etapas e deixa o usuário consultar e excluir os próprios dados. A IA recebe apenas o texto dos artigos, nunca dados pessoais dos usuários.
+Para proteger os dados, a API pede só o necessário no cadastro, mostra nos perfis públicos apenas o que o usuário escolher, permite ver e encerrar as sessões ativas, oferece verificação em duas etapas e deixa o usuário consultar e excluir os próprios dados. A IA nunca recebe dados que identifiquem os usuários: a recomendação usa apenas os interesses, sem nome, e-mail ou qualquer identificador.
 
 Para vencer a barreira do idioma, cada artigo pode ter várias versões escritas pelo próprio autor, que compartilham o mesmo endereço, os mesmos comentários e as mesmas reações. Quando não existe uma versão na língua do leitor, a plataforma oferece uma tradução automática feita com IA.
 
@@ -59,7 +59,7 @@ Para isso, o projeto deve:
 5. permitir que leitores busquem, comentem, reajam, sigam autores e acompanhem um feed;
 6. oferecer ferramentas de moderação para tratar denúncias;
 7. oferecer a cada perfil um painel com o que ele precisa para trabalhar e, ao dono, uma administração completa da plataforma, com usuários e papéis, regras ajustáveis, métricas e logs que respeitam a privacidade;
-8. responder em português e em inglês, conforme o idioma do cliente, com a estrutura pronta para receber novos idiomas;
+8. responder em português e em inglês, conforme o idioma indicado em cada requisição, com a estrutura pronta para receber novos idiomas;
 9. manter todo o código testado e a documentação de acordo com o que está implementado.
 
 Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
@@ -76,11 +76,13 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 
 ## 5. Público e perfis de usuário
 
+O Blog-API atende a dois públicos: quem instala e administra uma plataforma, e as pessoas que a usam, nos perfis abaixo.
+
 | Perfil | Quem é | O que pode fazer |
 |---|---|---|
 | Visitante | Pessoa sem login. | Ler e buscar artigos publicados, cadastrar-se e entrar. |
-| Leitor | Todo usuário cadastrado. | Comentar, reagir, seguir autores, denunciar conteúdo, gerenciar a própria conta e os próprios dados e pedir para ser autor. |
-| Autor | Leitor com o pedido de autoria aprovado. | Tudo do leitor, mais escrever, publicar e gerenciar os próprios artigos. |
+| Leitor | Todo usuário cadastrado. | Comentar, reagir, seguir autores, denunciar conteúdo, gerenciar a própria conta e os próprios dados e, no modo por pedido, pedir para ser autor. |
+| Autor | Leitor com permissão para escrever, conforme o modo de autoria. | Tudo do leitor, mais escrever, publicar e gerenciar os próprios artigos. |
 | Moderador | Usuário escolhido por um administrador. | Tudo do leitor, mais analisar denúncias, ocultar conteúdo e remover comentários. Só escreve artigos se também for autor. |
 | Administrador | Moderador promovido. | Tudo do autor e do moderador, mais aprovar autores, conceder o papel de moderador, aprovar novos administradores, gerenciar categorias e aplicar penalidades. |
 | Superadministrador | O dono e o responsável final pela plataforma. | Tudo, inclusive rebaixar administradores, ajustar as regras da plataforma e acessar as métricas e os logs. Nenhum outro perfil pode alterar ou bloquear a conta dele. |
@@ -93,7 +95,7 @@ Todo cadastro começa como leitor. O dono escolhe como a plataforma trata a auto
 
 Os outros perfis são conquistados por promoções que passam pela aprovação da administração, com exigências de tempo e de histórico que evitam favoritismo e contas criadas só para abusar da plataforma. O papel de moderador é concedido por um administrador. Um moderador só se torna administrador depois de um período na função sem denúncias procedentes contra ele, e com a aprovação de outros administradores.
 
-O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. É ele quem define, no painel de administração, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
+O superadministrador é o dono e o responsável final pela plataforma. Há apenas um, criado pela própria API na primeira vez que ela sobe, a partir de dados informados em variáveis de ambiente. É ele quem define, no painel do dono, o modo de autoria e os prazos e a quantidade de aprovações de cada regra, dentro de limites seguros definidos no código, e cada mudança fica registrada. Ele também segue as regras de promoção, para que não haja favoritismo. As exceções existem só para a plataforma começar a funcionar, como nomear diretamente as primeiras pessoas de cada perfil. Os valores padrão de cada regra estão em [Regras_de_Negócio.md](Regras_de_Negócio.md).
 
 Cada perfil tem o seu painel na API, com o que precisa para trabalhar. A tela de cada painel fica a cargo do front-end.
 
@@ -117,7 +119,7 @@ As estatísticas dos painéis são sempre agregadas: o autor vê quantas pessoas
 | Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
 | Painéis | Um painel para cada perfil: minha conta, do autor, dos autores (visão da administração e espaço comum), da moderação, do moderador e do dono, com estatísticas sempre agregadas. |
 | Conteúdo | Artigos com rascunho e publicação, versões do mesmo artigo em vários idiomas, categorias, tags, imagens e busca. |
-| Inteligência artificial | Tradução de artigos, correção e sugestões de escrita e recomendação de artigos, com um histórico de interesses que o leitor pode ver, limpar ou desligar. |
+| Inteligência artificial | Tradução de artigos, correção e sugestões de escrita e recomendação de artigos. |
 | Social | Comentários com respostas, reações, seguidores e feed. |
 | Moderação | Denúncias e ações de moderação. |
 | Administração da plataforma | Tudo o que um painel do dono precisa: gestão de usuários e papéis, bloqueio de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
