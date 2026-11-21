@@ -68,7 +68,7 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 - privacidade e proteção de dados pessoais, seguindo os princípios da LGPD;
 - integração com modelos de inteligência artificial;
 - modelagem de domínio e regras de negócio;
-- integração com serviços externos (Google, e-mail e armazenamento de imagens);
+- integração com serviços externos (Google, AWS S3 e AWS SES);
 - arquitetura limpa e testes automatizados;
 - monitoramento e observabilidade (métricas, logs e saúde do sistema);
 - um processo de desenvolvimento com Kanban e documentação de Engenharia de Software;
@@ -150,7 +150,7 @@ O projeto não inclui:
 Premissas e restrições:
 
 - o projeto é desenvolvido por uma pessoa, com o apoio de um assistente de IA e sem prazo fixo;
-- o orçamento é mínimo: a inteligência artificial usa o modelo mais barato do Claude, e os demais serviços externos (e-mail e armazenamento de imagens) precisam ter uma opção gratuita ou local para o desenvolvimento;
+- os serviços pagos custam, somados, no máximo US$ 15 por mês: o Claude Haiku 5.5 para a inteligência artificial, o AWS S3 para as imagens e o AWS SES para os e-mails. Para não passar desse valor, a API limita o uso da IA e o envio de e-mails, e as contas dos provedores têm alertas de gasto;
 - todo serviço externo fica atrás de um gateway, para poder ser trocado sem mudar o resto do sistema;
 - os testes automatizados nunca chamam serviços externos de verdade.
 
@@ -166,6 +166,7 @@ Premissas e restrições:
 | **Google Sign-In** | Cadastro e login com conta Google. |
 | **Claude Haiku 5.5** *(planejado)* | Inteligência artificial: tradução, correção e sugestões de escrita e recomendação de artigos. É o modelo mais barato do Claude. |
 | **AWS S3** *(planejado)* | Armazenamento de imagens. |
+| **AWS SES** *(planejado)* | Envio de e-mails. |
 | **Swagger / OpenAPI** *(planejado)* | Documentação interativa da API. |
 | **JUnit 5, Mockito, AssertJ** | Testes automatizados. |
 

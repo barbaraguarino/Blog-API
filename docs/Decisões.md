@@ -194,7 +194,16 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 
 - **Data:** 2026-11-21
 - **Status:** Aceita
-- **Contexto:** a tradução, a correção de escrita e a recomendação precisam de um modelo de IA, e o projeto não tem orçamento.
+- **Contexto:** a tradução, a correção de escrita e a recomendação precisam de um modelo de IA, e o orçamento do projeto é limitado (D-022).
 - **Decisão:** nas palavras da autora: "Usa Claude mais barato." Hoje esse modelo é o Claude Haiku 5.5 (`claude-haiku-5-5`), por US$ 0,10 por milhão de tokens de entrada e US$ 0,50 por milhão de saída.
 - **Alternativas consideradas:** um modelo local e gratuito, que exige uma máquina mais forte e tem qualidade menor; modelos mais caros do Claude, desnecessários para essas tarefas.
 - **Consequências:** a IA fica atrás de um gateway, para que o modelo ou o provedor possam ser trocados. O SDK Java da Anthropic é uma dependência nova e só entra com aprovação. Os testes nunca chamam a API de verdade, e a chave fica só no `.env`.
+
+## D-022: Orçamento de até US$ 15 por mês, com Claude e AWS
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** a restrição de que todo serviço externo tivesse uma opção gratuita ou local tirava o AWS S3 do projeto. A autora explicou: "pode ser o AWS, eu vi que o valor é baixo, assim como serviço de email deles e o Claude é pago, não ligo de pagar, mas não posso pagar mais de 15 dolares por mes".
+- **Decisão:** os serviços pagos são o Claude Haiku 5.5 (IA), o AWS S3 (imagens) e o AWS SES (e-mails), com um teto de US$ 15 por mês somando todos.
+- **Alternativas consideradas:** só serviços gratuitos ou locais (disco local para imagens, servidor de e-mail de teste e modelo de IA local), que evitam custo mas fogem dos serviços usados em produtos reais.
+- **Consequências:** a API limita o uso da IA e o envio de e-mails, por usuário e no total, para que nenhum uso inesperado estoure o teto. A autora configura alertas de gasto nas contas da Anthropic e da AWS. Todos os serviços ficam atrás de gateways e são simulados nos testes, que nunca geram custo.
