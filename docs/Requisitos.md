@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 7.0 · **Última modificação:** 21/11/2026
+**Versão:** 7.1 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -82,7 +82,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-054** – O sistema deve permitir que o autor agrupe os próprios artigos em séries ordenadas.
 - **RF-055** – O sistema deve permitir que o autor gere um link privado, com prazo de validade e que pode ser revogado, para outra pessoa ler um rascunho antes da publicação.
 - **RF-056** – O sistema deve permitir que o autor associe tags aos artigos e que qualquer pessoa filtre os artigos por tag.
-- **RF-057** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário, para a capa e para o corpo dos artigos, onde as imagens podem ficar em qualquer ponto do texto, com legenda e alinhamento.
+- **RF-057** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário, para a capa e para o corpo dos artigos, onde, nos formatos que permitem, as imagens podem ficar em qualquer ponto do texto, com legenda e alinhamento.
 - **RF-058** – O sistema deve permitir que o autor exporte os próprios artigos em um arquivo.
 - **RF-059** – O sistema deve permitir que a administração cadastre, edite e remova categorias e subcategorias.
 
