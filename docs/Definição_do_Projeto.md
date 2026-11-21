@@ -1,10 +1,10 @@
 # Definição do Projeto
 
-**Versão:** 1.0 · **Última modificação:** 21/11/2026
+**Versão:** 1.1 · **Última modificação:** 21/11/2026
 
 ## 1. Apresentação
 
-O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada plataforma, ou seja, cada instalação do Blog-API, ganha o seu, como tecnologia, livros ou culinária, de acordo com o front-end usado e as categorias que o dono cadastra. Cada dono conta com um painel próprio, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
+O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada plataforma, ou seja, cada instalação do Blog-API, ganha o seu, como tecnologia, livros ou culinária, de acordo com o front-end usado e as categorias que o dono cadastra. Cada dono conta com um painel exclusivo, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
 
 Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem pode escrever depende da plataforma: o dono escolhe se a autoria é aberta a todos, fechada ou concedida por pedido aprovado pela administração. O autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
@@ -16,7 +16,7 @@ Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com o
 
 O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, entregue em versões incrementais e acompanhado de documentação de Engenharia de Software.
 
-O Blog-API é um projeto de estudo e de portfólio. Ele é construído como um produto real, pronto para ser publicado, mas não será colocado em produção nem aberto ao público. O objetivo é praticar, de ponta a ponta, o desenvolvimento de um backend seguro, testado e bem documentado.
+O Blog-API é um projeto de estudo e de portfólio. É feito como um produto real, pronto para ser publicado, mas não será colocado em produção nem aberto ao público. O objetivo é praticar, de ponta a ponta, o desenvolvimento de um backend seguro, testado e bem documentado.
 
 ## 2. O problema
 
@@ -78,7 +78,7 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 
 ## 5. Público e perfis de usuário
 
-O Blog-API atende a dois públicos: quem instala e administra uma plataforma e as pessoas que a usam. Quem usa a plataforma tem um destes perfis:
+O Blog-API atende a dois públicos: quem instala e administra uma plataforma e as pessoas que a usam. Cada pessoa na plataforma, inclusive o dono, tem um destes perfis:
 
 | Perfil | Quem é | O que pode fazer |
 |---|---|---|
@@ -86,8 +86,8 @@ O Blog-API atende a dois públicos: quem instala e administra uma plataforma e a
 | Leitor | Todo usuário cadastrado. | Comentar, reagir, seguir autores, salvar artigos para ler depois, bloquear usuários, denunciar conteúdo, gerenciar a própria conta e os próprios dados e, no modo por pedido, pedir para ser autor. |
 | Autor | Leitor com permissão para escrever, conforme o modo de autoria. | Tudo do leitor, mais escrever, publicar e gerenciar os próprios artigos. |
 | Moderador | Usuário escolhido por um administrador. | Tudo do leitor, mais analisar denúncias, ocultar conteúdo e remover comentários. Só escreve artigos se também for autor. |
-| Administrador | Moderador promovido. | Tudo do autor e do moderador, mais aprovar autores, conceder o papel de moderador, aprovar novos administradores, gerenciar categorias e aplicar penalidades. |
-| Superadministrador | O dono e o responsável final pela plataforma. | Tudo, inclusive rebaixar administradores, ajustar as regras da plataforma e acessar as métricas e os logs. Nenhum outro perfil pode alterar ou bloquear a conta dele. |
+| Administrador | Em regra, um moderador promovido. | Tudo do autor e do moderador, mais aprovar ou nomear autores, conceder o papel de moderador, aprovar novos administradores, gerenciar categorias e aplicar penalidades. |
+| Superadministrador | O dono e o responsável final pela plataforma. | Tudo, inclusive rebaixar administradores, ajustar as regras da plataforma e acessar as métricas e os logs. Nenhum outro perfil pode alterar ou suspender a conta dele. |
 
 Todo cadastro começa como leitor. O dono escolhe como a plataforma trata a autoria, entre três modos:
 
@@ -111,14 +111,14 @@ O superadministrador é o dono e o responsável final pela plataforma. Há apena
 | Social | Comentários com respostas, reações, seguidores, feed e bloqueio de usuários. |
 | Notificações | Avisos dentro da plataforma, em tempo real, e por e-mail, como novos comentários, novos seguidores e respostas a pedidos, com o usuário escolhendo os canais de cada tipo de aviso. |
 | Moderação | Denúncias, triagem feita pela IA e ações de moderação. A IA só prioriza: quem decide é sempre uma pessoa. |
-| Administração da plataforma | Tudo o que um painel do dono precisa: identidade da plataforma (nome, descrição, logo, idioma padrão e links), páginas institucionais, termos de uso e política de privacidade, convites por e-mail, backup da plataforma, gestão de usuários e papéis, bloqueio de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
+| Administração da plataforma | Tudo o que um painel do dono precisa: identidade da plataforma (nome, descrição, logo, idioma padrão e links), páginas institucionais, termos de uso e política de privacidade, convites por e-mail, backup da plataforma, gestão de usuários e papéis, suspensão de contas, regras da plataforma ajustáveis com histórico de mudanças, categorias, métricas agregadas de uso e desempenho, saúde do sistema, logs técnicos e de segurança com dados pessoais mascarados e prazo de retenção, e registro de todas as ações administrativas. |
 | Transversal | Mensagens em português e inglês, preparadas para novos idiomas, erros padronizados e documentação interativa da API (Swagger). |
 
 Cada perfil cadastrado tem o seu painel na API, com o que precisa para trabalhar. A tela de cada painel fica a cargo do front-end.
 
 | Painel | Quem vê | O que mostra |
 |---|---|---|
-| Minha conta | Todo usuário. | Dados e privacidade, sessões, histórico de interesses, listas de leitura, usuários bloqueados, pedidos feitos e o resultado das denúncias que a pessoa fez. |
+| Minha conta | Todo usuário cadastrado. | Dados e privacidade, sessões, histórico de interesses, listas de leitura, usuários bloqueados, pedidos feitos e o resultado das denúncias que a pessoa fez. |
 | Do autor | Cada autor, sobre si. | Artigos, rascunhos e agendamentos, histórico de revisões, versões de idioma, estatísticas por artigo (leituras, reações e comentários, por idioma) e o número de seguidores. |
 | Dos autores | Administração e autores. | Para a administração, a lista de autores, a atividade de cada um e os pedidos de autoria pendentes. Para os autores, um espaço comum com avisos da administração e diretrizes de escrita. |
 | Da moderação | Moderadores e administração. | Fila de denúncias por motivo, conteúdo ocultado e tempo médio de resolução. |
