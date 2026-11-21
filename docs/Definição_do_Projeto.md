@@ -172,7 +172,7 @@ O código é distribuído sob a licença MIT.
 
 | Documento | O que explica |
 |---|---|
-| **Definição do Projeto** *(este)* | O que é o projeto, para quem e com que objetivos. |
+| Definição do Projeto *(este documento)* | O que é o projeto, para quem e com que objetivos. |
 | [Requisitos.md](Requisitos.md) | O que o sistema deve fazer (funcionais) e com que qualidade (não funcionais). |
 | [Regras_de_Negócio.md](Regras_de_Negócio.md) | As regras que cada funcionalidade obedece. |
 | [Arquitetura.md](Arquitetura.md) | Como o sistema é construído por dentro. |
