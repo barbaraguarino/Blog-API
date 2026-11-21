@@ -63,6 +63,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 ### 1.4 Conteúdo
 
+- **RF-115** – O sistema deve permitir que qualquer pessoa, mesmo sem login, liste e leia os artigos publicados.
 - **RF-023** – O sistema deve permitir que o autor crie, edite, salve como rascunho, publique e arquive os próprios artigos.
 - **RF-075** – O sistema deve aceitar o conteúdo dos artigos em Markdown, LaTeX, HTML com CSS ou texto puro, guardando o formato de cada artigo.
 - **RF-076** – O sistema deve permitir que o autor agende a data e a hora de publicação de um artigo.
@@ -89,7 +90,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 
 ### 1.6 Social
 
-- **RF-030** – O sistema deve permitir que o usuário autenticado comente artigos publicados e responda comentários.
+- **RF-030** – O sistema deve permitir que o usuário autenticado comente artigos publicados, responda comentários e edite ou remova os próprios comentários.
 - **RF-031** – O sistema deve permitir que o usuário autenticado reaja aos artigos publicados.
 - **RF-032** – O sistema deve permitir que o usuário autenticado siga e deixe de seguir autores.
 - **RF-033** – O sistema deve exibir ao usuário autenticado um feed com os artigos recentes dos autores que ele segue.
@@ -106,7 +107,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 ### 1.8 Moderação
 
 - **RF-040** – O sistema deve permitir que o usuário autenticado denuncie artigos e comentários.
-- **RF-041** – O sistema deve permitir que o moderador e o administrador analisem as denúncias e apliquem ações de moderação, como arquivar a denúncia, ocultar o conteúdo ou penalizar o autor.
+- **RF-041** – O sistema deve permitir que o moderador e o administrador analisem as denúncias e apliquem ações de moderação, como arquivar a denúncia, ocultar o conteúdo, remover comentários ou penalizar o autor.
 - **RF-096** – O sistema deve informar a quem denunciou o resultado da análise.
 
 ### 1.9 Painéis
