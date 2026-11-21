@@ -1,5 +1,7 @@
 # Definição do Projeto
 
+**Versão:** 1.0 · **Última modificação:** 21/11/2026
+
 ## 1. Apresentação
 
 O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada plataforma, ou seja, cada instalação do Blog-API, ganha o seu, como tecnologia, livros ou culinária, de acordo com o front-end usado e as categorias que o dono cadastra. Cada dono conta com um painel próprio, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
