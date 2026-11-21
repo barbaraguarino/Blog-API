@@ -1,12 +1,12 @@
 # Definição do Projeto
 
-**Versão:** 1.1 · **Última modificação:** 21/11/2026
+**Versão:** 1.2 · **Última modificação:** 21/11/2026
 
 ## 1. Apresentação
 
 O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada plataforma, ou seja, cada instalação do Blog-API, ganha o seu, como tecnologia, livros ou culinária, de acordo com o front-end usado e as categorias que o dono cadastra. Cada dono conta com um painel exclusivo, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
 
-Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem pode escrever depende da plataforma: o dono escolhe se a autoria é aberta a todos, fechada ou concedida por pedido aprovado pela administração. O autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua. Uma equipe de moderação cuida para que o ambiente continue saudável.
+Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem pode escrever depende da plataforma: o dono escolhe se a autoria é aberta a todos, fechada a autores nomeados pela administração ou concedida por pedido aprovado por ela. O autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
 Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso de inteligência artificial a serviço da leitura e da escrita.
 
@@ -55,7 +55,7 @@ O objetivo geral é desenvolver uma API REST segura, testada e documentada para 
 Para isso, o projeto deve:
 
 1. oferecer cadastro e login com e-mail e senha ou com conta Google, com as contas protegidas por confirmação de e-mail, recuperação de senha, sessões revogáveis, alerta de acesso em dispositivo novo e verificação em duas etapas;
-2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público, registrar o aceite dos termos de uso e consultar, exportar e excluir os próprios dados;
+2. coletar só os dados necessários e dar ao usuário controle sobre eles, registrando o aceite dos termos de uso e da política de privacidade e permitindo escolher o que aparece no perfil público e consultar, exportar e excluir os próprios dados;
 3. permitir que autores, conforme o modo de autoria escolhido pelo dono, criem, editem, agendem e publiquem artigos organizados por categorias e tags, com imagens, versões em vários idiomas e histórico de revisões;
 4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões de texto, tags, categoria e descrições de imagens, gerar resumos dos artigos, ajudar a moderação a priorizar o que analisar e recomendar artigos a partir dos sinais que cada leitor dá, sob o controle dele;
 5. permitir que leitores busquem, comentem, reajam, sigam autores, bloqueiem usuários, salvem artigos para ler depois, acompanhem um feed e recebam notificações pelos canais que escolherem;
@@ -105,7 +105,7 @@ O superadministrador é o dono e o responsável final pela plataforma. Há apena
 |---|---|
 | Identidade e acesso | Cadastro e login com e-mail e senha ou com conta Google, login por e-mail ou nickname, ativação da conta por e-mail, recuperação e troca de senha, sessões revogáveis e verificação em duas etapas. |
 | Privacidade | Escolha do que aparece no perfil público, consulta, exportação e exclusão dos próprios dados, aceite registrado dos termos de uso e da política de privacidade, alerta por e-mail de acesso em dispositivo novo e controle do histórico de interesses usado nas recomendações. |
-| Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido e aprovação de autoria, concessão do papel de moderador e promoção a administrador. |
+| Perfis | Modo de autoria escolhido pelo dono (por pedido, fechado ou aberto), pedido, aprovação e nomeação de autores, concessão do papel de moderador e promoção a administrador. |
 | Conteúdo | Artigos em Markdown, LaTeX, HTML com CSS ou texto puro, com rascunho, agendamento, publicação e histórico de revisões, versões do mesmo artigo em vários idiomas, categorias, tags, imagens, listas privadas para ler depois e busca. |
 | Inteligência artificial | Tradução de artigos, correção e sugestões de escrita, sugestão de tags e de categoria, resumo automático, texto alternativo para imagens, triagem de comentários e denúncias para a moderação e recomendação de artigos. |
 | Social | Comentários com respostas, reações, seguidores, feed e bloqueio de usuários. |
