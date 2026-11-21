@@ -1,5 +1,7 @@
 # Requisitos
 
+**Versão:** 2.0 · **Última modificação:** 21/11/2026
+
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
 - **Requisitos funcionais (RF):** descrevem **o que** o sistema deve fazer, ou seja, os serviços que ele oferece aos usuários.
@@ -142,29 +144,53 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RNF-003** – O sistema deve proteger todos os endpoints por padrão, liberando sem autenticação apenas as rotas explicitamente declaradas como públicas.
 - **RNF-004** – O sistema deve enviar os cookies de autenticação com o atributo `Secure` fora do ambiente local, com validade igual à do token.
 - **RNF-005** – O sistema deve obter senhas, chaves e credenciais apenas de variáveis de ambiente, sem armazená-las no código-fonte.
-- **RNF-006** – O sistema deve armazenar os tokens de renovação e os códigos enviados por e-mail apenas na forma de hash.
+- **RNF-006** – O sistema deve armazenar os tokens de renovação, os códigos enviados por e-mail e os códigos de recuperação apenas na forma de hash.
 - **RNF-007** – O sistema deve limitar o número de tentativas e a frequência de login, de verificação de códigos e de reenvio de e-mails.
 - **RNF-008** – O sistema não deve expor, em nenhuma resposta, senhas, hashes, tokens, identificadores de provedores externos ou dados privados de outros usuários.
+- **RNF-020** – O sistema deve limpar o HTML e o CSS dos artigos de qualquer código perigoso antes de salvá-los, aceitando só o que estiver numa lista de elementos permitidos.
 
-### 2.2 Usabilidade e padronização
+### 2.2 Privacidade e proteção de dados
 
-- **RNF-009** – O sistema deve responder com mensagens em português do Brasil (padrão) ou em inglês, conforme o cabeçalho `Accept-Language` da requisição.
+- **RNF-021** – O sistema deve coletar só os dados pessoais necessários para cada funcionalidade e seguir os princípios da LGPD.
+- **RNF-022** – O sistema deve enviar à IA só o conteúdo necessário para cada tarefa, nunca os dados das contas. A triagem da moderação recebe o texto sem nome, e-mail ou qualquer identificador de quem o escreveu.
+- **RNF-023** – O sistema deve mostrar as estatísticas dos painéis sempre de forma agregada, sem revelar quem leu ou reagiu a um conteúdo.
+- **RNF-024** – O sistema deve mascarar os dados pessoais nos logs, apagá-los depois de um prazo de retenção definido e registrar cada consulta feita aos logs.
+- **RNF-025** – O sistema deve guardar os registros de acesso pelo prazo exigido pela lei e apagá-los depois dele.
+
+### 2.3 Custos e limites de uso
+
+- **RNF-026** – O sistema deve manter o custo somado dos serviços pagos (inteligência artificial, armazenamento de imagens, envio de e-mails e login com Apple) em no máximo US$ 15 por mês.
+- **RNF-027** – O sistema deve limitar o uso da IA e o envio de e-mails, por usuário e no total da plataforma, com limites que o dono pode ajustar.
+- **RNF-028** – O sistema deve acessar cada serviço externo por meio de um gateway, para que o provedor possa ser trocado sem mudar o resto do sistema.
+
+### 2.4 Usabilidade e padronização
+
+- **RNF-009** – O sistema deve responder com mensagens em português do Brasil (padrão) ou em inglês, conforme o cabeçalho `Accept-Language` da requisição, com a estrutura pronta para receber novos idiomas.
 - **RNF-010** – O sistema deve devolver todos os erros em um formato único, contendo data e hora, status HTTP, descrição, mensagem traduzida, caminho da requisição e, quando houver, os erros por campo.
 - **RNF-011** – O sistema deve disponibilizar documentação interativa da API no padrão OpenAPI (Swagger).
+- **RNF-029** – O sistema deve preservar a formatação de cada artigo (Markdown, LaTeX, HTML com CSS ou texto puro) na tradução e na correção feitas pela IA.
 
-### 2.3 Desempenho
+### 2.5 Desempenho
 
 - **RNF-012** – O sistema deve paginar todas as listagens, com um tamanho máximo de página.
+- **RNF-030** – O sistema deve entregar os avisos dentro da plataforma em tempo real, sem que o cliente precise consultar a API repetidamente.
 
-### 2.4 Manutenibilidade e qualidade
+### 2.6 Manutenibilidade e qualidade
 
 - **RNF-013** – O sistema deve seguir a Pragmatic Clean Architecture, com o código organizado por funcionalidade e dividido nas camadas de domínio, aplicação, infraestrutura e apresentação.
 - **RNF-014** – O sistema deve trocar dados com os clientes apenas por meio de DTOs, sem expor as entidades do banco.
 - **RNF-015** – O sistema deve ter um teste automatizado para cada classe de produção.
 - **RNF-016** – O sistema deve registrar em log os erros internos com a causa original e responder ao cliente com uma mensagem genérica, sem detalhes técnicos.
+- **RNF-031** – Os testes automatizados não devem chamar serviços externos de verdade.
 
-### 2.5 Dados e compatibilidade
+### 2.7 Dados e compatibilidade
 
 - **RNF-017** – O sistema deve usar o PostgreSQL como banco de dados, com o esquema versionado exclusivamente por migrations do Flyway.
 - **RNF-018** – O sistema deve prefixar todas as rotas com a versão da API (`/api/v1`).
 - **RNF-019** – O sistema deve ser executável localmente com Java 25 e PostgreSQL, sem depender de contêineres.
+
+### 2.8 Operação
+
+- **RNF-032** – O sistema deve ter configurações separadas por ambiente, com a de produção pronta para uso, mesmo sem a publicação.
+- **RNF-033** – O sistema deve expor métricas de uso e de desempenho e o estado de saúde, acessíveis só ao superadministrador.
+- **RNF-034** – O sistema deve poder ser executado, com o banco de dados, em contêineres Docker.
