@@ -85,7 +85,7 @@ Uma conta pessoal não tem opção para impedir a própria dona de apagar o repo
 
 ## 4. Issues
 
-**Por que importa:** as issues são o Product Backlog do projeto (ver [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md)). Elas são públicas para mostrar o planejamento no portfólio, mas não devem virar um espaço aberto a spam.
+**Por que importa:** as issues são o backlog do projeto (ver [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md)). Elas são públicas para mostrar o planejamento no portfólio, mas não devem virar um espaço aberto a spam.
 
 **Configuração atual (D-011):** as issues são **públicas e travadas**, e o quadro do GitHub Projects é **privado**.
 

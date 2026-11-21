@@ -54,7 +54,7 @@ O Blog-API também é um projeto de estudo e portfólio. Ele exercita, em um dom
 - modelagem de domínio e regras de negócio;
 - integração com serviços externos (Google, e-mail, AWS S3);
 - arquitetura limpa e testes automatizados;
-- um processo de desenvolvimento com Scrum e documentação.
+- um processo de desenvolvimento com Kanban e documentação.
 
 ## 5. Público e perfis de usuário
 
@@ -110,7 +110,7 @@ Os detalhes técnicos estão em [Arquitetura.md](Arquitetura.md).
 
 ## 9. Entregas
 
-O produto é entregue em versões incrementais (Milestones), cada uma desenvolvida em Sprints:
+O produto é entregue em versões incrementais (Milestones):
 
 | Versão | Entrega | Situação |
 |---|---|---|
@@ -124,7 +124,7 @@ Detalhes no [Roadmap.md](Roadmap.md).
 
 ## 10. Como o projeto é desenvolvido
 
-- **Método:** Scrum adaptado a uma desenvolvedora, com Sprints, backlog no GitHub Issues e quadro no GitHub Projects. Ver [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
+- **Método:** Kanban simples, com o backlog no GitHub Issues e o quadro no GitHub Projects. Ver [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
 - **Versionamento:** Git Flow, com um branch e um Pull Request por tarefa.
 - **Qualidade:** toda classe tem teste automatizado, e nenhuma tarefa é concluída sem cumprir a Definição de Pronto.
 - **Licença:** MIT.
@@ -139,7 +139,7 @@ Detalhes no [Roadmap.md](Roadmap.md).
 | [Arquitetura.md](Arquitetura.md) | Como o sistema é construído por dentro. |
 | [Testes/Plano_de_Testes.md](Testes/Plano_de_Testes.md) | Como o sistema é testado. |
 | [Testes/Relatórios/](Testes/Relatórios/README.md) | Os resultados das execuções de testes. |
-| [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md) | Como o trabalho é organizado (Scrum). |
+| [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md) | Como o trabalho é organizado (Kanban). |
 | [Roadmap.md](Roadmap.md) | Versões e ordem de entrega. |
 | [Decisões.md](Decisões.md) | Por que cada escolha foi feita. |
 | [Segurança.md](Segurança.md) | Como o repositório e a conta são protegidos. |

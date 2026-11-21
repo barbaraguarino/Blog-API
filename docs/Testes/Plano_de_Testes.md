@@ -86,7 +86,7 @@ A base da pirâmide é a mais numerosa e a mais rápida: **toda classe tem teste
 - **Convenção:** sufixo `IT` (ex. `RegistrationFlowIT`).
 
 ### 4.6 Manual (Cliente HTTP do IntelliJ)
-- **Objetivo:** validar o comportamento como um cliente real, na Sprint Review e antes de cada PR.
+- **Objetivo:** validar o comportamento como um cliente real, antes de cada PR e ao fechar cada versão.
 - **Ferramenta:** o **Cliente HTTP do IntelliJ**, com arquivos `.http`. O projeto **não** usa Postman nem similares.
 - **Organização:**
   - os arquivos ficam em `requests/<modulo>/<funcionalidade>/`, com um bloco `###` por cenário e o status esperado no título (ex. `### Cadastrar Usuário Já Cadastrado (Conflito)`);

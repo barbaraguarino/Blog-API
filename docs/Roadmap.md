@@ -1,6 +1,6 @@
 # Roadmap
 
-O Roadmap mostra **para onde o produto vai**: as versões (Milestones) planejadas, o que cada uma entrega, por que estão nessa ordem e o que é preciso para considerar cada uma concluída. O detalhe de cada tarefa fica nas [Issues](https://github.com/barbaraguarino/Blog-API/issues), e o andamento do dia a dia no quadro do GitHub Projects. Como o trabalho é organizado em Sprints está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
+O Roadmap mostra **para onde o produto vai**: as versões (Milestones) planejadas, o que cada uma entrega, por que estão nessa ordem e o que é preciso para considerar cada uma concluída. O detalhe de cada tarefa fica nas [Issues](https://github.com/barbaraguarino/Blog-API/issues), e o andamento do dia a dia no quadro do GitHub Projects. Como o trabalho é organizado no quadro Kanban está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
 
 ---
 
@@ -121,7 +121,7 @@ Ideias que podem entrar no backlog no futuro, depois de avaliadas:
 ## 5. Fluxo de trabalho
 
 1. Toda tarefa nasce como uma **Issue**, com o template de funcionalidade ou de bug.
-2. A issue entra em um **Milestone** (versão) e é planejada em uma **Sprint** no quadro do Projects.
+2. A issue entra em um **Milestone** (versão) e na fila do quadro Kanban do Projects.
 3. O trabalho segue o **Git Flow**: um branch `feature/*` ou `bugfix/*` por issue, a partir da `develop`.
 4. Cada branch tem **um único PR** para a `develop`, com `Closes #N` e o checklist da Definição de Pronto. A issue só fecha se todos os critérios de aceite forem cumpridos.
 5. Ao fechar um Milestone, um branch `release/vX.Y.Z` leva a `develop` para a `main`, junto com um relatório de testes.

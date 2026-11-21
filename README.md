@@ -70,7 +70,7 @@ src/main/
 | Documento | Conteúdo |
 |---|---|
 | [Definição do Projeto](docs/Definição_do_Projeto.md) | Introdução: problema, objetivos, público, funcionalidades e escopo |
-| [Processo de Desenvolvimento](docs/Processo_de_Desenvolvimento.md) | Scrum adaptado, Sprints, Definição de Preparado e de Pronto |
+| [Processo de Desenvolvimento](docs/Processo_de_Desenvolvimento.md) | Kanban, quadro do Projects, Definição de Preparado e de Pronto |
 | [Requisitos](docs/Requisitos.md) | Requisitos funcionais e não funcionais |
 | [Regras de Negócio](docs/Regras_de_Negócio.md) | Regras numeradas e divergências conhecidas |
 | [Arquitetura](docs/Arquitetura.md) | Documento de Arquitetura de Software |
