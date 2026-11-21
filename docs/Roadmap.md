@@ -46,7 +46,7 @@ timeline
   - Spring Security stateless com JWT em cookie `HttpOnly`;
   - cadastro com e-mail e senha (BCrypt) e com conta Google;
   - login por e-mail ou nickname, e login com Google.
-- **Requisitos:** RF-001 a RF-004.
+- **Requisitos:** RF-001, RF-002, RF-003 e RF-004.
 - **Observação:** feita antes da adoção das Issues. As tarefas #01 a #08 do antigo `Backlog_Sequencial.md` não correspondem a números de issues ou PRs do GitHub.
 
 ### v0.1 – Identidade essencial ▶️
@@ -61,7 +61,7 @@ timeline
   - recuperação de senha e troca de senha com código;
   - correção das divergências D1 a D5;
   - testes para as classes que ainda não têm.
-- **Requisitos:** RF-005 a RF-010 · RNF-004, RNF-006, RNF-007, RNF-011, RNF-015.
+- **Requisitos:** RF-009, RF-010, RF-011, RF-013, RF-014 e RF-015 · RNF-004, RNF-006, RNF-007, RNF-020, RNF-026.
 - **Dependências internas:**
   ```mermaid
   flowchart LR
@@ -84,7 +84,7 @@ timeline
   - tags;
   - upload de avatar e capa no AWS S3;
   - listagens paginadas.
-- **Requisitos:** RF-020 a RF-025 · RNF-012.
+- **Requisitos:** RF-034, RF-035, RF-048, RF-056, RF-057 e RF-059 · RNF-022.
 - **Novo na arquitetura:** módulo `article`, `StorageGateway` e autorização por papel com `@PreAuthorize`.
 - **Concluída quando:** um autor aprovado conseguir publicar um artigo com capa, categoria e tags, e um visitante conseguir lê-lo nas listagens públicas.
 
@@ -92,7 +92,7 @@ timeline
 
 - **Objetivo:** transformar leitores em comunidade.
 - **Entregas:** comentários com respostas, reações, seguidores, feed e busca de artigos.
-- **Requisitos:** RF-026, RF-030 a RF-033.
+- **Requisitos:** RF-045, RF-069, RF-073, RF-075 e RF-076.
 - **Novo na arquitetura:** módulo `social` e busca textual no PostgreSQL.
 - **Concluída quando:** um leitor conseguir encontrar um artigo pela busca, comentá-lo, reagir, seguir o autor e ver os próximos artigos dele no feed.
 
@@ -100,7 +100,7 @@ timeline
 
 - **Objetivo:** manter a comunidade saudável e oferecer proteção extra às contas.
 - **Entregas:** denúncias, painel de moderação com ações e registro, 2FA com app autenticador e vínculo e desvínculo de conta Google.
-- **Requisitos:** RF-011, RF-012, RF-040, RF-041.
+- **Requisitos:** RF-016, RF-021, RF-084, RF-085.
 - **Novo na arquitetura:** módulo `moderation` e segundo fator no fluxo de login.
 - **Concluída quando:** um conteúdo denunciado puder ser ocultado por um moderador, e um usuário conseguir entrar exigindo o código do app autenticador.
 

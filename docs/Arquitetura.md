@@ -482,6 +482,6 @@ Os testes ficam no mesmo pacote da classe testada. A estratégia completa está 
 | `email_verified` não conferido | Um e-mail não verificado no Google ocuparia a conta. | D5 |
 | Cookie com `Secure=false` e validade fixa | Inadequado para produção. | D4 · RNF-004 |
 | CSRF desativado | Mitigado pelo `SameSite=Strict`; reavaliar com o Refresh Token. | RNF-002 |
-| Sem Swagger | A Definição de Pronto exige Swagger. | RNF-011 |
-| Cobertura de testes | 6 de 35 classes têm teste. | RNF-015 |
+| Sem Swagger | A Definição de Pronto exige Swagger. | RNF-020 |
+| Cobertura de testes | 6 de 35 classes têm teste. | RNF-026 |
 | Sem perfil de produção | Configurações de desenvolvimento valem para tudo. | — |

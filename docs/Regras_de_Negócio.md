@@ -78,7 +78,7 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 - **Por quê:** senhas curtas ou sem variedade são fáceis de adivinhar por força bruta. O BCrypt é lento de propósito e usa *salt*, o que dificulta ataques mesmo que o banco vaze.
 - **Exemplos:** `SenhaForte12!` ✔ (2 maiúsculas? S e F ✔, minúsculas ✔, 2 números ✔, especial ✔) · `senha123` ✘ (sem maiúsculas e sem especial).
 - **Erro:** `400` · uma mensagem por exigência que falhar: `error.validation.user.password.size`, `.uppercase`, `.lowercase`, `.number`, `.special`.
-- **Requisitos:** RF-001 e, no futuro, RF-009 e RF-010.
+- **Requisitos:** RF-001 e, no futuro, RF-014 e RF-015.
 
 #### RN-005 – Geração automática do nickname 🟡 ⚠️ D1
 - **Regra:** o nickname é gerado a partir do nome:
@@ -138,22 +138,22 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 #### RN-011 – Tokens de curta e longa duração ⬜
 - **Regra:** o token de acesso dura **15 minutos**; o **Refresh Token** dura **7 dias**. Cada login cria uma **sessão** com usuário, hash do Refresh Token, IP, User-Agent, data de criação, último uso, expiração e data de revogação. O logout revoga a sessão atual e apaga os cookies.
 - **Por quê:** um token de acesso curto limita o estrago de um token roubado. O Refresh Token, guardado no banco, permite revogar sessões, algo que um JWT sozinho não permite.
-- **Requisitos:** RF-005, RF-006.
+- **Requisitos:** RF-009, RF-010.
 
 #### RN-012 – Rotação do Refresh Token ⬜
 - **Regra:** cada uso do Refresh Token gera um **novo par** de tokens (acesso + refresh) e invalida o Refresh Token usado.
 - **Por quê:** um Refresh Token roubado perde valor assim que o dono legítimo o usa.
-- **Requisito:** RF-005.
+- **Requisito:** RF-009.
 
 #### RN-013 – Detecção de reuso ⬜
 - **Regra:** se um Refresh Token **já usado** for apresentado de novo, **todas** as sessões do usuário são revogadas e a resposta é `401`.
 - **Por quê:** o reuso indica que o token foi copiado por outra pessoa. Encerrar tudo obriga um novo login de quem é o verdadeiro dono.
 - **Erro (proposto):** `401` · `error.auth.refresh_token_reused`.
-- **Requisito:** RF-005.
+- **Requisito:** RF-009.
 
 #### RN-014 – Gestão das próprias sessões ⬜
 - **Regra:** o usuário lista e revoga **só as próprias** sessões. "Revogar todas" mantém a sessão atual. Uma sessão de outro usuário é tratada como inexistente (`404`), para não revelar que ela existe.
-- **Requisito:** RF-007.
+- **Requisito:** RF-011.
 
 ### 2.4 E-mail, ativação e senha *(v0.1)*
 
@@ -161,32 +161,32 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 - **Regra:** os códigos têm **6 dígitos**, valem **10 minutos**, são de **uso único**, aceitam no máximo **5 tentativas** e são guardados **só como hash**. Cada código tem uma finalidade (`ATIVACAO`, `RECUPERACAO_SENHA`, `TROCA_SENHA`) e não serve para outra.
 - **Por quê:** a validade curta e o limite de tentativas tornam inviável adivinhar o código (1 milhão de combinações). O hash protege os códigos se o banco vazar.
 - **Erros (propostos):** `422` · `error.code.invalid`, `error.code.expired`, `error.code.attempts_exceeded`.
-- **Requisitos:** RF-008, RF-009, RF-010.
+- **Requisitos:** RF-013, RF-014, RF-015.
 
 #### RN-016 – Conta local nasce desativada ⬜
 - **Regra:** a partir da v0.1, a conta local nasce com `enabled = false` e só é ativada com o código de ativação. A conta Google nasce ativa, porque o Google já verificou o e-mail (ver também D5).
 - **Por quê:** garante que o e-mail pertence a quem se cadastrou, condição para a recuperação de senha funcionar com segurança.
-- **Requisito:** RF-008.
+- **Requisito:** RF-013.
 
 #### RN-017 – Limite de reenvio do código de ativação ⬜
 - **Regra:** um novo código só pode ser pedido 60 segundos após o anterior, com no máximo 5 pedidos por hora. Um novo código invalida o anterior.
 - **Por quê:** evita abuso do envio de e-mails (spam e custo).
 - **Erro (proposto):** `429 Too Many Requests` · `error.code.too_many_requests`.
-- **Requisito:** RF-008.
+- **Requisito:** RF-013.
 
 #### RN-018 – Resposta neutra na recuperação de senha ⬜
 - **Regra:** o pedido de recuperação responde **sempre da mesma forma** ("Se o e-mail estiver cadastrado, você receberá um código"), exista ou não a conta.
 - **Por quê:** impede que alguém use a tela de recuperação para descobrir quais e-mails estão cadastrados (*enumeração de usuários*).
-- **Requisito:** RF-009.
+- **Requisito:** RF-014.
 
 #### RN-019 – Redefinir a senha encerra as sessões ⬜
 - **Regra:** ao redefinir a senha, **todas** as sessões do usuário são revogadas.
 - **Por quê:** quem esqueceu a senha pode estar recuperando uma conta comprometida; as sessões antigas podem estar com o invasor.
-- **Requisito:** RF-009.
+- **Requisito:** RF-014.
 
 #### RN-020 – Troca de senha estando logado ⬜
 - **Regra:** a troca exige a **senha atual** e um **código por e-mail**. A nova senha segue a RN-004 e deve ser **diferente** da atual. As **outras** sessões são revogadas; a atual continua.
-- **Requisito:** RF-010.
+- **Requisito:** RF-015.
 
 ### 2.5 Segurança avançada *(v0.4)*
 
@@ -196,11 +196,11 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
   - na ativação, são gerados **10 códigos de recuperação** de uso único, mostrados uma única vez;
   - com o 2FA ativo, o login com senha **não emite tokens** até o código TOTP ser confirmado;
   - desativar exige a senha e um código.
-- **Requisito:** RF-011.
+- **Requisito:** RF-016.
 
 #### RN-022 – Vínculo com Google ⬜
 - **Regra:** vincular exige um ID Token válido cujo `googleId` não pertença a outra conta. Desvincular só é permitido se a conta tiver senha local, para que o usuário não perca o acesso.
-- **Requisito:** RF-012.
+- **Requisito:** RF-021.
 
 ---
 
@@ -210,31 +210,31 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 - **Regra:** só pode pedir autoria quem tem a conta **criada há mais de 2 meses**.
 - **Por quê:** reduz contas criadas só para publicar spam e incentiva a participação como leitor antes.
 - **Erro (proposto):** `422` · `error.author_request.account_too_new`.
-- **Requisito:** RF-020.
+- **Requisito:** RF-034.
 
 #### RN-031 – Um pedido pendente por vez ⬜
 - **Regra:** um usuário tem no máximo **um** pedido de autoria pendente. Depois de uma recusa, pode pedir de novo.
 - **Erro (proposto):** `409` · `error.author_request.already_pending`.
-- **Requisito:** RF-020.
+- **Requisito:** RF-034.
 
 #### RN-032 – Aprovação de autoria ⬜
 - **Regra:** só o `ADMIN` aprova ou recusa. A aprovação muda o papel para `AUTHOR`. A recusa exige um motivo, visível para o solicitante.
 - **Erro:** `403` · `error.auth.access_denied` para quem não é admin.
-- **Requisito:** RF-021.
+- **Requisito:** RF-035.
 
 #### RN-033 – Categorias ⬜
 - **Regra:** a categoria tem nome, **slug único** e uma categoria pai opcional, formando uma árvore. Uma categoria não pode ser pai dela mesma, nem de um ancestral. Só o `ADMIN` gerencia categorias.
-- **Requisito:** RF-022.
+- **Requisito:** RF-059.
 
 #### RN-034 – Remoção de categorias ⬜
 - **Regra:** não é possível remover uma categoria que tenha artigos ou subcategorias.
 - **Por quê:** evita artigos sem categoria e árvores quebradas.
 - **Erro (proposto):** `422` · `error.category.in_use`.
-- **Requisito:** RF-022.
+- **Requisito:** RF-059.
 
 #### RN-035 – Quem escreve artigos ⬜
 - **Regra:** só `AUTHOR` ou `ADMIN` criam artigos, e só o próprio autor os edita.
-- **Requisito:** RF-023.
+- **Requisito:** RF-048.
 
 #### RN-036 – Ciclo de vida do artigo ⬜
 - **Regra:** o artigo tem o status `RASCUNHO`, `PUBLICADO` ou `ARQUIVADO`. As transições permitidas são:
@@ -243,28 +243,28 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
   - arquivado → rascunho.
 
   A **data de publicação** é registrada na primeira publicação. O **slug** é gerado a partir do título e é único.
-- **Requisito:** RF-023.
+- **Requisito:** RF-048.
 
 #### RN-037 – Rascunhos são privados ⬜
 - **Regra:** os rascunhos só são visíveis para o autor. Para os demais, o rascunho "não existe" (`404`).
-- **Requisito:** RF-023.
+- **Requisito:** RF-048.
 
 #### RN-038 – Listagens públicas ⬜
 - **Regra:** as listagens públicas mostram só artigos **publicados**, paginados (padrão 10, máximo 50 por página) e ordenados por data de publicação, do mais recente para o mais antigo.
-- **Requisito:** RF-023.
+- **Requisito:** RF-048.
 
 #### RN-039 – Tags ⬜
 - **Regra:** as tags são **normalizadas** (minúsculas, sem espaços nas pontas) e **únicas**. Uma tag inexistente é criada ao ser usada. Cada artigo tem no máximo 10 tags.
-- **Requisito:** RF-024.
+- **Requisito:** RF-056.
 
 #### RN-040 – Imagens ⬜
 - **Regra:** são aceitos só os formatos JPEG, PNG e WebP, com até 5 MB. Ao trocar uma imagem, a anterior é removida do armazenamento.
 - **Erro (proposto):** `400` · `error.upload.invalid_type` / `error.upload.too_large`.
-- **Requisito:** RF-025.
+- **Requisito:** RF-057.
 
 #### RN-041 – Busca ⬜
 - **Regra:** a busca considera só artigos publicados e procura no título e no resumo, ignorando maiúsculas e acentos. Pode ser combinada com filtros de categoria, tag e autor.
-- **Requisito:** RF-026.
+- **Requisito:** RF-045.
 
 ---
 
@@ -272,28 +272,28 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 
 #### RN-050 – Comentários ⬜
 - **Regra:** só é possível comentar artigos publicados. Há respostas em **um único nível** (comentário → resposta). Responder uma resposta não é permitido.
-- **Requisito:** RF-030.
+- **Requisito:** RF-069.
 
 #### RN-051 – Quem altera comentários ⬜
 - **Regra:** o autor do comentário edita e remove o próprio comentário. `ADMIN` e `MODERATOR` removem qualquer comentário.
-- **Requisito:** RF-030.
+- **Requisito:** RF-069.
 
 #### RN-052 – Uma reação por artigo ⬜
 - **Regra:** cada usuário tem no máximo **uma** reação por artigo. Uma nova reação substitui a anterior.
-- **Requisito:** RF-031.
+- **Requisito:** RF-073.
 
 #### RN-053 – Seguir autores ⬜
 - **Regra:** não é possível seguir a si mesmo, e seguir alguém que já é seguido não duplica.
-- **Requisito:** RF-032.
+- **Requisito:** RF-075.
 
 #### RN-054 – Feed ⬜
 - **Regra:** o feed mostra só artigos publicados de autores seguidos, paginados, do mais recente para o mais antigo.
-- **Requisito:** RF-033.
+- **Requisito:** RF-076.
 
 #### RN-060 – Denúncias ⬜
 - **Regra:** um usuário denuncia o mesmo conteúdo **uma única vez**, escolhendo um motivo de uma lista fixa (spam, assédio, conteúdo impróprio, desinformação, outro) e com uma descrição opcional.
 - **Erro (proposto):** `409` · `error.report.already_exists`.
-- **Requisito:** RF-040.
+- **Requisito:** RF-084.
 
 #### RN-061 – Ações de moderação ⬜
 - **Regra:** uma denúncia pode ser:
@@ -302,7 +302,7 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
   - resolvida com a **penalização do autor**, que pode chegar ao bloqueio da conta (`locked = true`).
 
   Toda ação registra quem a tomou e quando.
-- **Requisito:** RF-041.
+- **Requisito:** RF-085.
 
 ---
 

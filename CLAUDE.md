@@ -22,7 +22,7 @@ API REST de um blog (projeto de estudo): Java 25, Spring Boot 4, PostgreSQL. O r
   - `release/vX.Y.Z`: sai da `develop` ao fechar um Milestone, e o PR vai para a `main` e para a `develop`.
   - `hotfix/<nome>`: sai da `main`, e o PR vai para a `main` e para a `develop`.
   - A `main` só recebe `release/*` e `hotfix/*`.
-- **Um branch por issue, um PR por branch.** O PR usa `Closes #N`, cita os IDs atendidos (`RF-005`, `RN-012`) e segue o checklist de `.github/pull_request_template.md`.
+- **Um branch por issue, um PR por branch.** O PR usa `Closes #N`, cita os IDs atendidos (`RF-009`, `RN-012`) e segue o checklist de `.github/pull_request_template.md`.
 
 ## 3. Código
 

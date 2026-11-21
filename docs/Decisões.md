@@ -152,7 +152,7 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Contexto:** o projeto é construído como um produto real, pronto para ser publicado, mas sem deploy. O Docker estava fora do escopo, e a autora decidiu incluí-lo como tema de estudo.
 - **Decisão:** nas palavras da autora: "se vamos usar Docker ele deve ser a última coisa, a última tarefa." A API e o banco passam a ter execução com Docker, entregue depois de todas as funcionalidades.
 - **Alternativas consideradas:** deixar o Docker fora do escopo, como antes; adotá-lo já no início, o que mudaria o ambiente de desenvolvimento no meio das funcionalidades.
-- **Consequências:** até a última tarefa, a API e o PostgreSQL continuam rodando diretamente na máquina (RNF-019). O Roadmap precisa reservar essa tarefa para o fim.
+- **Consequências:** até a última tarefa, a API e o PostgreSQL continuam rodando diretamente na máquina (RNF-032). O Roadmap precisa reservar essa tarefa para o fim.
 
 ## D-017: Plataforma genérica, um blog por instalação, com regras ajustáveis pelo dono
 
@@ -234,7 +234,7 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 
 - **Data:** 2026-11-21
 - **Status:** Aceita
-- **Contexto:** a autora escolheu oferecer outros logins sociais além do Google (RF-056). Entrar com Apple exige o programa de desenvolvedor da Apple, que custa US$ 99 por ano, cerca de US$ 8 por mês.
+- **Contexto:** a autora escolheu oferecer outros logins sociais além do Google (RF-005). Entrar com Apple exige o programa de desenvolvedor da Apple, que custa US$ 99 por ano, cerca de US$ 8 por mês.
 - **Decisão:** a autora pediu para incluir a Apple mesmo assim ("Adicionar isso"). O GitHub e a Apple são os exemplos de provedores, e o dono escolhe quais ficam ativos.
 - **Alternativas consideradas:** oferecer só o GitHub, que é gratuito.
 - **Consequências:** o custo da Apple entra no teto de US$ 15 por mês (D-022), deixando cerca de US$ 7 por mês para a IA, as imagens e os e-mails. Como o provedor é opcional, a Apple pode ficar desativada enquanto o custo não couber.
@@ -244,7 +244,7 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Data:** 2026-11-21
 - **Status:** Aceita
 - **Contexto:** ao completar os Requisitos, a autora perguntou "Mais alguma ideia?" e escolheu, entre as sugestões, o que entra além do mínimo da Definição.
-- **Decisão:** entram tempo estimado de leitura, coautoria, prévia do rascunho por link privado, séries de artigos, menções com @nickname, reações em comentários, desativação temporária da conta, prazo de carência para a exclusão, recurso do autor contra ocultações e penalidades, lista de palavras bloqueadas, modo de manutenção e anúncios da plataforma (RF-116 a RF-127).
+- **Decisão:** entram tempo estimado de leitura, coautoria, prévia do rascunho por link privado, séries de artigos, menções com @nickname, reações em comentários, desativação temporária da conta, prazo de carência para a exclusão, recurso do autor contra ocultações e penalidades, lista de palavras bloqueadas, modo de manutenção e anúncios da plataforma (RF-028, RF-029, RF-046, RF-053, RF-054, RF-055, RF-072, RF-074, RF-087, RF-088, RF-115 e RF-116).
 - **Alternativas consideradas:** ficar só no mínimo da Definição.
 - **Consequências:** as séries, que tinham ficado de fora da Definição (D-023), entram como requisito além do mínimo; o feed RSS continua de fora. Os prazos (validade da prévia, carência da exclusão) e as listas (palavras bloqueadas) ficam nas Regras de Negócio e são ajustáveis pelo dono.
 
@@ -253,6 +253,17 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Data:** 2026-11-21
 - **Status:** Aceita
 - **Contexto:** na revisão dos Requisitos, a autora aceitou as ideias sugeridas e perguntou: "onde fica as ideias do dono ter acesso a numero de acessos, paginas mais usadas, e etc".
-- **Decisão:** entram a retirada do papel de autor, o resumo diário de avisos por e-mail, fechar e fixar comentários, restaurar backups, exportar os próprios artigos e o limite de requisições em toda a API. O dono ganha estatísticas agregadas de acesso, da comunidade, do uso e do custo dos serviços pagos e métricas técnicas (RF-128 a RF-137, RNF-035).
-- **Alternativas consideradas:** deixar as métricas do dono só no nível genérico do RF-112.
-- **Consequências:** as estatísticas são sempre agregadas e não rastreiam pessoas (RNF-023). Contar visitantes sem identificar ninguém e estimar regiões a partir do IP são decisões da Arquitetura. O painel de custos ajuda a manter o teto de US$ 15 por mês (D-022).
+- **Decisão:** entram a retirada do papel de autor, o resumo diário de avisos por e-mail, fechar e fixar comentários, restaurar backups, exportar os próprios artigos e o limite de requisições em toda a API. O dono ganha estatísticas agregadas de acesso, da comunidade, do uso e do custo dos serviços pagos e métricas técnicas (RF-037, RF-058, RF-070, RF-071, RF-083, RF-101, RF-106, RF-107, RF-108 e RF-109, RNF-010).
+- **Alternativas consideradas:** deixar as métricas do dono só no nível genérico do RF-105.
+- **Consequências:** as estatísticas são sempre agregadas e não rastreiam pessoas (RNF-013). Contar visitantes sem identificar ninguém e estimar regiões a partir do IP são decisões da Arquitetura. O painel de custos ajuda a manter o teto de US$ 15 por mês (D-022).
+
+## D-028: Renumeração dos requisitos na ordem do documento
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** com a revisão, os requisitos ganharam números fora de ordem dentro de cada seção, o que dificultava a leitura. A autora pediu: "renumera por favor, mas a ordem certa".
+- **Decisão:** os requisitos funcionais e não funcionais passam a ser numerados na ordem em que aparecem nos Requisitos (versão 6.0). As referências nas Regras de Negócio, no Roadmap, na Arquitetura, nestas Decisões, no template de issue e no `CLAUDE.md` foram atualizadas. O relatório de testes de 2026-11-15 não é editado e continua com os números antigos.
+- **Alternativas consideradas:** manter os números antigos fora de ordem; numerar por módulo (por exemplo, RF-ID-01), que evita renumerações futuras, mas muda o formato usado em todo o projeto.
+- **Consequências:** uma renumeração futura segue o mesmo procedimento e é registrada aqui. Correspondência entre os números antigos e os novos (os que não aparecem aqui não mudaram: RF-001, RF-002, RF-003, RF-004, RF-113, RF-114, RNF-001, RNF-002, RNF-003, RNF-004, RNF-005, RNF-006, RNF-007, RNF-008):
+  - Funcionais: RF-005 → RF-009; RF-006 → RF-010; RF-007 → RF-011; RF-008 → RF-013; RF-009 → RF-014; RF-010 → RF-015; RF-011 → RF-016; RF-012 → RF-021; RF-020 → RF-034; RF-021 → RF-035; RF-022 → RF-059; RF-023 → RF-048; RF-024 → RF-056; RF-025 → RF-057; RF-026 → RF-045; RF-030 → RF-069; RF-031 → RF-073; RF-032 → RF-075; RF-033 → RF-076; RF-040 → RF-084; RF-041 → RF-085; RF-050 → RF-017; RF-051 → RF-008; RF-052 → RF-022; RF-053 → RF-023; RF-054 → RF-006; RF-055 → RF-007; RF-056 → RF-005; RF-057 → RF-018; RF-058 → RF-020; RF-059 → RF-019; RF-060 → RF-012; RF-061 → RF-024; RF-062 → RF-025; RF-063 → RF-026; RF-064 → RF-027; RF-065 → RF-030; RF-066 → RF-031; RF-067 → RF-032; RF-068 → RF-033; RF-069 → RF-036; RF-070 → RF-038; RF-071 → RF-039; RF-072 → RF-040; RF-073 → RF-041; RF-074 → RF-042; RF-075 → RF-049; RF-076 → RF-050; RF-077 → RF-051; RF-078 → RF-052; RF-079 → RF-047; RF-080 → RF-044; RF-081 → RF-060; RF-082 → RF-061; RF-083 → RF-062; RF-084 → RF-063; RF-085 → RF-064; RF-086 → RF-065; RF-087 → RF-066; RF-088 → RF-068; RF-089 → RF-077; RF-090 → RF-078; RF-091 → RF-067; RF-092 → RF-079; RF-093 → RF-080; RF-094 → RF-081; RF-095 → RF-082; RF-096 → RF-086; RF-097 → RF-089; RF-098 → RF-090; RF-099 → RF-091; RF-100 → RF-092; RF-101 → RF-093; RF-102 → RF-094; RF-103 → RF-095; RF-104 → RF-096; RF-105 → RF-097; RF-106 → RF-098; RF-107 → RF-099; RF-108 → RF-100; RF-109 → RF-102; RF-110 → RF-103; RF-111 → RF-104; RF-112 → RF-105; RF-115 → RF-043; RF-116 → RF-046; RF-117 → RF-053; RF-118 → RF-055; RF-119 → RF-054; RF-120 → RF-072; RF-121 → RF-074; RF-122 → RF-028; RF-123 → RF-029; RF-124 → RF-087; RF-125 → RF-088; RF-126 → RF-115; RF-127 → RF-116; RF-128 → RF-037; RF-129 → RF-083; RF-130 → RF-070; RF-131 → RF-071; RF-132 → RF-101; RF-133 → RF-058; RF-134 → RF-106; RF-135 → RF-107; RF-136 → RF-108; RF-137 → RF-109; RF-138 → RF-110; RF-139 → RF-111; RF-140 → RF-112.
+  - Não funcionais: RNF-009 → RNF-018; RNF-010 → RNF-019; RNF-011 → RNF-020; RNF-012 → RNF-022; RNF-013 → RNF-024; RNF-014 → RNF-025; RNF-015 → RNF-026; RNF-016 → RNF-027; RNF-017 → RNF-030; RNF-018 → RNF-031; RNF-019 → RNF-032; RNF-020 → RNF-009; RNF-021 → RNF-011; RNF-022 → RNF-012; RNF-023 → RNF-013; RNF-024 → RNF-014; RNF-025 → RNF-015; RNF-026 → RNF-016; RNF-027 → RNF-017; RNF-028 → RNF-029; RNF-029 → RNF-021; RNF-030 → RNF-023; RNF-031 → RNF-028; RNF-032 → RNF-033; RNF-033 → RNF-034; RNF-034 → RNF-035; RNF-035 → RNF-010.
