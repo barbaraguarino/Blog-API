@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 10.0 · **Última modificação:** 21/11/2026
+**Versão:** 10.1 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -30,7 +30,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-011** – O sistema deve permitir que o usuário encerre a sessão atual (logout).
 - **RF-012** – O sistema deve permitir que o usuário visualize as próprias sessões ativas e encerre qualquer uma delas.
 - **RF-013** – O sistema deve mostrar ao usuário o histórico dos acessos recentes à conta, com data, dispositivo e local aproximado.
-- **RF-014** – O sistema deve exigir que o usuário confirme o e-mail, por meio de um código enviado a ele, para ativar uma conta criada com e-mail e senha, e permitir que ele peça um novo código.
+- **RF-014** – O sistema deve exigir que o usuário confirme o e-mail, por meio de um código enviado a ele, antes de usar uma conta criada com e-mail e senha, e permitir que ele peça um novo código.
 - **RF-015** – O sistema deve permitir que o usuário redefina a senha esquecida por meio de um código enviado ao e-mail cadastrado.
 - **RF-016** – O sistema deve permitir que o usuário autenticado altere a própria senha, informando a senha atual e um código enviado ao e-mail.
 - **RF-017** – O sistema deve permitir que o usuário ative e desative a verificação em duas etapas com um aplicativo autenticador, recebendo códigos de recuperação de uso único.
