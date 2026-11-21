@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 3.0 · **Última modificação:** 21/11/2026
+**Versão:** 3.1 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -103,7 +103,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-032** – O sistema deve permitir que o usuário autenticado siga e deixe de seguir autores.
 - **RF-033** – O sistema deve exibir ao usuário autenticado um feed com os artigos recentes dos autores que ele segue.
 - **RF-089** – O sistema deve permitir que o usuário bloqueie outros usuários, que deixam de poder comentar nos artigos dele, responder a ele e segui-lo, e desfaça o bloqueio.
-- **RF-090** – O sistema deve exibir o perfil público de cada autor, apenas com os dados que ele escolheu mostrar, e os artigos publicados por ele.
+- **RF-090** – O sistema deve exibir o perfil público de cada usuário, apenas com os dados que ele escolheu mostrar, e, no caso dos autores, os artigos publicados por eles.
 
 ### 1.7 Notificações
 
@@ -117,13 +117,13 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-040** – O sistema deve permitir que o usuário autenticado denuncie artigos e comentários.
 - **RF-041** – O sistema deve permitir que o moderador e o administrador analisem as denúncias e apliquem ações de moderação, como arquivar a denúncia, ocultar o conteúdo, remover comentários ou penalizar o autor.
 - **RF-096** – O sistema deve informar a quem denunciou o resultado da análise.
+- **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e o recurso deve ser analisado por outra pessoa da equipe de moderação.
+- **RF-125** – O sistema deve permitir que o dono configure uma lista de palavras bloqueadas, que impede a publicação de comentários que as contenham.
 
 ### 1.9 Painéis
 
 - **RF-097** – O sistema deve oferecer a todo usuário cadastrado um painel com os próprios dados e configurações de privacidade, sessões, histórico de interesses, listas de leitura, usuários bloqueados, pedidos feitos e o resultado das denúncias que ele fez.
 - **RF-098** – O sistema deve oferecer a cada autor um painel com os próprios artigos, rascunhos e agendamentos, o histórico de revisões, as versões de idioma, estatísticas agregadas por artigo e idioma (leituras, reações e comentários) e o número de seguidores.
-- **RF-124** – O sistema deve permitir que o autor recorra de uma ocultação ou penalidade, e o recurso deve ser analisado por outra pessoa da equipe de moderação.
-- **RF-125** – O sistema deve permitir que o dono configure uma lista de palavras bloqueadas, que impede a publicação de comentários que as contenham.
 - **RF-099** – O sistema deve oferecer à administração um painel com a lista de autores, a atividade de cada um e os pedidos de autoria pendentes.
 - **RF-100** – O sistema deve oferecer aos autores um espaço comum, em que a administração publica avisos e diretrizes de escrita.
 - **RF-101** – O sistema deve oferecer aos moderadores e à administração um painel com a fila de denúncias por motivo, o conteúdo ocultado e o tempo médio de resolução.
@@ -141,7 +141,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-110** – O sistema deve permitir que a administração suspenda e reative contas.
 - **RF-111** – O sistema deve permitir que o dono ajuste as regras da plataforma, como prazos, quantidade de aprovações e limites de uso, dentro de limites seguros, guardando o histórico de cada mudança.
 - **RF-112** – O sistema deve mostrar ao dono métricas agregadas de uso e de desempenho e a saúde do sistema.
-- **RF-113** – O sistema deve permitir que o dono consulte os logs técnicos e de segurança.
+- **RF-113** – O sistema deve permitir que o dono, e só ele, consulte os logs técnicos e de segurança.
 - **RF-114** – O sistema deve registrar todas as ações administrativas, com quem fez, o quê e quando, e mostrar esse registro ao dono.
 - **RF-126** – O sistema deve permitir que o dono coloque a plataforma em modo de manutenção, em que só a equipe consegue acessá-la.
 - **RF-127** – O sistema deve permitir que o dono publique anúncios para todos os usuários, enviados como aviso dentro da plataforma.
@@ -194,7 +194,7 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RNF-014** – O sistema deve trocar dados com os clientes apenas por meio de DTOs, sem expor as entidades do banco.
 - **RNF-015** – O sistema deve ter um teste automatizado para cada classe de produção.
 - **RNF-016** – O sistema deve registrar em log os erros internos com a causa original e responder ao cliente com uma mensagem genérica, sem detalhes técnicos.
-- **RNF-031** – Os testes automatizados não devem chamar serviços externos de verdade.
+- **RNF-031** – O sistema deve ser testado sem chamar serviços externos de verdade.
 
 ### 2.7 Dados e compatibilidade
 
