@@ -144,3 +144,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** "Um Kanban simples." O trabalho flui por um quadro no GitHub Projects, puxando uma issue de cada vez, sem Sprints, sem Story Points e sem cerimônias. As versões continuam sendo os Milestones do Roadmap, e a documentação de Engenharia de Software continua em `docs/`.
 - **Alternativas consideradas:** manter o Scrum adaptado (D-014), que exigia planejar Sprints, estimar pontos e fazer reuniões consigo mesma; usar só issues e milestones, sem quadro, que perde a visão do que está em andamento.
 - **Consequências:** o `Processo_de_Desenvolvimento.md` foi reescrito para Kanban. Os campos *Iteration* e *Story Points* deixam de ser necessários no Projects. A Definição de Preparado e a Definição de Pronto continuam valendo, como regras das colunas do quadro.
+
+## D-016: Docker como a última tarefa do projeto
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** o projeto é construído como um produto real, pronto para ser publicado, mas sem deploy. O Docker estava fora do escopo, e a autora decidiu incluí-lo como tema de estudo.
+- **Decisão:** nas palavras da autora: "se vamos usar Docker ele deve ser a última coisa, a última tarefa." A API e o banco passam a ter execução com Docker, entregue depois de todas as funcionalidades.
+- **Alternativas consideradas:** deixar o Docker fora do escopo, como antes; adotá-lo já no início, o que mudaria o ambiente de desenvolvimento no meio das funcionalidades.
+- **Consequências:** até a última tarefa, a API e o PostgreSQL continuam rodando diretamente na máquina (RNF-019). O Roadmap precisa reservar essa tarefa para o fim.

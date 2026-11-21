@@ -42,29 +42,29 @@ Em volta disso estão as funcionalidades de base de um blog com comunidade: arti
 
 ## 4. Objetivos
 
-### 4.1 Objetivo geral
+O objetivo geral é desenvolver uma API REST segura, testada e documentada para uma plataforma de blog com vários autores, que proteja os dados de quem a usa e use a inteligência artificial para apoiar a leitura e a escrita.
 
-Desenvolver uma API REST segura, testada e documentada que sirva de base para uma plataforma de blog com comunidade.
+Para isso, o projeto deve:
 
-### 4.2 Objetivos específicos
+1. oferecer cadastro e login com e-mail e senha ou com conta Google, com as contas protegidas por confirmação de e-mail, recuperação de senha, sessões revogáveis e verificação em duas etapas;
+2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público e consultar e excluir os próprios dados;
+3. permitir que autores aprovados por um administrador criem, editem e publiquem artigos organizados por categorias e tags, com imagens e com versões em vários idiomas;
+4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões e recomendar artigos de acordo com os interesses de cada leitor;
+5. permitir que leitores busquem, comentem, reajam, sigam autores e acompanhem um feed;
+6. oferecer ferramentas de moderação para tratar denúncias;
+7. responder em português e em inglês, conforme o idioma do cliente, com a estrutura pronta para receber novos idiomas;
+8. manter todo o código testado e a documentação de acordo com o que está implementado.
 
-1. Oferecer cadastro e login com e-mail e senha ou com conta Google.
-2. Proteger as contas com confirmação de e-mail, recuperação de senha, sessões revogáveis e verificação em duas etapas.
-3. Controlar quem pode publicar, por meio de um fluxo de pedido e aprovação de autoria.
-4. Permitir que autores criem, editem e publiquem artigos organizados por categorias e tags, com imagens.
-5. Permitir que leitores busquem, comentem, reajam, sigam autores e acompanhem um feed.
-6. Oferecer ferramentas de moderação para tratar denúncias.
-7. Responder em português e inglês, conforme o idioma do cliente.
-8. Manter todo o código testado e a documentação sempre de acordo com o que está implementado.
+Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 
-### 4.3 Objetivo de aprendizado
-
-O Blog-API também é um projeto de estudo e portfólio. Ele exercita, em um domínio fácil de entender:
-- autenticação e autorização (JWT, OAuth2 com Google, 2FA);
+- autenticação e autorização (JWT, login com Google e verificação em duas etapas);
+- privacidade e proteção de dados pessoais, seguindo os princípios da LGPD;
+- integração com modelos de inteligência artificial;
 - modelagem de domínio e regras de negócio;
-- integração com serviços externos (Google, e-mail, AWS S3);
+- integração com serviços externos (Google, e-mail e armazenamento de imagens);
 - arquitetura limpa e testes automatizados;
-- um processo de desenvolvimento com Kanban e documentação.
+- um processo de desenvolvimento com Kanban e documentação de Engenharia de Software;
+- conteinerização com Docker, como a última etapa do projeto.
 
 ## 5. Público e perfis de usuário
 
@@ -94,10 +94,10 @@ A lista completa e formal está em [Requisitos.md](Requisitos.md), e as regras d
 - A API REST completa dos módulos acima.
 - A documentação do projeto e a documentação interativa da API.
 - Os testes automatizados de todas as classes.
+- A execução da API e do banco com Docker, como a última tarefa do projeto. Até lá, os dois rodam diretamente na máquina.
 
 ### 7.2 O projeto não inclui
 - **Front-end:** o foco é o backend.
-- **Docker:** a API e o banco rodam localmente nesta fase.
 - **Editor de texto rico:** o conteúdo chega pronto do cliente.
 - **Monetização, anúncios, newsletter, notificações push ou chat.**
 - **Publicação em produção:** o projeto roda em ambiente local.
