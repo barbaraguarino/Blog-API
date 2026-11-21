@@ -61,7 +61,7 @@ timeline
   - recuperação de senha e troca de senha com código;
   - correção das divergências D1 a D5;
   - testes para as classes que ainda não têm.
-- **Requisitos:** RF-009, RF-010, RF-011, RF-013, RF-014 e RF-015 · RNF-004, RNF-006, RNF-007, RNF-020, RNF-026.
+- **Requisitos:** RF-010, RF-011, RF-012, RF-014, RF-015 e RF-016 · RNF-004, RNF-006, RNF-007, RNF-027, RNF-033.
 - **Dependências internas:**
   ```mermaid
   flowchart LR
@@ -84,7 +84,7 @@ timeline
   - tags;
   - upload de avatar e capa no AWS S3;
   - listagens paginadas.
-- **Requisitos:** RF-034, RF-035, RF-051, RF-062, RF-063 e RF-065 · RNF-022.
+- **Requisitos:** RF-036, RF-037, RF-053, RF-066, RF-067 e RF-070 · RNF-029.
 - **Novo na arquitetura:** módulo `article`, `StorageGateway` e autorização por papel com `@PreAuthorize`.
 - **Concluída quando:** um autor aprovado conseguir publicar um artigo com capa, categoria e tags, e um visitante conseguir lê-lo nas listagens públicas.
 
@@ -92,7 +92,7 @@ timeline
 
 - **Objetivo:** transformar leitores em comunidade.
 - **Entregas:** comentários com respostas, reações, seguidores, feed e busca de artigos.
-- **Requisitos:** RF-048, RF-077, RF-081, RF-083 e RF-085.
+- **Requisitos:** RF-050, RF-082, RF-086, RF-088 e RF-090.
 - **Novo na arquitetura:** módulo `social` e busca textual no PostgreSQL.
 - **Concluída quando:** um leitor conseguir encontrar um artigo pela busca, comentá-lo, reagir, seguir o autor e ver os próximos artigos dele no feed.
 
@@ -100,7 +100,7 @@ timeline
 
 - **Objetivo:** manter a comunidade saudável e oferecer proteção extra às contas.
 - **Entregas:** denúncias, painel de moderação com ações e registro, 2FA com app autenticador e vínculo e desvínculo de conta Google.
-- **Requisitos:** RF-016, RF-021, RF-093, RF-094.
+- **Requisitos:** RF-017, RF-022, RF-098, RF-099.
 - **Novo na arquitetura:** módulo `moderation` e segundo fator no fluxo de login.
 - **Concluída quando:** um conteúdo denunciado puder ser ocultado por um moderador, e um usuário conseguir entrar exigindo o código do app autenticador.
 

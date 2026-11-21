@@ -15,7 +15,7 @@ body:
     attributes:
       label: Requisitos e regras atendidos
       description: IDs de docs/Requisitos.md e docs/Regras_de_Negócio.md.
-      placeholder: "RF-009, RN-011, RN-012"
+      placeholder: "RF-010, RN-011, RN-012"
     validations:
       required: false
   - type: textarea
