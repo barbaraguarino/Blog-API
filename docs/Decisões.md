@@ -207,3 +207,16 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** os serviços pagos são o Claude Haiku 5.5 (IA), o AWS S3 (imagens) e o AWS SES (e-mails), com um teto de US$ 15 por mês somando todos.
 - **Alternativas consideradas:** só serviços gratuitos ou locais (disco local para imagens, servidor de e-mail de teste e modelo de IA local), que evitam custo mas fogem dos serviços usados em produtos reais.
 - **Consequências:** a API limita o uso da IA e o envio de e-mails, por usuário e no total, para que nenhum uso inesperado estoure o teto. A autora configura alertas de gasto nas contas da Anthropic e da AWS. Todos os serviços ficam atrás de gateways e são simulados nos testes, que nunca geram custo.
+
+## D-023: Funcionalidades acrescentadas para fechar o escopo
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** para a Definição do Projeto não mudar a cada nova ideia, a autora pediu para avaliar o que mais seria interessante acrescentar antes de seguir para os outros documentos.
+- **Decisão:** a autora escolheu, entre as sugestões:
+  - privacidade e segurança: exportação dos próprios dados, termos de uso e política de privacidade com aceite registrado, alerta por e-mail de acesso em dispositivo novo e bloqueio de usuários;
+  - conteúdo: listas para ler depois, agendamento da publicação e histórico de revisões;
+  - inteligência artificial: resumo automático, sugestão de tags e de categoria, triagem de moderação e texto alternativo para imagens;
+  - plataforma do dono: identidade da plataforma, páginas institucionais, convites por e-mail e backup da plataforma.
+- **Alternativas consideradas:** séries de artigos e feed RSS, que ficaram de fora.
+- **Consequências:** a triagem de moderação recebe só o texto do conteúdo, sem dados de quem o escreveu, e nunca remove nada sozinha. O texto alternativo usa imagens, o que custa mais tokens, e entra nos limites de uso que protegem o teto de US$ 15 por mês (D-022).
