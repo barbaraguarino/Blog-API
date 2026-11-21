@@ -320,3 +320,18 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
   - Os Requisitos dizem só o que deve existir: "Deve ficar no documento o que deve ter e somente isso". Regras vão para as Regras de Negócio, detalhes de entrega para os critérios de aceite das issues e o como fazer para a Arquitetura.
 - **Alternativas consideradas:** versionar só pelo Git, sem cabeçalho nos documentos.
 - **Consequências:** cada revisão atualiza a versão e a data. A numeração dos requisitos segue a ordem do documento, com cada renumeração registrada aqui (D-028).
+
+## D-033: Formato das Regras de Negócio, respostas no cadastro e valores em aberto
+
+- **Data:** 2026-11-21
+- **Status:** Aceita
+- **Contexto:** a revisão das Regras de Negócio precisava de um formato que comportasse as regras dos requisitos novos, de uma solução para o conflito entre a RN-001, que devolvia `409` para um e-mail já cadastrado, e o RNF-013, que pede respostas que não revelem quais contas existem, e dos valores que a D-031 deixou em aberto. A autora aprovou as propostas: "Aprovo tudo".
+- **Decisão:**
+  - As regras são numeradas na ordem do documento, como os Requisitos (D-028), e cada renumeração é registrada aqui. O documento ganha o cabeçalho de versão e data (D-032), começando na versão 1.0.
+  - Cada regra é escrita em texto corrido, com o erro e os requisitos em lista. As regras ajustáveis pelo dono são marcadas com ⚙️ e informam o padrão e o intervalo seguro. Só o perfil de testes aceita valores fora do intervalo.
+  - O cadastro com e-mail e senha responde sempre `202 Accepted`, com a mesma mensagem. Se o e-mail já pertencer a uma conta, nada é criado, e o próprio endereço recebe um aviso da tentativa.
+  - No cadastro com Google ou outro provedor social, o token prova que a pessoa é dona do e-mail, então a resposta pode ser clara: o identificador do provedor é conferido antes do e-mail, cada caso tem a sua mensagem (`409`), e as contas nunca são vinculadas automaticamente. Isso corrige a divergência D2.
+  - Nova divergência D6: o login confere se a conta está ativa antes de conferir a senha, e assim uma senha errada em uma conta suspensa revela que ela existe. A situação da conta passa a ser conferida só depois da senha.
+  - Valores padrão que estavam em aberto na D-031: a tradução automática oferece português, inglês e espanhol, e o dono escolhe entre os idiomas suportados; o link de prévia vale 7 dias (de 1 a 30); a carência da exclusão de conta é de 30 dias (de 7 a 30); o dispositivo confiável vale 30 dias (de 1 a 90); a idade mínima é de 18 anos (de 16 a 18).
+- **Alternativas consideradas:** manter os blocos de números por módulo, que estourariam com as regras novas; manter o `409` no cadastro, que revela quais e-mails estão cadastrados.
+- **Consequências:** a idade mínima abaixo de 18 anos só deve ser liberada depois de conferir a Lei 15.211/2025 (ECA Digital). Os limites de trabalho em andamento do Kanban, a última questão em aberto da D-031, ficam para a revisão do Processo de Desenvolvimento.

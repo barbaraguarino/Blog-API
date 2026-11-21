@@ -1,15 +1,23 @@
 # Regras de Negócio
 
-Este documento reúne as **regras que o sistema obedece**: validações, restrições, permissões e comportamentos esperados. Cada regra tem um identificador (RN-xxx), a explicação do **porquê** ela existe, um exemplo e o erro que o cliente recebe quando ela é violada. Os requisitos que as regras detalham estão em [Requisitos.md](Requisitos.md).
+**Versão:** 1.0 · **Última modificação:** 21/11/2026
+
+Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
 ---
 
 ## 1. Como ler este documento
 
+Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê, e, quando pode ser violada, qual erro o cliente recebe. As regras são numeradas na ordem em que aparecem neste documento. Uma regra nova entra na seção do seu módulo e, quando necessário, a numeração é refeita e registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos. Os requisitos que as regras detalham estão em [Requisitos.md](Requisitos.md).
+
 - **Status:** ✅ implementado · 🟡 parcial · ⬜ planejado.
-- **Regras implementadas** descrevem o comportamento **atual** do código. Quando o código não cumpre totalmente a regra, a diferença aparece marcada com ⚠️ e está descrita na seção 5 (*Divergências conhecidas*).
-- **Erros:** status HTTP + **chave de i18n**. A chave é traduzida conforme o cabeçalho `Accept-Language` (pt-BR por padrão, ou en) e devolvida no campo `message` do `ErrorResponseDTO`. Para regras planejadas, a chave é uma proposta.
-- **Manutenção:** uma regra nova recebe o próximo número livre do bloco do módulo. Toda regra implementada tem pelo menos um teste que cita o ID no `@DisplayName`. Uma regra que muda é editada aqui no mesmo PR da mudança de código.
+- **Divergências:** quando o código não cumpre totalmente uma regra já implementada, ela recebe a marca ⚠️, e a diferença é descrita na seção *Divergências conhecidas*.
+- **Erros:** status HTTP e chave de i18n, traduzida conforme o cabeçalho `Accept-Language` e devolvida no campo `message`. Nas regras planejadas, a chave é uma proposta.
+- **Testes:** toda regra implementada tem pelo menos um teste que cita o ID no `@DisplayName`, e uma regra que muda é atualizada aqui no mesmo PR da mudança de código.
+
+### Regras ajustáveis pelo dono
+
+Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão. O dono pode ajustá-los pela API (RF-119), sempre dentro de um intervalo seguro definido no código, e cada mudança guarda quem a fez, quando, o valor anterior e o novo. Só o perfil de testes aceita valores fora desse intervalo, para que os testes não precisem esperar prazos reais; fora dele, a API não sobe com um valor inseguro. Cada regra ajustável informa o padrão e o intervalo, como em "⚙️ padrão: 2 meses · intervalo: 2 a 12 meses".
 
 ### Formato de erro
 
@@ -17,11 +25,11 @@ Toda violação de regra devolve um corpo neste formato:
 
 ```json
 {
-  "timestamp": "2026-11-15T14:32:10.123",
-  "status": 409,
-  "error": "Conflict",
-  "message": "Já existe um usuário cadastrado com este e-mail.",
-  "path": "/api/v1/register"
+  "timestamp": "2026-11-21T14:32:10.123",
+  "status": 422,
+  "error": "Unprocessable Entity",
+  "message": "A conta precisa ter mais de 2 meses para pedir autoria.",
+  "path": "/api/v1/author-requests"
 }
 ```
 
