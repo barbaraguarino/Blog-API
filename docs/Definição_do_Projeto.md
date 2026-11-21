@@ -2,9 +2,17 @@
 
 ## 1. Apresentação
 
-O **Blog-API** é o backend de uma plataforma de publicações com comunidade. Leitores encontram, comentam e reagem a artigos; autores aprovados publicam conteúdo organizado por categorias e tags; e uma equipe de moderação mantém o ambiente saudável.
+O Blog-API é o backend de uma plataforma de blog com vários autores e de tema livre. Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem quer escrever pede autorização e passa a publicar depois de aprovado. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
-O projeto entrega **somente a API REST**: qualquer front-end, web ou mobile, pode consumi-la. Ele é desenvolvido em **Java com Spring Boot** e **PostgreSQL**, seguindo o método **Scrum** com documentação de Engenharia de Software.
+Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso de inteligência artificial a serviço da leitura e da escrita.
+
+As contas são protegidas com confirmação de e-mail, sessões revogáveis, verificação em duas etapas e senhas guardadas apenas como hash. A API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
+
+Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses de cada leitor, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto.
+
+O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, em versões incrementais, e acompanhado da documentação de Engenharia de Software.
+
+O Blog-API é um projeto de estudo e de portfólio. Ele é construído como um produto real, pronto para ser publicado, mas não será colocado em produção nem aberto ao público. O objetivo é praticar, de ponta a ponta, o desenvolvimento de um backend seguro, testado e bem documentado.
 
 ## 2. O problema
 
