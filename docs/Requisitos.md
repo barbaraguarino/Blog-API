@@ -17,16 +17,23 @@ Cada requisito tem um identificador único, que é citado nas issues, nas [Regra
 - **RF-002** – O sistema deve permitir que o visitante se cadastre usando uma conta Google cujo e-mail tenha sido verificado pelo Google, aceitando os termos de uso e a política de privacidade.
 - **RF-003** – O sistema deve permitir que o usuário se autentique informando o e-mail ou o nickname e a senha.
 - **RF-004** – O sistema deve permitir que o usuário se autentique usando a conta Google vinculada.
+- **RF-056** – O sistema deve permitir o cadastro e o login com outros provedores sociais, como o GitHub, e o dono deve escolher quais provedores ficam ativos na plataforma.
+- **RF-054** – O sistema deve permitir que o usuário cadastre, use e remova passkeys para entrar sem senha.
+- **RF-055** – O sistema deve permitir que o usuário entre sem senha, com um código de uso único enviado ao e-mail cadastrado.
 - **RF-051** – O sistema deve impedir o acesso de contas não ativadas ou suspensas, em qualquer forma de login.
 - **RF-005** – O sistema deve renovar o acesso do usuário autenticado, sem exigir um novo login, enquanto a sessão dele for válida.
 - **RF-006** – O sistema deve permitir que o usuário encerre a sessão atual (logout).
 - **RF-007** – O sistema deve permitir que o usuário visualize as próprias sessões ativas e encerre qualquer uma delas.
+- **RF-060** – O sistema deve mostrar ao usuário o histórico dos acessos recentes à conta, com data, dispositivo e local aproximado.
 - **RF-008** – O sistema deve exigir que o usuário confirme o e-mail, por meio de um código enviado a ele, para ativar uma conta criada com e-mail e senha, e permitir que ele peça um novo código.
 - **RF-009** – O sistema deve permitir que o usuário redefina a senha esquecida por meio de um código enviado ao e-mail cadastrado.
 - **RF-010** – O sistema deve permitir que o usuário autenticado altere a própria senha, informando a senha atual e um código enviado ao e-mail.
 - **RF-011** – O sistema deve permitir que o usuário ative e desative a verificação em duas etapas com um aplicativo autenticador, recebendo códigos de recuperação de uso único.
 - **RF-050** – O sistema deve exigir o código do aplicativo autenticador, ou um código de recuperação, no login dos usuários que ativaram a verificação em duas etapas.
-- **RF-012** – O sistema deve permitir que o usuário vincule e desvincule uma conta Google à sua conta.
+- **RF-057** – O sistema deve permitir que o usuário marque um dispositivo como confiável, dispensando o código da verificação em duas etapas nele por um período limitado, e desfaça essa marcação.
+- **RF-059** – O sistema deve exigir que moderadores, administradores e o superadministrador tenham a verificação em duas etapas ativa para usar as funções desses papéis.
+- **RF-058** – O sistema deve pedir a senha ou um código de verificação de novo antes de ações sensíveis, como trocar o e-mail, desativar a verificação em duas etapas ou excluir a conta, mesmo com o usuário autenticado.
+- **RF-012** – O sistema deve permitir que o usuário vincule e desvincule uma conta Google, ou de outro provedor social ativo, à sua conta.
 - **RF-052** – O sistema deve permitir que o usuário edite o próprio perfil: nome, foto, descrição e nickname, com um limite de frequência para a troca do nickname.
 - **RF-053** – O sistema deve permitir que o usuário troque o e-mail da conta, confirmando o novo endereço com um código e avisando o endereço antigo.
 
