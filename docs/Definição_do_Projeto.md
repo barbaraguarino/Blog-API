@@ -1,6 +1,6 @@
 # Definição do Projeto
 
-**Versão:** 2.1 · **Última modificação:** 21/11/2026
+**Versão:** 2.2 · **Última modificação:** 21/11/2026
 
 Este documento define o escopo mínimo do Blog-API, escrito como um acordo com um cliente. Neste projeto de estudo não há um cliente de verdade: a própria autora faz esse papel. Tudo o que está aqui deve ser entregue; o projeto pode ter mais, nunca menos. Uma mudança neste documento exige uma nova versão, aprovada pela autora.
 
@@ -16,7 +16,7 @@ A segurança e a privacidade não são um complemento: a API coleta só os dados
 
 Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê, ajuda os autores a escrever, sugerindo correções e melhorias no texto, e indica à moderação o que analisar primeiro.
 
-O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java, com Spring Boot e PostgreSQL, e acompanhado de documentação de Engenharia de Software.
+O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile, e é acompanhado de documentação de Engenharia de Software.
 
 O Blog-API é um projeto de estudo e de portfólio. É feito como um produto real, pronto para ser publicado, mas não será colocado em produção nem aberto ao público. O objetivo é praticar, de ponta a ponta, o desenvolvimento de um backend seguro, testado e bem documentado.
 
@@ -147,7 +147,7 @@ O projeto não inclui:
 
 - front-end, nem mesmo as telas dos painéis ou os pop-ups de notificação: a API oferece tudo o que essas telas usariam;
 - vários blogs na mesma instalação: cada instalação da API é uma única plataforma, com o próprio banco de dados;
-- editor de texto: o conteúdo chega pronto do cliente, em um dos formatos aceitos;
+- editor de texto: o conteúdo chega pronto do front-end, em um dos formatos aceitos;
 - a publicação em produção: o projeto roda em ambiente local.
 
 Premissas e restrições:
