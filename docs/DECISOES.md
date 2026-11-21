@@ -102,3 +102,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Contexto:** a licença anterior era privada (todos os direitos reservados), o que impedia o uso do código por terceiros.
 - **Decisão:** adotar a licença MIT.
 - **Consequências:** qualquer pessoa pode usar, modificar e distribuir o código, desde que mantenha o aviso de copyright. O software é fornecido sem garantia.
+
+## D-011: Segurança do repositório público e das issues
+
+- **Data:** 2026-11-15
+- **Status:** Aceita
+- **Contexto:** o repositório é público (portfólio) e será operado também pelo Claude via `gh`. É preciso proteger segredos e a conta, evitar spam e impedir que conteúdo de terceiros seja tratado como instrução.
+- **Decisão:** issues públicas, mas travadas automaticamente quando abertas pela autora (workflow `lock-own-issues.yml`, que usa só o `gh` dos runners); quadro do GitHub Projects privado; `.gitignore` reforçado para chaves e credenciais; token do `gh` com escopos mínimos; checklist em `docs/SEGURANCA.md` e regras para o Claude no `CLAUDE.md`.
+- **Alternativas consideradas:** desativar as issues (`gh repo edit --enable-issues=false`), que esconde o planejamento do portfólio; deixar as issues abertas a comentários, que expõe a spam.
+- **Consequências:** terceiros não comentam nas issues da autora. O workflow só passa a valer depois de chegar à `main`; até lá, as issues são travadas manualmente ou pelo script de criação.
