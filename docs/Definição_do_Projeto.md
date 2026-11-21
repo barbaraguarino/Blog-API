@@ -2,7 +2,7 @@
 
 ## 1. Apresentação
 
-O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada instalação vira um blog diferente, como um blog de tecnologia, de livros ou de culinária, de acordo com o front-end e as categorias escolhidas por quem a administra. As regras de funcionamento, como prazos e aprovações, também podem ser ajustadas pelo dono de cada plataforma.
+O Blog-API é o backend genérico de uma plataforma de blog com vários autores. Ele não tem um tema próprio: cada instalação vira um blog diferente, como um blog de tecnologia, de livros ou de culinária, de acordo com o front-end e as categorias escolhidas por quem a administra. O dono de cada plataforma conta com uma área de administração completa, em que ajusta as regras de funcionamento, como prazos e aprovações, gerencia usuários e acompanha métricas e logs.
 
 Qualquer pessoa pode ler os artigos publicados. Leitores cadastrados comentam, reagem e seguem autores. Quem quer escrever pede autorização e passa a publicar depois de aprovado. Uma equipe de moderação cuida para que o ambiente continue saudável.
 
@@ -10,7 +10,7 @@ Dois pilares orientam o projeto: a segurança e a privacidade dos dados, e o uso
 
 As contas são protegidas com confirmação de e-mail, sessões revogáveis, verificação em duas etapas e senhas guardadas apenas como hash. A API coleta só os dados necessários, nunca expõe informações privadas de outros usuários e trata os dados pessoais com cuidado desde o desenho do sistema (*privacy by design*).
 
-Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses de cada leitor, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto. Além disso, o autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua.
+Com a inteligência artificial, a plataforma recomenda conteúdo de acordo com os interesses que cada leitor demonstra, traduz artigos para o idioma de quem lê e ajuda os autores a escrever, sugerindo correções e melhorias no texto. Além disso, o autor que escreve em mais de um idioma pode publicar várias versões do mesmo artigo, sem precisar criar um artigo para cada língua.
 
 O projeto entrega somente a API REST, que pode ser consumida por qualquer front-end, web ou mobile. Ele é construído em Java com Spring Boot e PostgreSQL, em versões incrementais, e acompanhado da documentação de Engenharia de Software.
 
@@ -26,7 +26,9 @@ O segundo é o idioma. Um artigo só alcança quem lê a língua em que ele foi 
 
 O terceiro é a própria escrita. Muita gente tem conhecimento para compartilhar, mas trava na hora de escrever, seja por erros de ortografia e gramática, pela dificuldade de organizar as ideias ou pela insegurança com o próprio texto.
 
-Por fim, encontrar o que ler também é difícil. Com muitos autores e temas, os artigos que interessariam a cada leitor se perdem entre os demais, e as listagens por data ou por popularidade mostram a mesma coisa para todo mundo.
+Encontrar o que ler também é difícil. Com muitos autores e temas, os artigos que interessariam a cada leitor se perdem entre os demais, e as listagens por data ou por popularidade mostram a mesma coisa para todo mundo.
+
+Por fim, quem quer criar uma comunidade de escrita sobre um tema, como livros ou tecnologia, tem duas saídas ruins: usar uma plataforma que não é sua, sem controle sobre as regras, os dados e o funcionamento, ou construir tudo do zero.
 
 ## 3. A proposta
 
@@ -38,24 +40,27 @@ Para vencer a barreira do idioma, cada artigo pode ter várias versões escritas
 
 Para apoiar a escrita, o autor pode pedir à IA a correção de ortografia e gramática e sugestões para melhorar o texto, sempre decidindo o que aceitar.
 
-Para ajudar o leitor a encontrar o que ler, a plataforma recomenda artigos de acordo com os interesses dele, além da busca por texto, categoria, tag e autor e do feed com os autores seguidos.
+Para ajudar o leitor a encontrar o que ler, a plataforma recomenda artigos a partir de sinais que ele mesmo dá, como os autores que segue, as reações e as tags de interesse, com um histórico que ele pode ver, limpar ou desligar. Também há a busca por texto, categoria, tag e autor e o feed com os autores seguidos.
+
+Para quem quer criar uma comunidade, o Blog-API é uma base pronta e genérica. O dono escolhe o tema pelo front-end e pelas categorias, ajusta as regras de autoria e de promoção e acompanha a plataforma por métricas agregadas e logs que respeitam a privacidade dos usuários.
 
 Em volta disso estão as funcionalidades de base de um blog com comunidade: artigos com rascunho e publicação, categorias e tags, pedido e aprovação de autoria, comentários, reações, seguidores e moderação do conteúdo denunciado.
 
 ## 4. Objetivos
 
-O objetivo geral é desenvolver uma API REST segura, testada e documentada para uma plataforma de blog com vários autores, que proteja os dados de quem a usa e use a inteligência artificial para apoiar a leitura e a escrita.
+O objetivo geral é desenvolver uma API REST segura, testada e documentada para uma plataforma de blog genérica, com vários autores e adaptável a qualquer tema, que proteja os dados de quem a usa e use a inteligência artificial para apoiar a leitura e a escrita.
 
 Para isso, o projeto deve:
 
 1. oferecer cadastro e login com e-mail e senha ou com conta Google, com as contas protegidas por confirmação de e-mail, recuperação de senha, sessões revogáveis e verificação em duas etapas;
 2. coletar só os dados necessários e dar ao usuário controle sobre eles, permitindo escolher o que aparece no perfil público e consultar e excluir os próprios dados;
-3. permitir que autores aprovados por um administrador criem, editem e publiquem artigos organizados por categorias e tags, com imagens e com versões em vários idiomas;
-4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões e recomendar artigos de acordo com os interesses de cada leitor;
+3. permitir que autores aprovados pela administração criem, editem e publiquem artigos organizados por categorias e tags, com imagens e com versões em vários idiomas;
+4. usar a inteligência artificial para traduzir os artigos que não tenham versão no idioma do leitor, ajudar os autores a escrever com correções e sugestões e recomendar artigos a partir dos sinais que cada leitor dá, sob o controle dele;
 5. permitir que leitores busquem, comentem, reajam, sigam autores e acompanhem um feed;
 6. oferecer ferramentas de moderação para tratar denúncias;
-7. responder em português e em inglês, conforme o idioma do cliente, com a estrutura pronta para receber novos idiomas;
-8. manter todo o código testado e a documentação de acordo com o que está implementado.
+7. oferecer ao dono uma administração completa da plataforma, com usuários e papéis, regras ajustáveis, métricas e logs que respeitam a privacidade;
+8. responder em português e em inglês, conforme o idioma do cliente, com a estrutura pronta para receber novos idiomas;
+9. manter todo o código testado e a documentação de acordo com o que está implementado.
 
 Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 
@@ -74,7 +79,7 @@ Como projeto de estudo e de portfólio, o Blog-API também serve para praticar:
 | Perfil | Quem é | O que pode fazer |
 |---|---|---|
 | Visitante | Pessoa sem login. | Ler e buscar artigos publicados, cadastrar-se e entrar. |
-| Leitor | Todo usuário cadastrado. | Comentar, reagir, seguir autores, denunciar conteúdo, gerenciar a própria conta e pedir para ser autor. |
+| Leitor | Todo usuário cadastrado. | Comentar, reagir, seguir autores, denunciar conteúdo, gerenciar a própria conta e os próprios dados e pedir para ser autor. |
 | Autor | Leitor com o pedido de autoria aprovado. | Tudo do leitor, mais escrever, publicar e gerenciar os próprios artigos. |
 | Moderador | Usuário escolhido por um administrador. | Tudo do leitor, mais analisar denúncias, ocultar conteúdo e remover comentários. Só escreve artigos se também for autor. |
 | Administrador | Moderador promovido. | Tudo do autor e do moderador, mais aprovar autores, conceder o papel de moderador, aprovar novos administradores, gerenciar categorias e aplicar penalidades. |
