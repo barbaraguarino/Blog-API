@@ -1,6 +1,6 @@
 # Requisitos
 
-**Versão:** 6.0 · **Última modificação:** 21/11/2026
+**Versão:** 7.0 · **Última modificação:** 21/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
@@ -74,7 +74,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-046** – O sistema deve informar o tempo estimado de leitura de cada artigo.
 - **RF-047** – O sistema deve permitir que o leitor salve artigos em listas privadas para ler depois.
 - **RF-048** – O sistema deve permitir que o autor crie, edite, salve como rascunho, publique e arquive os próprios artigos.
-- **RF-049** – O sistema deve aceitar o conteúdo dos artigos em Markdown, LaTeX, HTML com CSS ou texto puro, guardando o formato de cada artigo.
+- **RF-049** – O sistema deve aceitar o conteúdo dos artigos em Markdown, LaTeX, HTML com CSS ou texto puro, guardando o formato de cada artigo e, nos formatos que permitem, o alinhamento do texto (à esquerda, ao centro, à direita ou justificado).
 - **RF-050** – O sistema deve permitir que o autor agende a data e a hora de publicação de um artigo.
 - **RF-051** – O sistema deve guardar o histórico de revisões de cada artigo e permitir que o autor compare e restaure versões anteriores.
 - **RF-052** – O sistema deve permitir que o autor publique várias versões de idioma do mesmo artigo, que compartilham o mesmo endereço, os mesmos comentários e as mesmas reações.
@@ -82,7 +82,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RF-054** – O sistema deve permitir que o autor agrupe os próprios artigos em séries ordenadas.
 - **RF-055** – O sistema deve permitir que o autor gere um link privado, com prazo de validade e que pode ser revogado, para outra pessoa ler um rascunho antes da publicação.
 - **RF-056** – O sistema deve permitir que o autor associe tags aos artigos e que qualquer pessoa filtre os artigos por tag.
-- **RF-057** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário, para a capa e para o corpo dos artigos.
+- **RF-057** – O sistema deve permitir o envio de imagens para a foto de perfil do usuário, para a capa e para o corpo dos artigos, onde as imagens podem ficar em qualquer ponto do texto, com legenda e alinhamento.
 - **RF-058** – O sistema deve permitir que o autor exporte os próprios artigos em um arquivo.
 - **RF-059** – O sistema deve permitir que a administração cadastre, edite e remova categorias e subcategorias.
 
@@ -175,7 +175,7 @@ Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_
 - **RNF-006** – O sistema deve armazenar os tokens de renovação, os códigos enviados por e-mail e os códigos de recuperação apenas na forma de hash.
 - **RNF-007** – O sistema deve limitar o número de tentativas e a frequência de login, de verificação de códigos e de reenvio de e-mails.
 - **RNF-008** – O sistema não deve expor, em nenhuma resposta, senhas, hashes, tokens, identificadores de provedores externos ou dados privados de outros usuários.
-- **RNF-009** – O sistema deve limpar o HTML e o CSS dos artigos de qualquer código perigoso antes de salvá-los, aceitando só o que estiver em uma lista de elementos permitidos.
+- **RNF-009** – O sistema deve limpar o HTML e o CSS dos artigos de qualquer código perigoso antes de salvá-los, aceitando só o que estiver em uma lista de elementos permitidos, que inclui a formatação dos artigos, como imagens, legendas e alinhamentos.
 - **RNF-010** – O sistema deve limitar a frequência de requisições em toda a API, inclusive nos endpoints públicos, para proteger a plataforma contra abuso e robôs.
 
 ### 2.2 Privacidade e proteção de dados
