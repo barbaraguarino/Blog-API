@@ -359,7 +359,7 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Data:** 2026-11-27
 - **Status:** Aceita
 - **Contexto:** a D-033 decidiu numerar as regras na ordem do documento, como os Requisitos (D-028). As Regras de Negócio foram reescritas seção por seção (versões 1.0 a 10.0), e as regras antigas ganharam números novos. A autora aprovou registrar a correspondência ("Aplica os três").
-- **Decisão:** as regras passam a ir de RN-001 a RN-140, na ordem do documento. Correspondência entre os números antigos e os novos (a RN-002 nova, a RN-004 e da RN-009 em diante, quando não aparecem aqui, são regras novas):
+- **Decisão:** as regras passam a ir de RN-001 a RN-140, na ordem do documento. Correspondência entre os números antigos e os novos (os números novos que não aparecem aqui são de regras novas):
   - RN-001 → RN-001; RN-002 → RN-003; RN-003 → RN-011; RN-004 → RN-005; RN-005 → RN-006; RN-006 → RN-007; RN-007 → RN-008; RN-008 → RN-017; RN-009 → RN-012; RN-010 → RN-013;
   - RN-011 → RN-018; RN-012 → RN-019; RN-013 → RN-020; RN-014 → RN-021; RN-015 → RN-022; RN-016 → RN-010; RN-017 → RN-023; RN-018 → RN-024; RN-019 → RN-025; RN-020 → RN-026;
   - RN-021 → RN-027; RN-022 → RN-031; RN-030 → RN-046; RN-031 → RN-047; RN-032 → RN-048; RN-033 e RN-034 → RN-075; RN-035 → RN-057; RN-036 → RN-058; RN-037 → RN-059; RN-038 → RN-077;
