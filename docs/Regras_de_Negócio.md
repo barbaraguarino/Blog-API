@@ -949,7 +949,7 @@ Cada ação administrativa guarda quem a fez, o que foi feito, sobre quem ou sob
 
 ## 11. Divergências conhecidas
 
-Pontos em que o código atual contraria uma regra ou não a cumpre totalmente. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
+Pontos em que o código atual contraria uma regra ou não a cumpre totalmente. Cada um vira uma issue `type:bug` da v0.1, como prevê o [Roadmap](Roadmap.md), e é removido daqui quando corrigido e testado.
 
 | ID | Regra | O que acontece hoje | Impacto | Correção proposta |
 |---|---|---|---|---|
