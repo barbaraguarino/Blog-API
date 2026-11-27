@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 4.0 · **Última modificação:** 27/11/2026
+**Versão:** 5.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -435,51 +435,164 @@ A transferência exige a reautenticação (RN-030). Quem recebe precisa ser um a
 
 ---
 
-## 5. Conteúdo *(v0.2–v0.3)*
+## 5. Conteúdo
 
-#### RN-133 – Categorias ⬜
-- **Regra:** a categoria tem nome, **slug único** e uma categoria pai opcional, formando uma árvore. Uma categoria não pode ser pai dela mesma, nem de um ancestral. Só o `ADMIN` gerencia categorias.
-- **Requisito:** RF-070.
+### 5.1 Artigos
 
-#### RN-134 – Remoção de categorias ⬜
-- **Regra:** não é possível remover uma categoria que tenha artigos ou subcategorias.
-- **Por quê:** evita artigos sem categoria e árvores quebradas.
+#### RN-057 – Quem escreve e edita ⬜
+Escrevem artigos os autores, os moderadores com permissão de autor, a administração e, no modo aberto, todo leitor ativo (RN-045). Só o autor e os coautores editam um artigo. A administração não edita artigos de outras pessoas: ela só pode ocultá-los pela moderação.
+
+- **Erro:** `403` · `error.auth.access_denied`.
+- **Requisitos:** RF-053, RF-061.
+
+#### RN-058 – Ciclo de vida do artigo ⬜
+O artigo está sempre em uma destas situações: rascunho, agendado, publicado ou arquivado. As mudanças permitidas são:
+
+- rascunho → publicado ou agendado;
+- agendado → rascunho, quando o agendamento é cancelado;
+- agendado → publicado, no horário marcado;
+- publicado → arquivado;
+- arquivado → rascunho.
+
+A data de publicação é a da primeira publicação. O slug é gerado a partir do título, é único (um slug repetido ganha `-2`, `-3` e assim por diante) e não muda depois da publicação, para que os links para o artigo não quebrem. Para ser publicado, o artigo precisa ter título de 5 a 200 caracteres, conteúdo de até 200.000 caracteres, uma categoria, o idioma informado e as descrições de todas as imagens e fórmulas (RN-065).
+
+- **Erros (propostos):** `422` · `error.article.invalid_transition`; `400` · `error.validation.article.<campo>.<regra>`.
+- **Requisitos:** RF-053, RF-060.
+
+#### RN-059 – Rascunhos são privados ⬜
+Um rascunho só pode ser visto pelo autor, pelos coautores e por quem tiver um link de prévia válido (RN-073). Para todas as outras pessoas, o rascunho não existe (`404`), para não revelar o que ainda não foi publicado.
+
+- **Requisitos:** RF-053, RF-065.
+
+#### RN-060 – Agendamento da publicação ⬜
+A data agendada deve ficar entre 5 minutos e 1 ano no futuro, e o artigo é publicado em até 1 minuto depois do horário marcado. As exigências da publicação (RN-058) são conferidas de novo nessa hora; se alguma falhar, o artigo volta a ser rascunho, e o autor é avisado.
+
+- **Erro (proposto):** `422` · `error.article.invalid_schedule`.
+- **Requisito:** RF-057.
+
+#### RN-061 – Exclusão de artigos ⬜
+Só o autor principal, quem criou o artigo, pode excluí-lo. A exclusão é definitiva e apaga também as versões de idioma, as revisões, os comentários, as reações e as imagens do artigo.
+
+- **Erro (proposto):** `403` · `error.article.not_owner`.
+- **Requisito:** RF-054.
+
+### 5.2 Formato e segurança do conteúdo
+
+#### RN-062 – Formatos e alinhamento ⬜
+O conteúdo pode estar em Markdown, LaTeX, HTML com CSS ou texto puro. O formato é escolhido na criação do artigo e só pode mudar enquanto ele for rascunho. O alinhamento do texto (à esquerda, ao centro, à direita ou justificado) vale para Markdown, LaTeX e HTML; o texto puro não tem formatação.
+
+- **Requisito:** RF-055.
+
+#### RN-063 – Limpeza do HTML e do CSS ⬜
+Antes de ser salvo, o HTML, inclusive o que aparece dentro do Markdown, e o CSS passam por uma lista de elementos, atributos e propriedades permitidos, que inclui a formatação dos artigos, como imagens, legendas e alinhamentos. Scripts, atributos de evento (`on…`), `iframe`, formulários e `url()` em CSS são removidos, e os links externos ganham `rel="noopener noreferrer nofollow"`. A resposta informa ao autor o que foi removido. A limpeza protege os leitores contra XSS e contra CSS malicioso.
+
+- **Requisitos:** RF-055, RNF-009.
+
+#### RN-064 – Recursos externos bloqueados ⬜
+Imagens e outros recursos carregados pelo artigo só podem vir do armazenamento da plataforma; os links para outros sites continuam permitidos. Um recurso externo impede o salvamento, para que o autor saiba o que corrigir. O bloqueio evita que sites de fora rastreiem quem lê os artigos.
+
+- **Erro (proposto):** `422` · `error.article.external_resource`.
+- **Requisito:** RNF-011.
+
+#### RN-065 – Descrições de imagens e fórmulas ⬜
+Cada imagem do corpo do artigo precisa de uma descrição de até 250 caracteres, e cada fórmula de um artigo em LaTeX precisa de uma descrição em texto, para que leitores de tela consigam lê-las. As descrições são conferidas ao publicar e ao agendar.
+
+- **Erros (propostos):** `422` · `error.article.missing_image_description` e `error.article.missing_formula_description`.
+- **Requisitos:** RF-056, RF-068.
+
+#### RN-066 – Tempo estimado de leitura ⬜
+O tempo de leitura é calculado para cada versão de idioma, com 200 palavras por minuto, arredondando para cima, com o mínimo de 1 minuto.
+
+- **Requisito:** RF-051.
+
+### 5.3 Revisões, idiomas e coautoria
+
+#### RN-067 – Histórico de revisões ⬜
+Cada salvamento cria uma revisão, com quem salvou, a data e o conteúdo, e cada artigo guarda as últimas 50 revisões. Restaurar uma revisão cria uma revisão nova e não apaga as anteriores. A comparação mostra as diferenças de texto entre duas revisões.
+
+- **Requisito:** RF-058.
+
+#### RN-068 – Versões de idioma ⬜
+Cada versão tem um idioma, no padrão BCP 47 (como `pt-BR`), e só pode haver uma versão por idioma. A primeira versão é a original e não pode ser excluída enquanto houver outras. As versões compartilham o endereço, os comentários e as reações, mas cada uma tem o próprio título, conteúdo e resumo, e é publicada de forma independente. Uma versão escrita pelo autor sempre é usada no lugar da tradução automática.
+
+- **Erro (proposto):** `409` · `error.article.language_exists`.
+- **Requisitos:** RF-059, RF-060.
+
+#### RN-069 – Versão mostrada ao leitor ⬜
+A versão do artigo mostrada a cada leitor é escolhida nesta ordem:
+
+1. a versão que o leitor escolheu explicitamente;
+2. a versão do autor no idioma do cabeçalho `Accept-Language`;
+3. a tradução automática, se estiver ligada e oferecer esse idioma;
+4. a versão original.
+
+A resposta informa o idioma mostrado e se ele é uma tradução automática.
+
+- **Requisitos:** RF-048, RF-049, RF-060, RF-072.
+
+#### RN-070 – Coautoria ⬜
+Só autores podem ser convidados como coautores, e cada artigo tem até 5 coautores. O convite vale 14 dias. O coautor edita o artigo e aparece como autor dele, mas não o exclui nem remove outros coautores, o que cabe só ao autor principal. O coautor pode sair da coautoria quando quiser. Quem bloqueou o autor principal, ou foi bloqueado por ele, não pode ser convidado.
+
+- **Erros (propostos):** `422` · `error.coauthor.limit_reached` e `error.coauthor.not_allowed`.
+- **Requisitos:** RF-061, RF-062.
+
+#### RN-071 – Edição simultânea ⬜
+Cada salvamento informa o número da revisão em que foi baseado. Se o artigo já tiver uma revisão mais nova, o salvamento é recusado, e a resposta traz a versão atual, para que ninguém apague sem perceber as alterações de outro coautor. O artigo também mostra quem está editando agora: quem salvou ou abriu o artigo para edição nos últimos 5 minutos.
+
+- **Erro (proposto):** `409` · `error.article.edit_conflict`.
+- **Requisito:** RF-063.
+
+#### RN-072 – Séries ⬜
+O autor principal agrupa os próprios artigos em séries ordenadas. Cada artigo fica em no máximo uma série, cada série tem até 50 artigos, e o nome da série é único entre as séries do autor. O público só vê os artigos publicados de cada série.
+
+- **Erro (proposto):** `409` · `error.series.name_exists`.
+- **Requisito:** RF-064.
+
+#### RN-073 – Link de prévia ⬜
+O link de prévia usa um token aleatório, guardado só como hash, vale por um prazo e pode ser revogado a qualquer momento. Ele dá acesso só à leitura, sem comentários, e vale apenas para rascunhos e artigos agendados. Cada artigo tem até 5 links ativos. ⚙️ validade: padrão de 7 dias · intervalo: 1 a 30 dias.
+
+- **Requisito:** RF-065.
+
+### 5.4 Organização, imagens e leitura
+
+#### RN-074 – Tags ⬜
+As tags são normalizadas (minúsculas e sem espaços nas pontas), têm de 2 a 30 caracteres e são únicas sem diferenciar acentos. Uma tag que não existe é criada ao ser usada, e cada artigo tem até 10 tags. A administração edita, junta e remove tags: ao juntar, os artigos passam para a tag de destino; ao remover, a tag sai dos artigos.
+
+- **Requisitos:** RF-066, RF-071.
+
+#### RN-075 – Categorias ⬜
+As categorias formam uma árvore de até 3 níveis, e cada uma tem um nome e um slug único. Uma categoria não pode ser pai de si mesma nem de um ancestral. Cada artigo tem uma categoria. Uma categoria só pode ser removida se não tiver artigos nem subcategorias, para que nenhum artigo fique sem categoria e a árvore não se quebre.
+
 - **Erro (proposto):** `422` · `error.category.in_use`.
 - **Requisito:** RF-070.
 
-#### RN-135 – Quem escreve artigos ⬜
-- **Regra:** só `AUTHOR` ou `ADMIN` criam artigos, e só o próprio autor os edita.
-- **Requisito:** RF-053.
+#### RN-076 – Imagens ⬜
+São aceitas imagens em JPEG, PNG e WebP, com até 5 MB. Cada imagem é regravada antes de ser guardada, o que remove os metadados, como a localização. A legenda tem até 300 caracteres, e cada artigo tem até 30 imagens. Ao trocar uma imagem, a anterior é apagada, e uma imagem enviada e não usada em 24 horas também é apagada.
 
-#### RN-136 – Ciclo de vida do artigo ⬜
-- **Regra:** o artigo tem o status `RASCUNHO`, `PUBLICADO` ou `ARQUIVADO`. As transições permitidas são:
-  - rascunho → publicado;
-  - publicado → arquivado;
-  - arquivado → rascunho.
+- **Erros (propostos):** `400` · `error.upload.invalid_type` e `error.upload.too_large`; `422` · `error.upload.limit_reached`.
+- **Requisitos:** RF-067, RNF-010.
 
-  A **data de publicação** é registrada na primeira publicação. O **slug** é gerado a partir do título e é único.
-- **Requisito:** RF-053.
+#### RN-077 – Listagens públicas e paginação ⬜
+As listagens públicas mostram só os artigos publicados, que não estejam ocultados e cujo autor não esteja com a conta desativada, da publicação mais recente para a mais antiga. Toda listagem da API é paginada, com 10 itens por página por padrão e o máximo de 50.
 
-#### RN-137 – Rascunhos são privados ⬜
-- **Regra:** os rascunhos só são visíveis para o autor. Para os demais, o rascunho "não existe" (`404`).
-- **Requisito:** RF-053.
+- **Requisitos:** RF-046, RNF-029.
 
-#### RN-138 – Listagens públicas ⬜
-- **Regra:** as listagens públicas mostram só artigos **publicados**, paginados (padrão 10, máximo 50 por página) e ordenados por data de publicação, do mais recente para o mais antigo.
-- **Requisito:** RF-053.
+#### RN-078 – Busca ⬜
+A busca procura no título, no resumo e nas tags dos artigos publicados, ignorando maiúsculas e acentos, e pode ser combinada com os filtros de categoria, tag e autor. Os termos buscados entram só nas estatísticas agregadas da plataforma, sem ligação com quem buscou.
 
-#### RN-139 – Tags ⬜
-- **Regra:** as tags são **normalizadas** (minúsculas, sem espaços nas pontas) e **únicas**. Uma tag inexistente é criada ao ser usada. Cada artigo tem no máximo 10 tags.
-- **Requisito:** RF-066.
+- **Requisitos:** RF-050, RF-122, RNF-018.
 
-#### RN-140 – Imagens ⬜
-- **Regra:** são aceitos só os formatos JPEG, PNG e WebP, com até 5 MB. Ao trocar uma imagem, a anterior é removida do armazenamento.
-- **Erro (proposto):** `400` · `error.upload.invalid_type` / `error.upload.too_large`.
-- **Requisito:** RF-067.
+#### RN-079 – Listas de leitura ⬜
+As listas de leitura são sempre privadas. Cada pessoa tem até 20 listas, com até 500 artigos em cada. Um artigo que sai do ar aparece na lista como indisponível.
 
-#### RN-141 – Busca ⬜
-- **Regra:** a busca considera só artigos publicados e procura no título e no resumo, ignorando maiúsculas e acentos. Pode ser combinada com filtros de categoria, tag e autor.
-- **Requisito:** RF-050.
+- **Erro (proposto):** `422` · `error.reading_list.limit_reached`.
+- **Requisito:** RF-052.
+
+#### RN-080 – Exportação dos próprios artigos ⬜
+A exportação gera um ZIP com todas as versões de idioma dos artigos da pessoa, inclusive aqueles de que ela é coautora, no formato original e com as imagens. É possível pedir uma nova exportação a cada 24 horas.
+
+- **Erro (proposto):** `429` · `error.export.too_soon`.
+- **Requisito:** RF-069.
 
 ---
 
