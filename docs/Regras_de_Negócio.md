@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 12.0 · **Última modificação:** 27/11/2026
+**Versão:** 12.1 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -8,16 +8,16 @@ Este documento reúne as regras que o sistema obedece: validações, restriçõe
 
 ## 1. Como ler este documento
 
-Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê, e, quando pode ser violada, qual erro o cliente recebe. As regras são numeradas na ordem em que aparecem neste documento. Uma regra nova entra na seção do seu módulo e, quando necessário, a numeração é refeita e registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos. Os requisitos que as regras detalham estão em [Requisitos.md](Requisitos.md).
+Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê, e, quando pode ser violada, qual erro o cliente recebe. As regras são numeradas na ordem em que aparecem neste documento. Uma regra nova entra na seção do seu módulo e, quando necessário, a numeração é refeita e registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos. Os requisitos que as regras detalham estão em [Requisitos.md](Requisitos.md). Os perfis e os termos seguem a [Definição do Projeto](Definição_do_Projeto.md): o dono é o superadministrador, e a administração reúne os administradores e o dono.
 
 - **Status:** ✅ implementado · 🟡 parcial · ⬜ planejado.
 - **Divergências:** quando o código atual contraria uma regra ou não a cumpre totalmente, ela recebe a marca ⚠️, e a diferença é descrita na seção *Divergências conhecidas*.
-- **Erros:** status HTTP e chave de i18n, traduzida conforme o cabeçalho `Accept-Language` e devolvida no campo `message`. Nas regras planejadas, a chave é uma proposta.
+- **Erros:** status HTTP e chave de i18n, traduzida conforme o cabeçalho `Accept-Language` e devolvida no campo `message`. Nas regras planejadas, e nas partes ainda não implementadas das regras parciais, a chave é uma proposta.
 - **Testes:** toda regra implementada tem pelo menos um teste que cita o ID no `@DisplayName`, e uma regra que muda é atualizada aqui no mesmo PR da mudança de código.
 
 ### Regras ajustáveis pelo dono
 
-Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão. O dono pode ajustá-los pela API (RF-119), sempre dentro de um intervalo seguro definido no código, e cada mudança guarda quem a fez, quando, o valor anterior e o novo. Só o perfil de testes aceita valores fora desse intervalo, para que os testes não precisem esperar prazos reais; fora dele, a API não sobe com um valor inseguro. Cada regra ajustável informa o padrão e o intervalo, como em "⚙️ padrão: 2 meses · intervalo: 2 a 12 meses".
+Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão. O dono pode ajustá-los pela API (RF-119), sempre dentro de um intervalo seguro definido no código, e cada mudança guarda quem a fez, quando, o valor anterior e o novo. Só o perfil de testes aceita valores fora desse intervalo, para que os testes não precisem esperar prazos reais; fora dele, a API não sobe com um valor inseguro. Cada regra ajustável informa o padrão e o intervalo, como em "⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses".
 
 ### Formato de erro
 
@@ -82,7 +82,7 @@ Os limites acompanham as colunas do banco (`VARCHAR(150)`) e evitam erros de ban
 - **Requisitos:** RF-001, RF-002, RF-005.
 
 #### RN-004 – Idade mínima ⬜
-A pessoa declara, no cadastro, que tem a idade mínima da plataforma. A data de nascimento não é pedida, porque só a declaração é necessária (RNF-016). ⚙️ padrão: 18 anos · intervalo: 16 a 18 anos. Um mínimo abaixo de 18 anos só é liberado depois de conferir a Lei 15.211/2025 (ECA Digital), conforme a D-033.
+A pessoa declara, no cadastro, que tem a idade mínima da plataforma. A data de nascimento não é pedida, porque só a declaração é necessária (RNF-016). ⚙️ idade mínima: padrão de 18 anos · intervalo: 16 a 18 anos. Um mínimo abaixo de 18 anos só é liberado depois de conferir a Lei 15.211/2025 (ECA Digital), conforme a D-033.
 
 - **Erro:** `400` · `error.validation.user.age.required`.
 - **Requisito:** RF-006.
@@ -141,7 +141,7 @@ Só a conta ativa usa a plataforma normalmente. A conta desativada volta a ficar
 - **Requisitos:** RF-009, RF-029, RF-030, RF-118.
 
 #### RN-010 – Conta local só é usada depois da confirmação do e-mail ⬜
-A conta criada com e-mail e senha nasce com o e-mail ainda não confirmado e só fica ativa com o código de confirmação (RN-022). Isso garante que o e-mail pertence a quem se cadastrou, condição para a recuperação de senha ser segura. A conta criada com provedor social já nasce ativa, porque o provedor confirmou o e-mail (RN-007). Uma conta que não for confirmada no prazo é apagada, o que libera o e-mail se alguém o tiver usado sem ser o dono. ⚙️ padrão: 7 dias · intervalo: 1 a 30 dias.
+A conta criada com e-mail e senha nasce com o e-mail ainda não confirmado e só fica ativa com o código de confirmação (RN-022). Isso garante que o e-mail pertence a quem se cadastrou, condição para a recuperação de senha ser segura. A conta criada com provedor social já nasce ativa, porque o provedor confirmou o e-mail (RN-007). Uma conta que não for confirmada no prazo é apagada, o que libera o e-mail se alguém o tiver usado sem ser o dono. ⚙️ prazo para confirmar: padrão de 7 dias · intervalo: 1 a 30 dias.
 
 - **Requisito:** RF-014.
 
@@ -172,7 +172,7 @@ O token é validado como na RN-007, e a conta é buscada pelo identificador do p
 - **Requisitos:** RF-004, RF-005, RF-009.
 
 #### RN-014 – Limite de tentativas de login ⬜
-Depois de 5 falhas seguidas com o mesmo identificador (e-mail ou nickname) em 15 minutos, as novas tentativas com ele ficam bloqueadas por 15 minutos. Cada IP também tem um limite de 20 tentativas em 15 minutos. O contador vale também para identificadores que não existem, para que o bloqueio não revele quais contas existem. ⚙️ padrão: 5 falhas e 15 minutos · intervalo: 3 a 10 falhas e 5 a 60 minutos.
+Depois de 5 falhas seguidas com o mesmo identificador (e-mail ou nickname) em 15 minutos, as novas tentativas com ele ficam bloqueadas por 15 minutos. Cada IP também tem um limite de 20 tentativas em 15 minutos. O contador vale também para identificadores que não existem, para que o bloqueio não revele quais contas existem. ⚙️ falhas e tempo de bloqueio: padrão de 5 falhas e 15 minutos · intervalo: 3 a 10 falhas e 5 a 60 minutos.
 
 - **Erro:** `429` · `error.auth.too_many_attempts`.
 - **Requisitos:** RNF-007, RNF-013.
@@ -224,7 +224,7 @@ Os códigos têm 6 dígitos, valem 10 minutos, são de uso único, aceitam no m�
 - **Requisitos:** RF-008, RF-014, RF-015, RF-016, RF-021, RF-024, RNF-006.
 
 #### RN-023 – Limite de envio de códigos ⬜
-Um novo código só pode ser pedido 60 segundos depois do anterior, e um novo código invalida o anterior da mesma finalidade. O limite evita o abuso do envio de e-mails, que gera spam e custo. O limite é contado por endereço de e-mail e finalidade, para valer também nos pedidos feitos com um e-mail sem conta. ⚙️ pedidos por hora: padrão de 5 · intervalo: 3 a 10.
+Um novo código só pode ser pedido 60 segundos depois do anterior, e um novo código invalida o anterior da mesma finalidade. O limite, contado por endereço de e-mail e finalidade para valer também nos pedidos feitos com um e-mail sem conta, evita o abuso do envio de e-mails, que gera spam e custo. ⚙️ pedidos por hora: padrão de 5 · intervalo: 3 a 10.
 
 - **Erro (proposto):** `429` · `error.code.too_many_requests`.
 - **Requisitos:** RF-014, RNF-007, RNF-023.
@@ -258,7 +258,7 @@ Moderadores, administradores e o dono só usam as funções desses papéis com a
 - **Requisito:** RF-020.
 
 #### RN-029 – Dispositivos confiáveis ⬜
-O usuário pode marcar o dispositivo em que entrou como confiável, e o código da verificação em duas etapas deixa de ser pedido nele durante o prazo. A marcação pode ser desfeita a qualquer momento, e a redefinição de senha desfaz todas (RN-025). Para quem é moderador ou da administração, o dispositivo confiável não dispensa o código. ⚙️ padrão: 30 dias · intervalo: 1 a 90 dias.
+O usuário pode marcar o dispositivo em que entrou como confiável, e o código da verificação em duas etapas deixa de ser pedido nele durante o prazo. A marcação pode ser desfeita a qualquer momento, e a redefinição de senha desfaz todas (RN-025). Para quem é moderador ou da administração, o dispositivo confiável não dispensa o código. ⚙️ validade: padrão de 30 dias · intervalo: 1 a 90 dias.
 
 - **Requisito:** RF-019.
 
@@ -273,11 +273,11 @@ As ações sensíveis do RF-021 (trocar o e-mail, desativar a verificação em d
 #### RN-031 – Vínculo com provedores sociais ⬜
 Vincular exige um token válido de um provedor ativo, cujo identificador não pertença a outra conta. Desvincular só é permitido se restar outra forma de entrar (senha, passkey ou outro provedor), para que o usuário não perca o acesso.
 
-- **Erro (proposto):** `409` · `error.user.provider_already_registered`; `422` · `error.user.last_login_method`.
+- **Erros (propostos):** `409` · `error.user.provider_already_registered`; `422` · `error.user.last_login_method`.
 - **Requisito:** RF-022.
 
 #### RN-032 – Perfil e nickname ⬜
-O nickname tem de 3 a 30 caracteres, só letras minúsculas, números e `_`, é único sem diferenciar maiúsculas de minúsculas e nunca contém `@`. Ele pode ser trocado só depois de um intervalo desde a última troca, e o nickname antigo fica reservado por 30 dias, para que ninguém se passe pela pessoa. A descrição tem até 300 caracteres. ⚙️ intervalo entre trocas: padrão de 30 dias · intervalo: 7 a 90 dias.
+O nickname tem de 3 a 30 caracteres, só letras minúsculas, números e `_`, é único sem diferenciar maiúsculas de minúsculas e nunca contém `@`. Ele pode ser trocado só depois de um intervalo desde a última troca, e o nickname antigo fica reservado por 30 dias, para que ninguém se passe pela pessoa. A descrição tem até 300 caracteres. ⚙️ tempo entre trocas: padrão de 30 dias · intervalo: 7 a 90 dias.
 
 - **Erros (propostos):** `400` · `error.validation.user.nickname.format`; `409` · `error.user.nickname_in_use`; `422` · `error.user.nickname_change_too_soon`.
 - **Requisito:** RF-023.
@@ -372,13 +372,13 @@ O dono escolhe um dos três modos de autoria: por pedido, que é o padrão, fech
 - **Requisito:** RF-035.
 
 #### RN-046 – Prazo mínimo para pedir autoria ⬜
-No modo por pedido, só pode pedir autoria quem tem a conta há mais de 2 meses. O prazo reduz as contas criadas só para publicar spam e incentiva a participação como leitor antes. Só o perfil de testes aceita um prazo menor que o mínimo. ⚙️ padrão: 2 meses · intervalo: 2 a 12 meses.
+No modo por pedido, só pode pedir autoria quem tem a conta há mais de 2 meses. O prazo reduz as contas criadas só para publicar spam e incentiva a participação como leitor antes. Só o perfil de testes aceita um prazo menor que o mínimo. ⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses.
 
 - **Erro (proposto):** `422` · `error.author_request.account_too_new`.
 - **Requisito:** RF-036.
 
 #### RN-047 – Um pedido pendente por vez ⬜
-Cada pessoa tem no máximo um pedido de autoria pendente, com uma motivação de até 1.000 caracteres. Depois de uma recusa, um novo pedido só pode ser feito após um intervalo, para que os pedidos repetidos não sobrecarreguem a administração. ⚙️ intervalo depois de uma recusa: padrão de 30 dias · intervalo: 0 a 90 dias.
+Cada pessoa tem no máximo um pedido de autoria pendente, com uma motivação de até 1.000 caracteres. Depois de uma recusa, um novo pedido só pode ser feito após um intervalo, para que os pedidos repetidos não sobrecarreguem a administração. ⚙️ espera depois de uma recusa: padrão de 30 dias · intervalo: 0 a 90 dias.
 
 - **Erros (propostos):** `409` · `error.author_request.already_pending`; `422` · `error.author_request.too_soon`.
 - **Requisito:** RF-036.
