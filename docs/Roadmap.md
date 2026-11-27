@@ -334,10 +334,4 @@ Uma ideia nova só entra no Roadmap depois de virar requisito e, se for além da
 
 ## 6. Fluxo de trabalho
 
-1. Toda tarefa nasce como uma **Issue**, com o template de funcionalidade ou de bug.
-2. A issue entra em um **Milestone** (versão) e na fila do quadro Kanban do Projects.
-3. O trabalho segue o **Git Flow**: um branch `feature/*` ou `bugfix/*` por issue, a partir da `develop`.
-4. Cada branch tem **um único PR** para a `develop`, com `Closes #N` e o checklist da Definição de Pronto. A issue só fecha se todos os critérios de aceite forem cumpridos.
-5. Ao fechar um Milestone, um branch `release/vX.Y.Z` leva a `develop` para a `main`, junto com um relatório de testes.
-
-O processo completo está em [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md), e as decisões em [Decisões.md](Decisões.md).
+Cada versão é um Milestone do GitHub, e cada entrega dentro dela é uma issue, puxada uma de cada vez pelo quadro Kanban do Projects, sem Sprints (D-015). Cada issue tem um branch e um único PR para a `develop`. Ao fechar o Milestone, um branch `release/vX.Y.Z` leva a versão para a `main`, junto com um relatório de testes. O processo completo está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md), e as decisões estão em [Decisões.md](Decisões.md).
