@@ -48,7 +48,7 @@ A v1.0 marca o fim do escopo planejado: com ela, todos os requisitos e todas as 
 
 ## 2. Por que esta ordem
 
-1. **Identidade antes de tudo:** todas as outras funcionalidades dependem de saber quem é o usuário. Sessões que podem ser encerradas, e-mail confirmado e recuperação de senha são o mínimo para uma conta ser confiável, e por isso a v0.1 também corrige as divergências D1 a D7 das Regras de Negócio.
+1. **Identidade antes de tudo:** todas as outras funcionalidades dependem de saber quem é o usuário. Sessões que podem ser encerradas, e-mail confirmado e recuperação de senha são o mínimo para uma conta ser confiável. Como as divergências D1 a D7 das Regras de Negócio estão todas no cadastro e no login, a v0.1 também as corrige.
 2. **Verificação em duas etapas antes dos perfis:** o dono configura a verificação em duas etapas no primeiro acesso (RN-054), e moderadores e administradores só usam as funções desses papéis com ela ativa (RN-028). Sem ela, ninguém aprova os pedidos de autoria e, sem autores, não há artigos. Por isso a segurança da conta vem na v0.2 (D-037, que substitui a D-008).
 3. **Perfis antes da privacidade:** a plataforma só aceita cadastros depois de o dono publicar os termos de uso, a política de privacidade e o contato do encarregado (RN-127), e o dono só existe a partir da v0.3.
 4. **Privacidade antes do conteúdo:** com a consulta, a exportação e a exclusão dos dados prontas na v0.4, cada versão seguinte já nasce incluindo os próprios dados nelas, em vez de adaptá-las no fim.
