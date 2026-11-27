@@ -27,20 +27,20 @@ timeline
 
 | Versão | Tema | Situação |
 |---|---|---|
-| **v0.0 – Fundação** | Base técnica e identidade básica | ✅ Concluída |
-| **v0.1 – Identidade essencial** | Contas confiáveis e sessões seguras | ▶️ Próxima |
-| **v0.2 – Segurança da conta** | Proteção extra e outras formas de entrar | ⏳ Planejada |
-| **v0.3 – Perfis e autoria** | O dono, os papéis e quem pode escrever | ⏳ Planejada |
-| **v0.4 – Privacidade e LGPD** | Os direitos de cada pessoa sobre os próprios dados | ⏳ Planejada |
-| **v0.5 – Artigos** | Publicar conteúdo organizado | ⏳ Planejada |
-| **v0.6 – Conteúdo avançado** | Escrever em equipe e em vários idiomas | ⏳ Planejada |
-| **v0.7 – Social** | Interagir com o conteúdo e com as pessoas | ⏳ Planejada |
-| **v0.8 – Notificações** | Avisar cada pessoa do que a envolve | ⏳ Planejada |
-| **v0.9 – Moderação** | Proteger a comunidade | ⏳ Planejada |
-| **v0.10 – Inteligência artificial** | Ajudar quem escreve e quem lê, dentro do teto de custos | ⏳ Planejada |
-| **v0.11 – Administração da plataforma** | Dar ao dono o controle da instalação | ⏳ Planejada |
-| **v0.12 – Painéis** | Uma visão do próprio trabalho para cada perfil | ⏳ Planejada |
-| **v1.0 – Docker** | Executar a API e o banco em contêineres | ⏳ Planejada |
+| [**v0.0 – Fundação**](https://github.com/barbaraguarino/Blog-API/milestone/1) | Base técnica e identidade básica | ✅ Concluída |
+| [**v0.1 – Identidade essencial**](https://github.com/barbaraguarino/Blog-API/milestone/2) | Contas confiáveis e sessões seguras | ▶️ Próxima |
+| [**v0.2 – Segurança da conta**](https://github.com/barbaraguarino/Blog-API/milestone/3) | Proteção extra e outras formas de entrar | ⏳ Planejada |
+| [**v0.3 – Perfis e autoria**](https://github.com/barbaraguarino/Blog-API/milestone/4) | O dono, os papéis e quem pode escrever | ⏳ Planejada |
+| [**v0.4 – Privacidade e LGPD**](https://github.com/barbaraguarino/Blog-API/milestone/5) | Os direitos de cada pessoa sobre os próprios dados | ⏳ Planejada |
+| [**v0.5 – Artigos**](https://github.com/barbaraguarino/Blog-API/milestone/6) | Publicar conteúdo organizado | ⏳ Planejada |
+| [**v0.6 – Conteúdo avançado**](https://github.com/barbaraguarino/Blog-API/milestone/7) | Escrever em equipe e em vários idiomas | ⏳ Planejada |
+| [**v0.7 – Social**](https://github.com/barbaraguarino/Blog-API/milestone/8) | Interagir com o conteúdo e com as pessoas | ⏳ Planejada |
+| [**v0.8 – Notificações**](https://github.com/barbaraguarino/Blog-API/milestone/9) | Avisar cada pessoa do que a envolve | ⏳ Planejada |
+| [**v0.9 – Moderação**](https://github.com/barbaraguarino/Blog-API/milestone/10) | Proteger a comunidade | ⏳ Planejada |
+| [**v0.10 – Inteligência artificial**](https://github.com/barbaraguarino/Blog-API/milestone/11) | Ajudar quem escreve e quem lê, dentro do teto de custos | ⏳ Planejada |
+| [**v0.11 – Administração da plataforma**](https://github.com/barbaraguarino/Blog-API/milestone/12) | Dar ao dono o controle da instalação | ⏳ Planejada |
+| [**v0.12 – Painéis**](https://github.com/barbaraguarino/Blog-API/milestone/13) | Uma visão do próprio trabalho para cada perfil | ⏳ Planejada |
+| [**v1.0 – Docker**](https://github.com/barbaraguarino/Blog-API/milestone/14) | Executar a API e o banco em contêineres | ⏳ Planejada |
 
 A v1.0 marca o fim do escopo planejado: com ela, todos os requisitos e todas as regras de negócio estão entregues.
 
