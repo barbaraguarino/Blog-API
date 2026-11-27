@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 11.0 · **Última modificação:** 27/11/2026
+**Versão:** 12.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -224,7 +224,7 @@ Os códigos têm 6 dígitos, valem 10 minutos, são de uso único, aceitam no m�
 - **Requisitos:** RF-008, RF-014, RF-015, RF-016, RF-021, RF-024, RNF-006.
 
 #### RN-023 – Limite de envio de códigos ⬜
-Um novo código só pode ser pedido 60 segundos depois do anterior, e um novo código invalida o anterior da mesma finalidade. O limite evita o abuso do envio de e-mails, que gera spam e custo. ⚙️ pedidos por hora, por conta e finalidade: padrão de 5 · intervalo: 3 a 10.
+Um novo código só pode ser pedido 60 segundos depois do anterior, e um novo código invalida o anterior da mesma finalidade. O limite evita o abuso do envio de e-mails, que gera spam e custo. O limite é contado por endereço de e-mail e finalidade, para valer também nos pedidos feitos com um e-mail sem conta. ⚙️ pedidos por hora: padrão de 5 · intervalo: 3 a 10.
 
 - **Erro (proposto):** `429` · `error.code.too_many_requests`.
 - **Requisitos:** RF-014, RNF-007, RNF-023.
@@ -310,7 +310,7 @@ A exportação exige a reautenticação (RN-030). O arquivo é um JSON compactad
 #### RN-037 – Exclusão da conta ⬜
 A exclusão exige a reautenticação (RN-030), e a pessoa escolhe se os artigos e comentários públicos dela são apagados ou mantidos como de um "usuário excluído". A exclusão só é aplicada depois de um prazo de carência, durante o qual a conta fica escondida, como na desativação, e a pessoa pode desistir ao entrar (RN-009). ⚙️ carência: padrão de 30 dias · intervalo: 7 a 30 dias.
 
-Ao fim da carência, os dados pessoais são apagados, o e-mail fica livre para um novo cadastro e o nickname fica reservado por 30 dias (RN-032). Nas coautorias, a pessoa sai do artigo, que continua com os outros coautores. Os registros de acesso são mantidos até completar os 6 meses do Marco Civil da Internet (RN-021), porque a guarda é uma obrigação legal. O dono só pode excluir a própria conta depois de transferir a posse da plataforma, para que ela não fique sem responsável.
+Ao fim da carência, os dados pessoais são apagados, o e-mail fica livre para um novo cadastro e o nickname fica reservado por 30 dias (RN-032). Nas coautorias, a pessoa sai do artigo, que continua com os outros coautores; se ela for a autora principal, o coautor mais antigo passa a ser o autor principal. A escolha entre apagar e manter de forma anônima vale para os artigos sem coautores. Os registros de acesso são mantidos até completar os 6 meses do Marco Civil da Internet (RN-021), porque a guarda é uma obrigação legal. O dono só pode excluir a própria conta depois de transferir a posse da plataforma, para que ela não fique sem responsável.
 
 - **Erro (proposto):** `422` · `error.account.owner_cannot_delete`.
 - **Requisitos:** RF-028, RF-030, RF-044.
@@ -396,7 +396,7 @@ No modo fechado, não existem pedidos: um administrador nomeia o autor, e a pess
 - **Requisito:** RF-038.
 
 #### RN-050 – Retirada do papel de autor ⬜
-Um administrador pode retirar o papel de autor, informando um motivo, que fica registrado. Os artigos já publicados continuam publicados e assinados pela pessoa, e os rascunhos ficam guardados, mas não podem mais ser publicados. A pessoa pode pedir autoria de novo, pelas regras normais.
+Um administrador pode retirar o papel de autor, informando um motivo, que fica registrado. Os artigos já publicados continuam publicados e assinados pela pessoa, os rascunhos ficam guardados, mas não podem mais ser publicados, e os artigos agendados voltam a ser rascunhos. A pessoa pode pedir autoria de novo, pelas regras normais.
 
 - **Requisito:** RF-039.
 
@@ -531,7 +531,7 @@ A resposta informa o idioma mostrado e se ele é uma tradução automática.
 - **Requisitos:** RF-048, RF-049, RF-060, RF-072.
 
 #### RN-070 – Coautoria ⬜
-Só autores podem ser convidados como coautores, e cada artigo tem até 5 coautores. O convite vale 14 dias. O coautor edita o artigo e aparece como autor dele, mas não o exclui nem remove outros coautores, o que cabe só ao autor principal. O coautor pode sair da coautoria quando quiser. Quem bloqueou o autor principal, ou foi bloqueado por ele, não pode ser convidado.
+Só quem pode escrever artigos (RN-057) pode ser convidado como coautor, e cada artigo tem até 5 coautores. O convite vale 14 dias. O coautor edita o artigo e aparece como autor dele, mas não o exclui nem remove outros coautores, o que cabe só ao autor principal. O coautor pode sair da coautoria quando quiser. Quem bloqueou o autor principal, ou foi bloqueado por ele, não pode ser convidado.
 
 - **Erros (propostos):** `422` · `error.coauthor.limit_reached` e `error.coauthor.not_allowed`.
 - **Requisitos:** RF-061, RF-062.
@@ -622,7 +622,7 @@ O autor envia o artigo inteiro ou um trecho, e a IA devolve uma lista de sugest�
 - **Requisitos:** RF-073, RF-074, RNF-028.
 
 #### RN-085 – Sugestões de tags, categoria e resumo ⬜
-A IA sugere até 5 tags, de preferência entre as que já existem, e uma categoria, escolhida só entre as existentes; o autor decide se aceita. O resumo tem até 300 caracteres e é gerado na publicação, para cada versão de idioma. Um resumo editado pelo autor nunca é sobrescrito, e um novo resumo só é gerado se o autor pedir.
+A IA sugere até 5 tags, de preferência entre as que já existem, e uma categoria, escolhida só entre as existentes; o autor decide se aceita. O resumo tem até 300 caracteres e é gerado na publicação, para cada versão de idioma. Um resumo editado pelo autor nunca é sobrescrito, e um novo resumo só é gerado se o autor pedir. Sem a IA, o autor pode escrever o resumo; se não escrever, as listagens mostram o começo do texto.
 
 - **Requisitos:** RF-075, RF-076, RNF-024.
 
@@ -750,7 +750,7 @@ Os avisos chegam por dois canais: dentro da plataforma e por e-mail. Por padrão
 - **Requisitos:** RF-093, RF-094, RF-095.
 
 #### RN-105 – E-mails essenciais ⬜
-São essenciais os e-mails com códigos e os de dispositivo novo, troca de e-mail, tentativa de cadastro com o e-mail da pessoa, redefinição de senha, exclusão agendada, suspensão e novos termos de uso. Eles não podem ser desligados, não entram no resumo diário e continuam sendo enviados quando o teto de custos é atingido, para que ninguém perca o acesso à conta. Os convites (RN-129) não são essenciais e param junto com os outros e-mails quando o teto é atingido.
+São essenciais os e-mails com códigos e os de dispositivo novo, troca de e-mail, tentativa de cadastro com o e-mail da pessoa, redefinição de senha, exclusão agendada, suspensão e novas versões dos termos de uso e da política de privacidade. Eles não podem ser desligados, não entram no resumo diário e continuam sendo enviados quando o teto de custos é atingido, para que ninguém perca o acesso à conta. Os convites (RN-129) não são essenciais e param junto com os outros e-mails quando o teto é atingido.
 
 - **Requisitos:** RF-095, RF-124.
 
