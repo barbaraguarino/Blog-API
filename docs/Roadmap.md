@@ -66,6 +66,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
 
 - os requisitos de base valem desde a primeira linha de código: RNF-001, RNF-002, RNF-003, RNF-005, RNF-008, RNF-025, RNF-026, RNF-029 e RNF-031 a RNF-039;
 - cada PR segue a Definição de Pronto, com testes, arquivos `.http`, Swagger e documentos atualizados;
+- as dependências novas de cada versão, como bibliotecas e plugins, são aprovadas pela autora antes de a versão começar, como pede a regra 4 do `CLAUDE.md`;
 - a partir da v0.3, cada ação administrativa nova entra no registro das ações administrativas (RF-130), e os valores ⚙️ podem ser ajustados pelo dono (RF-119), inclusive os das versões anteriores; cada valor novo entra nesse ajuste. Até lá, os valores ⚙️ usam o padrão definido na configuração;
 - a partir da v0.4, cada dado pessoal novo entra na consulta, na exportação e na exclusão da conta (RF-026 a RF-028), e cada serviço externo novo entra na lista dos serviços que recebem dados (RN-042);
 - a partir da v0.8, cada evento novo ganha o seu tipo de aviso (RF-093);
