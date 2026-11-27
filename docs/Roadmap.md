@@ -133,7 +133,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - reautenticação antes de ações sensíveis;
   - passkeys;
   - login com código enviado por e-mail;
-  - cadastro e login com GitHub e Apple, e vínculo e desvínculo de provedores sociais. A Apple pode ficar desativada enquanto o custo não couber no teto (D-025);
+  - cadastro e login com GitHub e Apple, e vínculo e desvínculo de provedores sociais;
   - histórico de acessos com local aproximado e alerta de acesso em dispositivo novo;
   - edição do perfil e troca do nickname;
   - troca de e-mail.
