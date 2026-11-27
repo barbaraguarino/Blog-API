@@ -1,13 +1,13 @@
 # Requisitos
 
-**Versão:** 10.1 · **Última modificação:** 21/11/2026
+**Versão:** 10.2 · **Última modificação:** 27/11/2026
 
 Este documento lista os requisitos do Blog-API, divididos em dois tipos:
 
 - **Requisitos funcionais (RF):** descrevem **o que** o sistema deve fazer, ou seja, os serviços que ele oferece aos usuários.
 - **Requisitos não funcionais (RNF):** descrevem **como** o sistema deve se comportar: as qualidades e restrições que ele deve cumprir, como segurança, desempenho e manutenibilidade.
 
-Cada requisito tem um identificador único, que é citado nas issues, nas [Regras de Negócio](Regras_de_Negócio.md) e nos testes. Os requisitos são numerados na ordem em que aparecem no documento. Um requisito novo entra na seção do seu módulo, e a numeração é refeita quando necessário. Cada renumeração é registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos, para que documentos antigos, como os relatórios de testes, continuem rastreáveis. As histórias de usuário e os critérios de aceite de cada entrega ficam nas issues do GitHub.
+Cada requisito tem um identificador único, que é citado nas issues, nas [Regras de Negócio](Regras_de_Negócio.md), no [Roadmap](Roadmap.md), que mostra em que versão cada requisito é entregue, e nos testes. Os requisitos são numerados na ordem em que aparecem no documento. Um requisito novo entra na seção do seu módulo, e a numeração é refeita quando necessário. Cada renumeração atualiza as referências nos outros documentos, inclusive o Roadmap, e é registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos, para que documentos antigos, como os relatórios de testes, continuem rastreáveis. As histórias de usuário e os critérios de aceite de cada entrega ficam nas issues do GitHub.
 
 Os perfis e os termos usados aqui seguem a [Definição do Projeto](Definição_do_Projeto.md): o dono é o superadministrador, e a administração reúne os administradores e o dono.
 
