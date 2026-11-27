@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 9.0 · **Última modificação:** 27/11/2026
+**Versão:** 10.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -848,7 +848,135 @@ O dono mantém uma lista de até 500 palavras ou expressões bloqueadas. A compa
 
 ---
 
-## 10. Divergências conhecidas
+## 10. Painéis e administração da plataforma
+
+### 10.1 Painéis
+
+#### RN-122 – Quem vê cada painel ⬜
+Cada painel é visto só por quem precisa dele:
+
+- minha conta: todo usuário cadastrado;
+- do autor: cada autor, sobre si, contando as coautorias;
+- dos autores: a administração vê a lista de autores e os pedidos de autoria, e os autores veem o espaço comum;
+- da moderação: os moderadores e a administração;
+- do moderador: o próprio moderador e a administração;
+- do dono: só o superadministrador.
+
+O conteúdo detalhado de cada painel fica nos critérios de aceite das issues.
+
+- **Erro:** `403` · `error.auth.access_denied`.
+- **Requisitos:** RF-103, RF-104, RF-105, RF-106, RF-107, RF-108, RF-109.
+
+#### RN-123 – Estatísticas agregadas e anônimas ⬜
+Os painéis mostram só números. Um grupo com menos de 5 pessoas aparece como "menos de 5", para que ninguém seja identificado pelo número, como aconteceria com um único leitor de uma cidade pequena. Cada leitura conta uma vez por visitante, por artigo e por dia, com um identificador temporário (um hash que muda todos os dias), sem guardar quem leu.
+
+- **Requisitos:** RF-104, RNF-018.
+
+#### RN-124 – Espaço comum dos autores ⬜
+No espaço comum, a administração publica avisos e diretrizes de escrita e pode fixar alguns no topo. Os autores só leem.
+
+- **Requisito:** RF-106.
+
+### 10.2 Identidade, páginas e termos
+
+#### RN-125 – Identidade da plataforma ⬜
+A identidade da plataforma tem o nome, com até 100 caracteres, a descrição, com até 500, o logo, que segue as regras das imagens (RN-076), o idioma padrão, escolhido entre os idiomas suportados, até 10 links e o fuso horário da plataforma, usado no resumo diário e no agendamento.
+
+- **Requisitos:** RF-110, RNF-025.
+
+#### RN-126 – Páginas institucionais ⬜
+O dono cria até 20 páginas institucionais, cada uma com um slug único. As páginas usam os mesmos formatos e a mesma limpeza dos artigos (RN-062 e RN-063) e são públicas.
+
+- **Requisitos:** RF-047, RF-111.
+
+#### RN-127 – Plataforma pronta para cadastros ⬜
+A plataforma só aceita cadastros depois de o dono informar o contato do encarregado pelos dados pessoais e publicar a primeira versão dos termos de uso e da política de privacidade, porque a LGPD exige os dois antes da coleta de dados.
+
+- **Erro (proposto):** `503` · `error.platform.not_ready`.
+- **Requisitos:** RF-112, RF-113.
+
+#### RN-128 – Versões dos termos ⬜
+As versões dos termos de uso e da política de privacidade são numeradas e têm data de vigência. Uma versão publicada não muda mais: qualquer alteração vira uma versão nova, que exige um novo aceite (RN-039).
+
+- **Requisito:** RF-113.
+
+### 10.3 Convites e usuários
+
+#### RN-129 – Convites ⬜
+O convite é um link de uso único enviado por e-mail, e cada administrador envia até 20 convites por dia. O convite para um perfil segue as regras de concessão: para autor, só no modo fechado ou pelas exceções de início; para moderador, por um administrador; para administrador, só pelas exceções de início, porque a promoção normal segue a RN-052. A pessoa convidada aceita os termos e confirma a idade como em qualquer cadastro. Se o e-mail já tiver uma conta, a resposta é a mesma, e a pessoa recebe o convite ao entrar. ⚙️ validade: padrão de 7 dias · intervalo: 1 a 30 dias.
+
+- **Erro (proposto):** `429` · `error.invite.too_many`.
+- **Requisito:** RF-114.
+
+#### RN-130 – Gestão de usuários ⬜
+A administração lista os usuários com filtros por papel e situação. Cada pessoa só age sobre os perfis abaixo do seu (RN-044), e toda ação fica registrada (RN-140). O e-mail dos usuários só é visto pelo dono, para expor menos dados pessoais.
+
+- **Erro:** `403` · `error.auth.access_denied`.
+- **Requisito:** RF-117.
+
+### 10.4 Regras e operação
+
+#### RN-131 – Ajuste das regras ⬜
+Todo valor marcado com ⚙️ só muda dentro do intervalo seguro, com o histórico descrito na seção 1, e a mudança exige a verificação em duas etapas ativa (RN-028).
+
+- **Erro (proposto):** `422` · `error.settings.out_of_range`.
+- **Requisito:** RF-119.
+
+#### RN-132 – Backup ⬜
+O backup é feito automaticamente uma vez por dia, e o dono também pode pedir um backup manual por dia. Ele é gerado fora da requisição e criptografado com uma chave que fica só no `.env`. Baixar um backup exige a reautenticação (RN-030), e cada download fica registrado. Os backups expiram no prazo da RN-043.
+
+- **Requisitos:** RF-115, RNF-014.
+
+#### RN-133 – Restauração ⬜
+A restauração exige a reautenticação (RN-030). Durante ela, a plataforma fica em manutenção, e todas as sessões são encerradas. A restauração aplica de novo as exclusões de conta feitas depois do backup (RN-043) e fica registrada.
+
+- **Requisito:** RF-116.
+
+#### RN-134 – Modo de manutenção ⬜
+Durante a manutenção, só os moderadores e a administração entram na plataforma. As outras pessoas recebem `503`, com uma mensagem escrita pelo dono, inclusive na leitura pública. Os artigos agendados para esse período são publicados quando a manutenção termina.
+
+- **Erro (proposto):** `503` · `error.platform.maintenance`.
+- **Requisito:** RF-131.
+
+#### RN-135 – Anúncios ⬜
+O anúncio tem até 1.000 caracteres e chega a todas as contas ativas como um aviso do tipo "anúncio" (RN-104). O dono publica no máximo 1 anúncio por dia.
+
+- **Erro (proposto):** `429` · `error.announcement.too_many`.
+- **Requisitos:** RF-093, RF-132.
+
+#### RN-136 – Limite de requisições em toda a API ⬜
+Cada IP faz um número limitado de requisições por minuto, menor nas rotas públicas e maior com login, para proteger a plataforma contra abuso e robôs.
+
+- ⚙️ rotas públicas: padrão de 100 por minuto · intervalo: 30 a 1.000.
+- ⚙️ com login: padrão de 300 por minuto · intervalo: 30 a 1.000.
+- **Erro (proposto):** `429` · `error.rate_limit.exceeded`.
+- **Requisito:** RNF-015.
+
+### 10.5 Custos, métricas e registros
+
+#### RN-137 – Teto de custos ⬜
+O custo de cada serviço pago é estimado a partir do uso e dos preços configurados. O teto pode ser baixado pelo dono, nunca subido acima de US$ 15. O dono recebe avisos quando o gasto do mês chega a 50%, 80% e 100% do teto. Ao chegar a 100%, a IA e os e-mails não essenciais são pausados; o envio de imagens continua, porque custa centavos e bloqueá-lo impediria publicar, e os e-mails essenciais (RN-105) também continuam. Tudo volta no mês seguinte, ou antes, se o dono aumentar o teto dentro do limite. ⚙️ teto: padrão de US$ 15 · intervalo: US$ 1 a US$ 15.
+
+- **Requisitos:** RF-123, RF-124, RNF-022.
+
+#### RN-138 – Métricas e estatísticas ⬜
+Os visitantes são contados sem cookies e sem guardar quem são, com o mesmo identificador temporário da RN-123. A região aproximada vem de uma base de geolocalização local, e o IP não é guardado para as estatísticas. A saúde do sistema e as métricas técnicas são vistas só pelo dono. Os dados agregados ficam guardados por 24 meses.
+
+- **Requisitos:** RF-120, RF-121, RF-122, RF-123, RF-125, RF-126, RF-127, RF-128, RNF-018, RNF-041.
+
+#### RN-139 – Logs ⬜
+Os logs técnicos e de segurança são vistos só pelo dono. Neles, os dados pessoais aparecem mascarados, cada consulta fica registrada, e os registros são apagados no prazo da RN-043.
+
+- **Requisitos:** RF-129, RNF-019.
+
+#### RN-140 – Registro das ações administrativas ⬜
+Cada ação administrativa guarda quem a fez, o que foi feito, sobre quem ou sobre o quê, quando e o motivo. O registro não pode ser editado nem apagado por ninguém, nem pelo dono, e é guardado por 2 anos.
+
+- **Requisito:** RF-130.
+
+---
+
+## 11. Divergências conhecidas
 
 Pontos em que o código atual não cumpre totalmente a regra pretendida. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
 
