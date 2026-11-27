@@ -1,6 +1,6 @@
 # Roadmap
 
-O Roadmap mostra **para onde o produto vai**: as versões (Milestones) planejadas, o que cada uma entrega, com os requisitos e as regras de negócio que atende, por que estão nessa ordem e o que é preciso para considerar cada uma concluída. O detalhe de cada tarefa fica nas [Issues](https://github.com/barbaraguarino/Blog-API/issues), e o andamento do dia a dia no quadro do GitHub Projects. Como o trabalho é organizado no quadro Kanban está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
+O Roadmap mostra **para onde o produto vai**: as versões (Milestones) planejadas, o que cada uma entrega, com os requisitos e as regras de negócio que atende, por que estão nessa ordem e o que é preciso para considerar cada uma concluída. O detalhe de cada tarefa fica nas [Issues](https://github.com/barbaraguarino/Blog-API/issues), e o andamento do dia a dia no quadro do GitHub Projects. A organização do trabalho no quadro Kanban está descrita no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
 
 ---
 
