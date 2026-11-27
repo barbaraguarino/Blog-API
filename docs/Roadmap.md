@@ -69,6 +69,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
 - a partir da v0.3, cada ação administrativa nova entra no registro das ações administrativas (RF-130), e cada valor ⚙️ novo pode ser ajustado pelo dono (RF-119). Até lá, os valores ⚙️ usam o padrão definido na configuração;
 - a partir da v0.4, cada dado pessoal novo entra na consulta, na exportação e na exclusão da conta (RF-026 a RF-028), e cada serviço externo novo entra na lista dos serviços que recebem dados (RN-042);
 - a partir da v0.8, cada evento novo ganha o seu tipo de aviso (RF-093);
+- até a v0.10, o teto de US$ 15 por mês é protegido pelos limites de envio de e-mails (RNF-007) e pelos alertas de gasto que a autora configura na AWS (D-022);
 - até a v0.11, o idioma padrão e o fuso horário da plataforma vêm da configuração da API;
 - uma versão só é concluída quando todas as suas issues cumprem os critérios de aceite, a suíte completa de testes passa e há um relatório de testes da versão, como manda a seção 7 do [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md). O item "Concluída quando" de cada versão diz o que precisa funcionar de ponta a ponta.
 
