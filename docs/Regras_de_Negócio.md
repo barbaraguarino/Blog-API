@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 2.0 · **Última modificação:** 21/11/2026
+**Versão:** 3.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -289,7 +289,76 @@ A troca exige a reautenticação (RN-030). O código vai para o endereço novo, 
 
 ---
 
-## 3. Autoria e conteúdo *(v0.2–v0.3)*
+## 3. Privacidade
+
+#### RN-034 – Perfil público escolhido pelo usuário ⬜
+O nickname é sempre público, porque identifica a pessoa nos comentários. O nome, a foto e a descrição só aparecem no perfil público se a pessoa escolher mostrá-los, e o padrão é ficarem ocultos: a privacidade vem ativada desde o início, como pede o art. 46 da LGPD. O e-mail nunca é público. Nos autores, os artigos publicados e o número de seguidores são sempre públicos, mas a lista de seguidores e a de autores seguidos nunca são.
+
+- **Requisitos:** RF-025, RF-092.
+
+#### RN-035 – Consulta dos próprios dados ⬜
+O usuário vê tudo o que a plataforma guarda sobre ele, agrupado por assunto: conta, perfil, sessões, histórico de acessos, provedores vinculados, aceites dos termos, interesses, listas de leitura, bloqueios, pedidos, denúncias e preferências de avisos. Hashes, segredos e tokens nunca aparecem, nem para o próprio dono dos dados (RNF-008).
+
+- **Requisito:** RF-026.
+
+#### RN-036 – Exportação dos próprios dados ⬜
+A exportação exige a reautenticação (RN-030). O arquivo é um JSON compactado em ZIP, com os dados da RN-035 e também os artigos e comentários da pessoa. Ele é gerado fora da requisição, a pessoa é avisada quando fica pronto, e o link para baixá-lo vale 24 horas. É possível pedir uma nova exportação a cada 24 horas.
+
+- **Erro (proposto):** `429` · `error.export.too_soon`.
+- **Requisito:** RF-027.
+
+#### RN-037 – Exclusão da conta ⬜
+A exclusão exige a reautenticação (RN-030), e a pessoa escolhe se os artigos e comentários públicos dela são apagados ou mantidos como de um "usuário excluído". A exclusão só é aplicada depois de um prazo de carência, durante o qual a conta fica escondida, como na desativação, e a pessoa pode desistir ao entrar (RN-009). ⚙️ carência: padrão de 30 dias · intervalo: 7 a 30 dias.
+
+Ao fim da carência, os dados pessoais são apagados, o e-mail fica livre para um novo cadastro e o nickname fica reservado por 30 dias (RN-032). Nas coautorias, a pessoa sai do artigo, que continua com os outros coautores. Os registros de acesso são mantidos até completar os 6 meses do Marco Civil da Internet (RN-021), porque a guarda é uma obrigação legal. O dono só pode excluir a própria conta depois de transferir a posse da plataforma, para que ela não fique sem responsável.
+
+- **Erro (proposto):** `422` · `error.account.owner_cannot_delete`.
+- **Requisitos:** RF-028, RF-030, RF-044.
+
+#### RN-038 – Desativação temporária ⬜
+Com a conta desativada, o perfil, os artigos e os comentários da pessoa ficam escondidos. No lugar de cada comentário aparece "comentário indisponível", para que as conversas não percam o sentido. Os avisos param, e os seguidores são mantidos. A conta volta a ficar ativa quando a pessoa entra de novo (RN-009). O dono não pode desativar a própria conta, para que a plataforma não fique sem responsável.
+
+- **Erro (proposto):** `422` · `error.account.owner_cannot_deactivate`.
+- **Requisito:** RF-029.
+
+#### RN-039 – Aceite dos termos e da política de privacidade ⬜
+Cada aceite guarda a versão dos termos de uso e da política de privacidade e a data. O IP não é guardado, porque não é necessário para comprovar o aceite. Toda nova versão publicada pelo dono exige um novo aceite no próximo acesso; até aceitar, a pessoa só pode ler a plataforma, exportar os próprios dados ou excluir a conta.
+
+- **Erro (proposto):** `403` · `error.terms.acceptance_required`.
+- **Requisitos:** RF-031, RF-113.
+
+#### RN-040 – Alerta de acesso em dispositivo novo ⬜
+Um dispositivo é reconhecido por um identificador guardado em um cookie, junto com o navegador e o sistema informados pelo User-Agent. No primeiro acesso de um dispositivo, a pessoa recebe um e-mail com a data, o dispositivo, o local aproximado e um link para encerrar as sessões. Esse é um e-mail de segurança: ele não pode ser desligado nas preferências e não é pausado quando o teto de custos é atingido.
+
+- **Requisitos:** RF-032, RF-124.
+
+#### RN-041 – Histórico de interesses ⬜
+O histórico de interesses guarda as tags dos artigos que a pessoa leu ou em que reagiu e os autores que ela segue, e vem ligado por padrão. Os registros são apagados depois de um prazo. Limpar o histórico apaga tudo na hora; desligá-lo faz a plataforma parar de registrar, e a recomendação passa a usar só as tags de interesse escolhidas e os autores seguidos. ⚙️ prazo dos registros: padrão de 90 dias · intervalo: 30 a 180 dias.
+
+- **Requisitos:** RF-033, RF-080.
+
+#### RN-042 – Serviços externos que recebem dados ⬜
+A plataforma mantém uma lista pública, parte da política de privacidade, com cada serviço externo que recebe dados e o que ele recebe:
+
+- a IA recebe o conteúdo dos artigos, comentários e denúncias, nunca os dados das contas;
+- o armazenamento de imagens recebe as imagens, já sem metadados;
+- o envio de e-mails recebe o endereço e o texto de cada aviso;
+- cada provedor social troca dados só com quem vinculou a conta a ele.
+
+A lista é atualizada junto com qualquer troca de provedor.
+
+- **Requisitos:** RF-034, RNF-017.
+
+#### RN-043 – Retenção e mascaramento dos dados ⬜
+Nos logs técnicos, e-mails e IPs aparecem mascarados (por exemplo, `a***@exemplo.com` e `189.40.*.*`). Os logs são apagados depois de um prazo, e cada consulta feita a eles fica registrada. Os registros de acesso são guardados por 6 meses (RN-021). Os backups também expiram depois de um prazo, o que faz os dados das contas excluídas sumirem deles, e uma restauração aplica de novo as exclusões feitas depois do backup, para que nenhuma conta excluída volte.
+
+- ⚙️ prazo dos logs técnicos: padrão de 30 dias · intervalo: 7 a 90 dias.
+- ⚙️ prazo dos backups: padrão de 30 dias · intervalo: 7 a 90 dias.
+- **Requisitos:** RF-116, RNF-016, RNF-019, RNF-020, RNF-021.
+
+---
+
+## 4. Autoria e conteúdo *(v0.2–v0.3)*
 
 #### RN-130 – Prazo mínimo para pedir autoria ⬜
 - **Regra:** só pode pedir autoria quem tem a conta **criada há mais de 2 meses**.
@@ -353,7 +422,7 @@ A troca exige a reautenticação (RN-030). O código vai para o endereço novo, 
 
 ---
 
-## 4. Social e moderação *(v0.3–v0.4)*
+## 5. Social e moderação *(v0.3–v0.4)*
 
 #### RN-150 – Comentários ⬜
 - **Regra:** só é possível comentar artigos publicados. Há respostas em **um único nível** (comentário → resposta). Responder uma resposta não é permitido.
@@ -391,7 +460,7 @@ A troca exige a reautenticação (RN-030). O código vai para o endereço novo, 
 
 ---
 
-## 5. Divergências conhecidas
+## 6. Divergências conhecidas
 
 Pontos em que o código atual não cumpre totalmente a regra pretendida. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
 
