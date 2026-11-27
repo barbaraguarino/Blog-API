@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 12.1 · **Última modificação:** 27/11/2026
+**Versão:** 12.2 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -55,7 +55,7 @@ Em erros de validação (`400`), aparece também o campo `validationErrors`, com
 ### 2.1 Cadastro
 
 #### RN-001 – E-mail único ✅
-Cada e-mail pertence a uma única conta, seja qual for a forma de cadastro. O e-mail identifica a pessoa, serve para entrar e é o canal de recuperação da conta; duas contas com o mesmo e-mail tornariam esses fluxos ambíguos. O caso de uso confere se o e-mail já existe antes de criar a conta, e a coluna `email` tem uma restrição `UNIQUE` no banco, como segunda barreira.
+Cada e-mail pertence a uma única conta, seja qual for a forma de cadastro. O e-mail identifica a pessoa, serve para entrar e é o canal de recuperação da conta; duas contas com o mesmo e-mail tornariam esses fluxos ambíguos. A regra é conferida antes de criar a conta e garantida também pelo banco de dados.
 
 - **Requisitos:** RF-001, RF-002, RF-005.
 
@@ -76,7 +76,7 @@ O cadastro com e-mail e senha exige estes campos:
 | Confirmação da idade mínima | Sim | Verdadeiro | Ver RN-004 |
 | Aceite dos termos de uso e da política de privacidade | Sim | Verdadeiro | Versão vigente |
 
-Os limites acompanham as colunas do banco (`VARCHAR(150)`) e evitam erros de banco disfarçados de erro interno. O cadastro com provedor social exige a confirmação da idade e o aceite dos termos da mesma forma.
+Os limites acompanham o tamanho dos campos no banco de dados. O cadastro com provedor social exige a confirmação da idade e o aceite dos termos da mesma forma.
 
 - **Erro:** `400` · `error.validation.generic`, com mensagens por campo, como `error.validation.user.name.not_blank`, `error.validation.user.name.size`, `error.validation.user.email.invalid`, `error.validation.user.email.size`, `error.validation.user.age.required` e `error.validation.user.terms.required`.
 - **Requisitos:** RF-001, RF-002, RF-005.
@@ -88,7 +88,7 @@ A pessoa declara, no cadastro, que tem a idade mínima da plataforma. A data de 
 - **Requisito:** RF-006.
 
 #### RN-005 – Política de senha ✅
-A senha local deve ter no mínimo 8 caracteres, com pelo menos 2 letras maiúsculas, 2 letras minúsculas, 2 números e 1 caractere especial, e é guardada só como hash BCrypt. Senhas curtas ou sem variedade são fáceis de adivinhar por força bruta, e o BCrypt é lento de propósito e usa *salt*, o que dificulta os ataques mesmo que o banco vaze. Por exemplo, `SenhaForte12!` é aceita, e `senha123` é recusada por não ter maiúsculas nem caractere especial.
+A senha local deve ter no mínimo 8 caracteres, com pelo menos 2 letras maiúsculas, 2 letras minúsculas, 2 números e 1 caractere especial, e é guardada só como hash (RNF-001), que não permite recuperar a senha. Senhas curtas ou sem variedade são fáceis de adivinhar por tentativa e erro. Por exemplo, `SenhaForte12!` é aceita, e `senha123` é recusada por não ter maiúsculas nem caractere especial.
 
 - **Erro:** `400` · uma mensagem por exigência que falhar: `error.validation.user.password.size`, `.uppercase`, `.lowercase`, `.number` e `.special`.
 - **Requisitos:** RF-001, RF-015, RF-016, RNF-001.
@@ -100,7 +100,7 @@ No cadastro, o nickname é gerado a partir do nome, para que a pessoa possa entr
 2. os espaços viram `_`;
 3. os caracteres fora de `a-z`, `0-9` e `_` são removidos, inclusive os acentos;
 4. o resultado é cortado em 25 caracteres, e um nome sem nenhum caractere válido usa a base `leitor`;
-5. acrescenta-se `_` e um número aleatório de 4 dígitos (1000 a 9999), gerado com `SecureRandom`;
+5. acrescenta-se `_` e um número de 4 dígitos (1000 a 9999), sorteado;
 6. se o nickname já existir, outro número é sorteado, até 5 tentativas.
 
 Por exemplo, "Ana Júlia Souza" vira `ana_jlia_souza_4821`. O resultado segue o formato da RN-032 e pode ser trocado depois.
@@ -108,7 +108,7 @@ Por exemplo, "Ana Júlia Souza" vira `ana_jlia_souza_4821`. O resultado segue o 
 - **Requisitos:** RF-001, RF-002, RF-005.
 
 #### RN-007 – Cadastro com provedor social 🟡 ⚠️ D5
-O cadastro com provedor social, como o Google, só é aceito com os provedores que o dono ativou. Ele recebe o token de identidade emitido pelo provedor, e a API valida a assinatura e o destinatário do token (o `client-id` configurado) e exige que o provedor tenha confirmado o e-mail (`email_verified`). Do token vêm o identificador da pessoa no provedor, o e-mail e o nome: a API não confia em dados enviados pelo cliente, só no que vem dentro de um token assinado. A conta nasce sem senha local e com o e-mail já confirmado.
+O cadastro com provedor social, como o Google, só é aceito com os provedores que o dono ativou. Ele recebe o token de identidade emitido pelo provedor, e a API confere se o token é autêntico, se foi emitido para esta plataforma e se o provedor confirmou o e-mail. Do token vêm o identificador da pessoa no provedor, o e-mail e o nome: a API não confia em dados enviados pelo cliente, só no que vem dentro de um token assinado. A conta nasce sem senha local e com o e-mail já confirmado.
 
 - **Erros:**
   - `400` · `error.validation.auth.provider_token_required` (token vazio);
@@ -146,14 +146,14 @@ A conta criada com e-mail e senha nasce com o e-mail ainda não confirmado e só
 - **Requisito:** RF-014.
 
 #### RN-011 – Papel inicial ✅
-Toda conta nasce com o papel de leitor. Ninguém nasce autor, moderador ou administrador: os outros papéis são concedidos pelas regras da seção 4. As fábricas `User.createLocalUser` e `User.createGoogleUser` definem o papel, e não é possível criar um usuário por outro caminho.
+Toda conta nasce com o papel de leitor. Ninguém nasce autor, moderador ou administrador: os outros papéis são concedidos pelas regras da seção 4.
 
 - **Requisitos:** RF-001, RF-002, RF-005.
 
 ### 2.3 Login
 
 #### RN-012 – Login por e-mail ou nickname 🟡 ⚠️ D6
-O campo `login` aceita o e-mail ou o nickname: se contém `@`, a busca é por e-mail; senão, por nickname, que nunca contém `@` (RN-032). A senha é comparada com o hash BCrypt. A situação da conta só é conferida depois de a senha estar certa, para que uma senha errada nunca revele que a conta existe.
+O campo `login` aceita o e-mail ou o nickname: se contém `@`, a busca é por e-mail; senão, por nickname, que nunca contém `@` (RN-032). A situação da conta só é conferida depois de a senha estar certa, para que uma senha errada nunca revele que a conta existe.
 
 - **Erros:**
   - `401` · `error.auth.bad_credentials`, a mesma resposta para conta inexistente, senha errada ou conta sem senha local;
@@ -190,12 +190,12 @@ Para cadastrar uma passkey, a pessoa precisa estar logada e passar pela reautent
 ### 2.4 Sessões
 
 #### RN-017 – Token de acesso em cookie ✅ ⚠️ D4
-Um login bem-sucedido emite um JWT assinado com HMAC256, com emissor igual ao nome da aplicação, assunto igual ao e-mail do usuário e validade definida por `JWT_EXPIRATION`. O token vai no cabeçalho `Set-Cookie`, em um cookie `HttpOnly`, `SameSite=Strict` e `path=/`, e o corpo da resposta traz o perfil do usuário. Um cookie `HttpOnly` não pode ser lido por JavaScript, o que protege o token contra roubo via XSS, e `SameSite=Strict` impede que outros sites enviem o cookie em requisições forjadas (CSRF).
+Um login bem-sucedido entrega um token de acesso assinado em um cookie que o JavaScript não consegue ler (`HttpOnly`) e que outros sites não conseguem enviar (`SameSite=Strict`), e a resposta traz o perfil do usuário. Assim, o token fica protegido contra roubo (XSS) e contra requisições forjadas por outros sites (CSRF).
 
 - **Requisitos:** RF-003, RF-004, RNF-002, RNF-004.
 
 #### RN-018 – Sessões com renovação ⬜
-O token de acesso passa a durar 15 minutos (o `JWT_EXPIRATION` da RN-017), e o token de renovação dura 7 dias. Cada login cria uma sessão com o usuário, o hash do token de renovação, o IP, o dispositivo (User-Agent), a data de criação, o último uso, a expiração e a data em que foi encerrada. O logout encerra a sessão atual e apaga os cookies. Um token de acesso curto limita o estrago de um token roubado, e o token de renovação guardado no banco permite encerrar sessões, o que um JWT sozinho não permite. ⚙️ validade do token de renovação: padrão de 7 dias · intervalo: 1 a 30 dias.
+O token de acesso passa a durar 15 minutos, e o token de renovação dura 7 dias. Cada login cria uma sessão, com o dispositivo, o local aproximado e as datas de uso. O logout encerra a sessão atual e apaga os cookies. Um token de acesso curto limita o estrago de um token roubado, e o token de renovação guardado no banco permite encerrar sessões, o que um JWT sozinho não permite. ⚙️ validade do token de renovação: padrão de 7 dias · intervalo: 1 a 30 dias.
 
 - **Requisitos:** RF-010, RF-011, RNF-006.
 
@@ -247,7 +247,7 @@ A troca exige a senha atual e um código por e-mail. A nova senha segue a RN-005
 ### 2.6 Verificação em duas etapas
 
 #### RN-027 – Verificação em duas etapas com aplicativo autenticador ⬜
-O usuário recebe um segredo TOTP, em QR Code, e só ativa a verificação depois de confirmar um código válido. Na ativação, são gerados 10 códigos de recuperação de uso único, mostrados uma única vez; gerar novos códigos invalida os anteriores. Com a verificação ativa, o login não emite tokens até o código do aplicativo, ou um código de recuperação, ser confirmado. Desativar exige a reautenticação (RN-030).
+O usuário cadastra a conta no aplicativo autenticador lendo um QR Code e só ativa a verificação depois de confirmar um código válido. Na ativação, são gerados 10 códigos de recuperação de uso único, mostrados uma única vez; gerar novos códigos invalida os anteriores. Com a verificação ativa, o login não emite tokens até o código do aplicativo, ou um código de recuperação, ser confirmado. Desativar exige a reautenticação (RN-030).
 
 - **Requisitos:** RF-017, RF-018, RNF-006.
 
@@ -328,7 +328,7 @@ Cada aceite guarda a versão dos termos de uso e da política de privacidade e a
 - **Requisitos:** RF-031, RF-113.
 
 #### RN-040 – Alerta de acesso em dispositivo novo ⬜
-Um dispositivo é reconhecido por um identificador guardado em um cookie, junto com o navegador e o sistema informados pelo User-Agent. No primeiro acesso de um dispositivo, a pessoa recebe um e-mail com a data, o dispositivo, o local aproximado e um link para encerrar as sessões. Esse é um e-mail de segurança: ele não pode ser desligado nas preferências e não é pausado quando o teto de custos é atingido.
+Um dispositivo é reconhecido pelo navegador e por um identificador guardado nele. No primeiro acesso de um dispositivo, a pessoa recebe um e-mail com a data, o dispositivo, o local aproximado e um link para encerrar as sessões. Esse é um e-mail de segurança: ele não pode ser desligado nas preferências e não é pausado quando o teto de custos é atingido.
 
 - **Requisitos:** RF-032, RF-124.
 
@@ -350,7 +350,7 @@ A lista é atualizada junto com qualquer troca de provedor.
 - **Requisitos:** RF-034, RNF-017.
 
 #### RN-043 – Retenção e mascaramento dos dados ⬜
-Nos logs técnicos, e-mails e IPs aparecem mascarados (por exemplo, `a***@exemplo.com` e `189.40.*.*`). Os logs são apagados depois de um prazo, e cada consulta feita a eles fica registrada. Os registros de acesso são guardados por 6 meses (RN-021). Os backups também expiram depois de um prazo, o que faz os dados das contas excluídas sumirem deles, e uma restauração aplica de novo as exclusões feitas depois do backup, para que nenhuma conta excluída volte.
+Nos logs técnicos, e-mails e IPs aparecem mascarados (por exemplo, `a***@exemplo.com` e `189.40.*.*`). Os logs são apagados depois de um prazo, e cada consulta feita a eles fica registrada. Os registros de acesso são guardados por 6 meses (RN-021). Os backups também expiram depois de um prazo, o que faz os dados das contas excluídas sumirem deles.
 
 - ⚙️ prazo dos logs técnicos: padrão de 30 dias · intervalo: 7 a 90 dias.
 - ⚙️ prazo dos backups: padrão de 30 dias · intervalo: 7 a 90 dias.
@@ -484,7 +484,7 @@ O conteúdo pode estar em Markdown, LaTeX, HTML com CSS ou texto puro. O formato
 - **Requisito:** RF-055.
 
 #### RN-063 – Limpeza do HTML e do CSS ⬜
-Antes de ser salvo, o HTML, inclusive o que aparece dentro do Markdown, e o CSS passam por uma lista de elementos, atributos e propriedades permitidos, que inclui a formatação dos artigos, como imagens, legendas e alinhamentos. Scripts, atributos de evento (`on…`), `iframe`, formulários e `url()` em CSS são removidos, e os links externos ganham `rel="noopener noreferrer nofollow"`. A resposta informa ao autor o que foi removido. A limpeza protege os leitores contra XSS e contra CSS malicioso.
+Antes de ser salvo, o HTML, inclusive o que aparece dentro do Markdown, e o CSS passam por uma lista de elementos, atributos e propriedades permitidos, que inclui a formatação dos artigos, como imagens, legendas e alinhamentos. Tudo o que pode executar código ou carregar conteúdo de fora é removido, e os links externos não passam dados ao site de destino. A resposta informa ao autor o que foi removido. A limpeza protege os leitores contra XSS e contra CSS malicioso.
 
 - **Requisitos:** RF-055, RNF-009.
 
@@ -513,7 +513,7 @@ Cada salvamento cria uma revisão, com quem salvou, a data e o conteúdo, e cada
 - **Requisito:** RF-058.
 
 #### RN-068 – Versões de idioma ⬜
-Cada versão tem um idioma, no padrão BCP 47 (como `pt-BR`), e só pode haver uma versão por idioma. A primeira versão é a original e não pode ser excluída enquanto houver outras. As versões compartilham o endereço, os comentários e as reações, mas cada uma tem o próprio título, conteúdo e resumo, e é publicada de forma independente. Uma versão escrita pelo autor sempre é usada no lugar da tradução automática.
+Cada versão tem um idioma, identificado por um código como `pt-BR`, e só pode haver uma versão por idioma. A primeira versão é a original e não pode ser excluída enquanto houver outras. As versões compartilham o endereço, os comentários e as reações, mas cada uma tem o próprio título, conteúdo e resumo, e é publicada de forma independente. Uma versão escrita pelo autor sempre é usada no lugar da tradução automática.
 
 - **Erro (proposto):** `409` · `error.article.language_exists`.
 - **Requisitos:** RF-059, RF-060.
@@ -680,7 +680,7 @@ Cada conta faz no máximo 1 comentário a cada 30 segundos e um número limitado
 - **Requisitos:** RNF-007, RNF-015.
 
 #### RN-095 – Fechar e reabrir os comentários ⬜
-O autor principal e os coautores fecham e reabrem os comentários de um artigo. Com os comentários fechados, os que já existem continuam visíveis e continuam recebendo reações, mas não entram comentários novos nem respostas.
+O autor principal e os coautores fecham e reabrem os comentários de um artigo. Com os comentários fechados, os que já existem continuam visíveis e recebendo reações, mas não entram comentários novos nem respostas.
 
 - **Requisito:** RF-083.
 
@@ -724,7 +724,7 @@ Quem foi bloqueado não comenta nos artigos de quem bloqueou, não responde a es
 - **Requisito:** RF-091.
 
 #### RN-103 – Perfil público ⬜
-O perfil público mostra os dados que a pessoa escolheu mostrar (RN-034) e, no caso dos autores, os artigos publicados e as séries. O perfil de uma conta desativada, suspensa, com exclusão agendada ou excluída responde `404`. O perfil sai do ar nesses casos, mas o conteúdo da pessoa segue as regras de cada situação (RN-038, RN-077 e RN-117).
+O perfil público exibe os dados que a pessoa escolheu mostrar (RN-034) e, no caso dos autores, os artigos publicados e as séries. O perfil de uma conta desativada, suspensa, com exclusão agendada ou excluída responde `404`. O perfil sai do ar nesses casos, mas o conteúdo da pessoa segue as regras de cada situação (RN-038, RN-077 e RN-117).
 
 - **Requisitos:** RF-092, RF-064.
 
@@ -755,7 +755,7 @@ São essenciais os e-mails com códigos e os de dispositivo novo, troca de e-mai
 - **Requisitos:** RF-095, RF-124.
 
 #### RN-106 – Entrega em tempo real ⬜
-Os avisos dentro da plataforma chegam por uma conexão contínua (*Server-Sent Events*), sem que o front-end precise consultar a API de tempos em tempos. Todo aviso é guardado antes de ser enviado, e quem estava desconectado recebe os pendentes ao se conectar de novo.
+Os avisos dentro da plataforma chegam por uma conexão contínua, sem que o front-end precise consultar a API de tempos em tempos. Todo aviso é guardado antes de ser enviado, e quem estava desconectado recebe os pendentes ao se conectar de novo.
 
 - **Requisitos:** RF-093, RNF-030.
 
@@ -802,7 +802,7 @@ O usuário autenticado pode denunciar artigos, comentários e perfis. Cada pesso
 - **Requisito:** RF-098.
 
 #### RN-114 – Fila e conflito de interesse ⬜
-A fila de denúncias é ordenada pela classificação da triagem (RN-089) e, depois, pela data, da mais antiga para a mais nova. As denúncias sobre o mesmo item são analisadas juntas. Ninguém analisa uma denúncia sobre o próprio conteúdo nem uma denúncia que fez. A análise exige a verificação em duas etapas ativa (RN-028).
+A fila de denúncias é ordenada pela classificação da triagem (RN-089) e, depois, pela data, da mais antiga para a mais nova. As denúncias sobre o mesmo item são analisadas juntas. Ninguém analisa uma denúncia sobre o próprio conteúdo nem uma denúncia que fez.
 
 - **Erro (proposto):** `403` · `error.moderation.conflict_of_interest`.
 - **Requisitos:** RF-099, RF-107.
@@ -868,7 +868,7 @@ O conteúdo detalhado de cada painel fica nos critérios de aceite das issues.
 - **Requisitos:** RF-103, RF-104, RF-105, RF-106, RF-107, RF-108, RF-109.
 
 #### RN-123 – Estatísticas agregadas e anônimas ⬜
-Os painéis mostram só números. Um grupo com menos de 5 pessoas aparece como "menos de 5", para que ninguém seja identificado pelo número, como aconteceria com um único leitor de uma cidade pequena. Cada leitura conta uma vez por visitante, por artigo e por dia, com um identificador temporário (um hash que muda todos os dias), sem guardar quem leu.
+Os painéis mostram só números. Um grupo com menos de 5 pessoas aparece como "menos de 5", para que ninguém seja identificado pelo número, como aconteceria com um único leitor de uma cidade pequena. Cada leitura conta uma vez por visitante, por artigo e por dia, com um identificador temporário, trocado todos os dias, sem guardar quem leu.
 
 - **Requisitos:** RF-104, RNF-018.
 
@@ -917,13 +917,13 @@ A administração lista os usuários com filtros por papel e situação. Cada pe
 ### 10.4 Regras e operação
 
 #### RN-131 – Ajuste das regras ⬜
-Todo valor marcado com ⚙️ só muda dentro do intervalo seguro, com o histórico descrito na seção 1, e a mudança exige a verificação em duas etapas ativa (RN-028).
+Todo valor marcado com ⚙️ só muda dentro do intervalo seguro, com o histórico descrito na seção 1.
 
 - **Erro (proposto):** `422` · `error.settings.out_of_range`.
 - **Requisito:** RF-119.
 
 #### RN-132 – Backup ⬜
-O backup é feito automaticamente uma vez por dia, e o dono também pode pedir um backup manual por dia. Ele é gerado fora da requisição e criptografado com uma chave que fica só no `.env`. Baixar um backup exige a reautenticação (RN-030), e cada download fica registrado. Os backups expiram no prazo da RN-043.
+O backup é feito automaticamente uma vez por dia, e o dono também pode pedir um backup manual por dia. Ele é gerado fora da requisição e criptografado com uma chave que fica fora do banco de dados e do código. Baixar um backup exige a reautenticação (RN-030), e cada download fica registrado. Os backups expiram no prazo da RN-043.
 
 - **Requisitos:** RF-115, RNF-014.
 
@@ -955,17 +955,17 @@ Cada IP faz um número limitado de requisições por minuto, menor nas rotas pú
 ### 10.5 Custos, métricas e registros
 
 #### RN-137 – Teto de custos ⬜
-O custo de cada serviço pago é estimado a partir do uso e dos preços configurados. O teto pode ser baixado pelo dono, nunca subido acima de US$ 15. O dono recebe avisos quando o gasto do mês chega a 50%, 80% e 100% do teto. Ao chegar a 100%, a IA e os e-mails não essenciais são pausados; o envio de imagens continua, porque custa centavos e bloqueá-lo impediria publicar, e os e-mails essenciais (RN-105) também continuam. Tudo volta no mês seguinte, ou antes, se o dono aumentar o teto dentro do limite. ⚙️ teto: padrão de US$ 15 · intervalo: US$ 1 a US$ 15.
+O custo de cada serviço pago é estimado a partir do uso e dos preços configurados. O dono pode baixar o teto, mas nunca passar de US$ 15. Ele recebe avisos quando o gasto do mês chega a 50%, 80% e 100% do teto. Ao chegar a 100%, a IA e os e-mails não essenciais são pausados; o envio de imagens continua, porque custa centavos e bloqueá-lo impediria publicar, e os e-mails essenciais (RN-105) também continuam. Tudo volta no mês seguinte, ou antes, se o dono aumentar o teto dentro do limite. ⚙️ teto: padrão de US$ 15 · intervalo: US$ 1 a US$ 15.
 
 - **Requisitos:** RF-123, RF-124, RNF-022.
 
 #### RN-138 – Métricas e estatísticas ⬜
-Os visitantes são contados sem cookies e sem guardar quem são, com o mesmo identificador temporário da RN-123. A região aproximada vem de uma base de geolocalização local, e o IP não é guardado para as estatísticas. A saúde do sistema e as métricas técnicas são vistas só pelo dono. Os dados agregados ficam guardados por 24 meses.
+Os visitantes são contados sem cookies e sem guardar quem são, com o mesmo identificador temporário da RN-123. A região aproximada é estimada pela própria plataforma, e o IP não é enviado a outros serviços nem guardado para as estatísticas. A saúde do sistema e as métricas técnicas são vistas só pelo dono. Os dados agregados ficam guardados por 24 meses.
 
 - **Requisitos:** RF-120, RF-121, RF-122, RF-123, RF-125, RF-126, RF-127, RF-128, RNF-018, RNF-041.
 
 #### RN-139 – Logs ⬜
-Os logs técnicos e de segurança são vistos só pelo dono. Neles, os dados pessoais aparecem mascarados, cada consulta fica registrada, e os registros são apagados no prazo da RN-043.
+Os logs técnicos e de segurança são vistos só pelo dono, com as proteções da RN-043.
 
 - **Requisitos:** RF-129, RNF-019.
 
