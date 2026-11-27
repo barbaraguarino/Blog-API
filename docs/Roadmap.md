@@ -335,4 +335,8 @@ Uma ideia nova só entra no Roadmap depois de virar requisito e, se for além da
 
 ## 6. Fluxo de trabalho
 
-Cada versão é um Milestone do GitHub, e cada entrega dentro dela é uma issue, puxada uma de cada vez pelo quadro Kanban do Projects, sem Sprints (D-015). Cada issue tem um branch e um único PR para a `develop`. Ao fechar o Milestone, um branch `release/vX.Y.Z` leva a versão para a `main`, junto com um relatório de testes. O processo completo está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md), e as decisões estão em [Decisões.md](Decisões.md).
+Cada versão é um Milestone do GitHub, e cada entrega dentro dela é uma issue, puxada uma de cada vez pelo quadro Kanban do Projects, sem Sprints (D-015). Cada issue tem um branch e um único PR para a `develop`. Ao fechar o Milestone, um branch `release/vX.Y.Z` leva a versão para a `main`, junto com um relatório de testes. As versões não têm datas: cada uma termina quando todas as suas issues estão prontas.
+
+Quando uma versão é concluída, a situação dela passa a ✅, e a da próxima, a ▶️. Um requisito ou uma regra nova entra na versão do seu tema, e uma mudança na ordem das versões, ou de uma entrega de uma versão para outra, é registrada em [Decisões.md](Decisões.md).
+
+O processo completo está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md), e as decisões estão em [Decisões.md](Decisões.md).
