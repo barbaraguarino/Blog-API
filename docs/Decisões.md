@@ -384,3 +384,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** a autora aprovou a proposta ("Aplica tudo"): a v0.1 ganha um workflow do GitHub Actions que roda `./mvnw test` em cada PR, usando só actions oficiais com versão fixada e permissões mínimas.
 - **Alternativas consideradas:** continuar rodando os testes só na máquina, o que deixa passar um PR com a suíte quebrada.
 - **Consequências:** os testes não podem depender de serviços externos de verdade (RNF-035), nem de segredos do repositório. Os testes de integração usam o PostgreSQL que já vem instalado no runner do GitHub, iniciado pelo próprio workflow, sem contêineres, como na máquina da autora (D-016).
+
+## D-039: Versão e data no Roadmap
+
+- **Data:** 2026-11-27
+- **Status:** Aceita
+- **Contexto:** pela D-032, só a Definição do Projeto e os Requisitos têm a versão e a data abaixo do título, e os outros documentos só ganham esse cabeçalho se a autora pedir. As Regras de Negócio ganharam o cabeçalho na D-033.
+- **Decisão:** a autora pediu: "Coloca versão e data de ultima modificação, igual aos que já escrevemos." O Roadmap passa a ter o cabeçalho, começando na versão 1.0, que corresponde à revisão feita a partir da D-037.
+- **Alternativas consideradas:** continuar versionando o Roadmap só pelo Git.
+- **Consequências:** cada mudança no Roadmap segue a regra de versão da D-032: uma mudança de conteúdo sobe o número da frente, um ajuste de redação sobe o de trás, e a data muda sempre.
