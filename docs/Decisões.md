@@ -383,4 +383,4 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Contexto:** na revisão do Roadmap, notou-se que nenhum workflow roda os testes. A Definição de Pronto exige a suíte passando, mas isso dependia só de rodá-la à mão.
 - **Decisão:** a autora aprovou a proposta ("Aplica tudo"): a v0.1 ganha um workflow do GitHub Actions que roda `./mvnw test` em cada PR, usando só actions oficiais com versão fixada e permissões mínimas.
 - **Alternativas consideradas:** continuar rodando os testes só na máquina, o que deixa passar um PR com a suíte quebrada.
-- **Consequências:** os testes não podem depender de serviços externos de verdade (RNF-035), nem de segredos do repositório. Os testes de integração precisam de um PostgreSQL no runner, que é configurado no próprio workflow, sem Docker na máquina da autora (D-016).
+- **Consequências:** os testes não podem depender de serviços externos de verdade (RNF-035), nem de segredos do repositório. Os testes de integração usam o PostgreSQL que já vem instalado no runner do GitHub, iniciado pelo próprio workflow, sem contêineres, como na máquina da autora (D-016).
