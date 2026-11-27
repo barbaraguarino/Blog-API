@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 12.2 · **Última modificação:** 27/11/2026
+**Versão:** 13.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -12,41 +12,12 @@ Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê
 
 - **Status:** ✅ implementado · 🟡 parcial · ⬜ planejado.
 - **Divergências:** quando o código atual contraria uma regra ou não a cumpre totalmente, ela recebe a marca ⚠️, e a diferença é descrita na seção *Divergências conhecidas*.
-- **Erros:** status HTTP e chave de i18n, traduzida conforme o cabeçalho `Accept-Language` e devolvida no campo `message`. Nas regras planejadas, e nas partes ainda não implementadas das regras parciais, a chave é uma proposta.
-- **Testes:** toda regra implementada tem pelo menos um teste que cita o ID no `@DisplayName`, e uma regra que muda é atualizada aqui no mesmo PR da mudança de código.
+- **Erros:** status HTTP e chave de i18n, traduzida conforme o cabeçalho `Accept-Language` e devolvida no campo `message` do formato único de erro da API (RNF-026), que, nos erros de validação, traz também uma mensagem por campo. Nas regras planejadas, e nas partes ainda não implementadas das regras parciais, a chave é uma proposta.
+- **Manutenção:** uma regra que muda é atualizada aqui no mesmo PR da mudança de código.
 
 ### Regras ajustáveis pelo dono
 
-Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão. O dono pode ajustá-los pela API (RF-119), sempre dentro de um intervalo seguro definido no código, e cada mudança guarda quem a fez, quando, o valor anterior e o novo. Só o perfil de testes aceita valores fora desse intervalo, para que os testes não precisem esperar prazos reais; fora dele, a API não sobe com um valor inseguro. Cada regra ajustável informa o padrão e o intervalo, como em "⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses".
-
-### Formato de erro
-
-Toda violação de regra devolve um corpo neste formato, que é o formato único de erro da API (RNF-026):
-
-```json
-{
-  "timestamp": "2026-11-21T14:32:10.123",
-  "status": 422,
-  "error": "Unprocessable Entity",
-  "message": "A conta precisa ter mais de 2 meses para pedir autoria.",
-  "path": "/api/v1/author-requests"
-}
-```
-
-Em erros de validação (`400`), aparece também o campo `validationErrors`, com uma mensagem por campo:
-
-```json
-{
-  "status": 400,
-  "error": "Bad Request",
-  "message": "Erro de validação nos dados fornecidos.",
-  "path": "/api/v1/register",
-  "validationErrors": {
-    "email": "Formato de e-mail inválido.",
-    "password": "A senha deve conter pelo menos 2 números."
-  }
-}
-```
+Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão. O dono pode ajustá-los pela API (RF-119), sempre dentro de um intervalo seguro definido no código, e cada mudança guarda quem a fez, quando, o valor anterior e o novo. Só o perfil de testes aceita valores fora desse intervalo, para que os testes não precisem esperar prazos reais; fora dele, a API não sobe com um valor inseguro. Cada regra ajustável informa o padrão e o intervalo, como em "⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses". Os limites por dia são contados de meia-noite a meia-noite no fuso da plataforma (RN-125).
 
 ---
 
@@ -60,7 +31,7 @@ Cada e-mail pertence a uma única conta, seja qual for a forma de cadastro. O e-
 - **Requisitos:** RF-001, RF-002, RF-005.
 
 #### RN-002 – Resposta neutra no cadastro ⬜ ⚠️ D7
-O cadastro com e-mail e senha responde sempre `202 Accepted`, com a mensagem "Se o e-mail puder ser usado, enviaremos um código de confirmação". Se o e-mail for novo, a conta é criada aguardando a confirmação (RN-010). Se ele já pertencer a uma conta, nada é criado, e o próprio endereço recebe um aviso: "Alguém tentou criar uma conta com este e-mail. Se foi você, entre ou recupere a senha." Assim, o cadastro não revela quais e-mails estão cadastrados. O e-mail é enviado fora da requisição, para que o tempo de resposta também não revele qual dos dois casos aconteceu.
+O cadastro com e-mail e senha responde sempre `202 Accepted`, com a mensagem "Se o e-mail puder ser usado, enviaremos um código de confirmação". Se o e-mail for novo, a conta é criada aguardando a confirmação (RN-010). Se ele já pertencer a uma conta, nada é criado, e o próprio endereço recebe um aviso: "Alguém tentou criar uma conta com este e-mail. Se foi você, entre ou recupere a senha." Assim, o cadastro não revela quais e-mails estão cadastrados. O e-mail é enviado em segundo plano, para que o tempo de resposta também não revele qual dos dois casos aconteceu.
 
 - **Erro:** só os de validação (`400`, RN-003).
 - **Requisitos:** RF-001, RNF-013.
@@ -195,7 +166,7 @@ Um login bem-sucedido entrega um token de acesso assinado em um cookie que o Jav
 - **Requisitos:** RF-003, RF-004, RNF-002, RNF-004.
 
 #### RN-018 – Sessões com renovação ⬜
-O token de acesso passa a durar 15 minutos, e o token de renovação dura 7 dias. Cada login cria uma sessão, com o dispositivo, o local aproximado e as datas de uso. O logout encerra a sessão atual e apaga os cookies. Um token de acesso curto limita o estrago de um token roubado, e o token de renovação guardado no banco permite encerrar sessões, o que um JWT sozinho não permite. ⚙️ validade do token de renovação: padrão de 7 dias · intervalo: 1 a 30 dias.
+O token de acesso passa a durar 15 minutos, e o token de renovação dura 7 dias. Cada login cria uma sessão, com o dispositivo, o local aproximado e as datas de uso. O logout encerra a sessão atual e apaga os cookies. Um token de acesso curto limita o estrago de um token roubado, e o token de renovação guardado no banco permite encerrar sessões, o que o token de acesso sozinho não permite. ⚙️ validade do token de renovação: padrão de 7 dias · intervalo: 1 a 30 dias.
 
 - **Requisitos:** RF-010, RF-011, RNF-006.
 
@@ -252,7 +223,7 @@ O usuário cadastra a conta no aplicativo autenticador lendo um QR Code e só at
 - **Requisitos:** RF-017, RF-018, RNF-006.
 
 #### RN-028 – Verificação obrigatória para moderação e administração ⬜
-Moderadores, administradores e o dono só usam as funções desses papéis com a verificação em duas etapas ativa. Enquanto ela não estiver ativa, essas funções ficam bloqueadas, e o resto da conta funciona normalmente. O dono configura a dele no primeiro acesso.
+Moderadores, administradores e o dono só usam as funções desses papéis com a verificação em duas etapas ativa. Enquanto ela não estiver ativa, essas funções ficam bloqueadas, e o resto da conta funciona normalmente. O dono a configura no primeiro acesso (RN-054).
 
 - **Erro:** `403` · `error.auth.two_factor_required`.
 - **Requisito:** RF-020.
@@ -277,7 +248,7 @@ Vincular exige um token válido de um provedor ativo, cujo identificador não pe
 - **Requisito:** RF-022.
 
 #### RN-032 – Perfil e nickname ⬜
-O nickname tem de 3 a 30 caracteres, só letras minúsculas, números e `_`, é único sem diferenciar maiúsculas de minúsculas e nunca contém `@`. Ele pode ser trocado só depois de um intervalo desde a última troca, e o nickname antigo fica reservado por 30 dias, para que ninguém se passe pela pessoa. A descrição tem até 300 caracteres. ⚙️ tempo entre trocas: padrão de 30 dias · intervalo: 7 a 90 dias.
+O nickname tem de 3 a 30 caracteres, só letras minúsculas, números e `_`, é único e nunca contém `@`. Ele pode ser trocado só depois de um intervalo desde a última troca, e o nickname antigo fica reservado por 30 dias, para que ninguém se passe pela pessoa. A descrição tem até 300 caracteres, o nome segue o limite da RN-003, e a foto, as regras da RN-076. ⚙️ tempo entre trocas: padrão de 30 dias · intervalo: 7 a 90 dias.
 
 - **Erros (propostos):** `400` · `error.validation.user.nickname.format`; `409` · `error.user.nickname_in_use`; `422` · `error.user.nickname_change_too_soon`.
 - **Requisito:** RF-023.
@@ -302,7 +273,7 @@ O usuário vê tudo o que a plataforma guarda sobre ele, agrupado por assunto: c
 - **Requisito:** RF-026.
 
 #### RN-036 – Exportação dos próprios dados ⬜
-A exportação exige a reautenticação (RN-030). O arquivo é um JSON compactado em ZIP, com os dados da RN-035 e também os artigos e comentários da pessoa. Ele é gerado fora da requisição, a pessoa é avisada quando fica pronto, e o link para baixá-lo vale 24 horas. É possível pedir uma nova exportação a cada 24 horas.
+A exportação exige a reautenticação (RN-030). O arquivo é um JSON compactado em ZIP, com os dados da RN-035 e também os artigos e comentários da pessoa. Ele é gerado em segundo plano, a pessoa é avisada quando fica pronto, e o link para baixá-lo vale 24 horas. É possível pedir uma nova exportação a cada 24 horas.
 
 - **Erro (proposto):** `429` · `error.export.too_soon`.
 - **Requisito:** RF-027.
@@ -361,7 +332,7 @@ Nos logs técnicos, e-mails e IPs aparecem mascarados (por exemplo, `a***@exempl
 ## 4. Perfis e autoria
 
 #### RN-044 – Papéis e hierarquia ⬜
-Os papéis seguem a ordem leitor, autor, moderador, administrador e superadministrador, e cada papel só é concedido ou retirado por alguém acima dele, conforme as regras desta seção. O moderador pode ter também a permissão de autor; sem ela, não escreve artigos. O administrador e o superadministrador escrevem artigos.
+Os papéis seguem a ordem leitor, autor, moderador, administrador e superadministrador, e cada papel só é concedido ou retirado por alguém acima dele, conforme as regras desta seção.
 
 - **Erro:** `403` · `error.auth.access_denied`.
 - **Requisitos:** RF-040, RF-117.
@@ -454,7 +425,7 @@ O artigo está sempre em uma destas situações: rascunho, agendado, publicado o
 - publicado → arquivado;
 - arquivado → rascunho.
 
-A data de publicação é a da primeira publicação. O slug é gerado a partir do título, é único (um slug repetido ganha `-2`, `-3` e assim por diante) e não muda depois da publicação, para que os links para o artigo não quebrem. Para ser publicado, o artigo precisa ter título de 5 a 200 caracteres, conteúdo de até 200.000 caracteres, uma categoria, o idioma informado e as descrições de todas as imagens e fórmulas (RN-065).
+A data de publicação é a da primeira publicação. O slug é gerado a partir do título, é único (um slug repetido ganha `-2`, `-3` e assim por diante) e não muda depois da publicação, para que os links para o artigo não quebrem. Para ser publicado, o artigo precisa ter título de 5 a 200 caracteres, conteúdo de até 200.000 caracteres, uma categoria, o idioma informado e as descrições de todas as imagens e fórmulas (RN-065). Um artigo arquivado sai das listagens, da busca e do feed, mas continua acessível pelo endereço, marcado como arquivado e com os comentários fechados.
 
 - **Erros (propostos):** `422` · `error.article.invalid_transition`; `400` · `error.validation.article.<campo>.<regra>`.
 - **Requisitos:** RF-053, RF-060.
@@ -567,7 +538,7 @@ As categorias formam uma árvore de até 3 níveis, e cada uma tem um nome e um 
 - **Requisito:** RF-070.
 
 #### RN-076 – Imagens ⬜
-São aceitas imagens em JPEG, PNG e WebP, com até 5 MB. Cada imagem é regravada antes de ser guardada, o que remove os metadados, como a localização. A legenda tem até 300 caracteres, e cada artigo tem até 30 imagens. Ao trocar uma imagem, a anterior é apagada, e uma imagem enviada e não usada em 24 horas também é apagada.
+Na foto de perfil, na capa e no corpo dos artigos, são aceitas imagens em JPEG, PNG e WebP, com até 5 MB. Cada imagem é regravada antes de ser guardada, o que remove os metadados, como a localização. A legenda tem até 300 caracteres, e cada artigo tem até 30 imagens. Ao trocar uma imagem, a anterior é apagada, e uma imagem enviada e não usada em 24 horas também é apagada.
 
 - **Erros (propostos):** `400` · `error.upload.invalid_type` e `error.upload.too_large`; `422` · `error.upload.limit_reached`.
 - **Requisitos:** RF-067, RNF-010.
@@ -604,7 +575,7 @@ O dono liga e desliga separadamente cada funcionalidade de IA: tradução, corre
 - **Requisito:** RF-081.
 
 #### RN-082 – Limites de uso da IA ⬜
-Cada autor tem um limite diário de pedidos de correção, sugestões de texto e descrições, e a plataforma tem uma cota mensal de gasto com IA. A cota padrão vem da conta do teto de custos: dos US$ 15 por mês, cerca de US$ 8 vão para o login com Apple, quando ele está ativo (D-025), e sobram uns US$ 7 para a IA, as imagens e os e-mails.
+Cada autor tem um limite diário de pedidos de correção, sugestões de texto e descrições, e a plataforma tem uma cota mensal de gasto com IA. A cota padrão cabe no teto de custos (RN-137).
 
 - ⚙️ pedidos por autor: padrão de 20 por dia · intervalo: 5 a 100.
 - ⚙️ cota mensal da plataforma: padrão de US$ 4 · intervalo: US$ 0 a US$ 10.
@@ -662,7 +633,7 @@ Quando uma funcionalidade de IA está desligada, a cota acabou, o provedor está
 ## 7. Social
 
 #### RN-092 – Comentários ⬜
-Só contas ativas comentam, e só em artigos publicados que estejam com os comentários abertos. As respostas têm um único nível: não é possível responder a uma resposta. O comentário é texto puro, com até 2.000 caracteres. O autor do comentário pode editá-lo quando quiser, e ele passa a aparecer marcado como "editado". Um comentário removido pelo autor some; se tiver respostas, fica no lugar dele a mensagem "comentário removido", para que a conversa não perca o sentido.
+Os comentários dos artigos publicados podem ser lidos por qualquer pessoa, mesmo sem login, mas só contas ativas comentam, e só em artigos publicados que estejam com os comentários abertos. As respostas têm um único nível: não é possível responder a uma resposta. O comentário é texto puro, com até 2.000 caracteres. O autor do comentário pode editá-lo quando quiser, e ele passa a aparecer marcado como "editado". Um comentário removido pelo autor some; se tiver respostas, fica no lugar dele a mensagem "comentário removido", para que a conversa não perca o sentido.
 
 - **Erros (propostos):** `422` · `error.comment.closed` e `error.comment.reply_depth`; `400` · `error.validation.comment.content.size`.
 - **Requisito:** RF-082.
@@ -819,7 +790,7 @@ O conteúdo ocultado some das listagens, da busca, do feed e do perfil público,
 - **Requisitos:** RF-099, RF-101.
 
 #### RN-117 – Suspensão de contas ⬜
-Só a administração suspende uma conta, sempre com um motivo e um prazo, ou por tempo indeterminado. Ao suspender, as sessões da pessoa são encerradas, e o login passa a responder `403` (RN-012). O conteúdo dela continua visível, a menos que também seja ocultado. Como a pessoa não consegue entrar na conta, o e-mail de suspensão traz um link de uso único para recorrer. Ninguém suspende o superadministrador (RN-054), e só o superadministrador suspende administradores. A conta volta a ficar ativa ao fim do prazo ou quando a administração a reativa.
+Só a administração suspende uma conta, sempre com um motivo e um prazo, ou por tempo indeterminado. Ao suspender, as sessões da pessoa são encerradas, e o login passa a responder `403` (RN-012). O conteúdo dela continua visível, a menos que também seja ocultado. Como a pessoa não consegue entrar na conta, o e-mail de suspensão traz um link de uso único para recorrer. O superadministrador não pode ser suspenso (RN-054), e só ele suspende administradores. A conta volta a ficar ativa ao fim do prazo ou quando a administração a reativa.
 
 - **Erro:** `403` · `error.auth.access_denied`.
 - **Requisitos:** RF-043, RF-118.
@@ -862,8 +833,6 @@ Cada painel é visto só por quem precisa dele:
 - do moderador: o próprio moderador e a administração;
 - do dono: só o superadministrador.
 
-O conteúdo detalhado de cada painel fica nos critérios de aceite das issues.
-
 - **Erro:** `403` · `error.auth.access_denied`.
 - **Requisitos:** RF-103, RF-104, RF-105, RF-106, RF-107, RF-108, RF-109.
 
@@ -896,7 +865,7 @@ A plataforma só aceita cadastros depois de o dono informar o contato do encarre
 - **Requisitos:** RF-112, RF-113.
 
 #### RN-128 – Versões dos termos ⬜
-As versões dos termos de uso e da política de privacidade são numeradas e têm data de vigência. Uma versão publicada não muda mais: qualquer alteração vira uma versão nova, que exige um novo aceite (RN-039).
+As versões dos termos de uso e da política de privacidade são numeradas, têm data de vigência e podem ser lidas por qualquer pessoa, mesmo sem login. Uma versão publicada não muda mais: qualquer alteração vira uma versão nova, que exige um novo aceite (RN-039).
 
 - **Requisito:** RF-113.
 
@@ -923,7 +892,7 @@ Todo valor marcado com ⚙️ só muda dentro do intervalo seguro, com o histór
 - **Requisito:** RF-119.
 
 #### RN-132 – Backup ⬜
-O backup é feito automaticamente uma vez por dia, e o dono também pode pedir um backup manual por dia. Ele é gerado fora da requisição e criptografado com uma chave que fica fora do banco de dados e do código. Baixar um backup exige a reautenticação (RN-030), e cada download fica registrado. Os backups expiram no prazo da RN-043.
+O backup é feito automaticamente uma vez por dia, e o dono também pode pedir um backup manual por dia. Ele é gerado em segundo plano e criptografado com uma chave que fica fora do banco de dados e do código. Baixar um backup exige a reautenticação (RN-030), e cada download fica registrado. Os backups expiram no prazo da RN-043.
 
 - **Requisitos:** RF-115, RNF-014.
 
