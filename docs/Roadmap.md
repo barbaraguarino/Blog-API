@@ -60,7 +60,21 @@ A v1.0 marca o fim do escopo planejado: com ela, todos os requisitos e todas as 
 
 ---
 
-## 3. Versões
+## 3. Regras que valem para todas as versões
+
+Algumas regras valem em todas as versões e, por isso, não se repetem em cada uma delas:
+
+- os requisitos de base valem desde a primeira linha de código: RNF-001, RNF-002, RNF-003, RNF-005, RNF-008, RNF-025, RNF-026, RNF-029 e RNF-031 a RNF-039;
+- cada PR segue a Definição de Pronto, com testes, arquivos `.http`, Swagger e documentos atualizados;
+- a partir da v0.3, cada ação administrativa nova entra no registro das ações administrativas (RF-130), e cada valor ⚙️ novo pode ser ajustado pelo dono (RF-119). Até lá, os valores ⚙️ usam o padrão definido na configuração;
+- a partir da v0.4, cada dado pessoal novo entra na consulta, na exportação e na exclusão da conta (RF-026 a RF-028), e cada serviço externo novo entra na lista dos serviços que recebem dados (RN-042);
+- a partir da v0.8, cada evento novo ganha o seu tipo de aviso (RF-093);
+- até a v0.11, o idioma padrão e o fuso horário da plataforma vêm da configuração da API;
+- uma versão só é concluída quando todas as suas issues cumprem os critérios de aceite, a suíte completa de testes passa e há um relatório de testes da versão, como manda a seção 7 do [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md). O item "Concluída quando" de cada versão diz o que precisa funcionar de ponta a ponta.
+
+---
+
+## 4. Versões
 
 ### v0.0 – Fundação ✅
 
@@ -131,7 +145,7 @@ A v1.0 marca o fim do escopo planejado: com ela, todos os requisitos e todas as 
 
 ---
 
-## 4. Depois da v0.4 (ideias, sem compromisso)
+## 5. Depois da v0.4 (ideias, sem compromisso)
 
 Ideias que podem entrar no backlog no futuro, depois de avaliadas:
 
@@ -143,7 +157,7 @@ Ideias que podem entrar no backlog no futuro, depois de avaliadas:
 
 ---
 
-## 5. Fluxo de trabalho
+## 6. Fluxo de trabalho
 
 1. Toda tarefa nasce como uma **Issue**, com o template de funcionalidade ou de bug.
 2. A issue entra em um **Milestone** (versão) e na fila do quadro Kanban do Projects.
