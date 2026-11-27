@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 13.2 · **Última modificação:** 27/11/2026
+**Versão:** 13.3 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -304,7 +304,7 @@ Um dispositivo é reconhecido pelo navegador e por um identificador guardado nel
 - **Requisitos:** RF-032, RF-124.
 
 #### RN-041 – Histórico de interesses ⬜
-O histórico de interesses guarda as tags dos artigos que a pessoa leu ou aos quais reagiu e os autores que ela segue, e vem ligado por padrão. Os registros são apagados depois de um prazo. Limpar o histórico apaga tudo na hora; desligá-lo faz a plataforma parar de registrar, e a recomendação passa a usar só as tags de interesse escolhidas e os autores seguidos. ⚙️ prazo dos registros: padrão de 90 dias · intervalo: 30 a 180 dias.
+O histórico de interesses guarda as tags dos artigos que a pessoa leu ou aos quais reagiu e vem ligado por padrão. Os registros são apagados depois de um prazo. Limpar o histórico apaga tudo na hora; desligá-lo faz a plataforma parar de registrar, e a recomendação passa a usar só as tags de interesse escolhidas e os autores seguidos. ⚙️ prazo dos registros: padrão de 90 dias · intervalo: 30 a 180 dias.
 
 - **Requisitos:** RF-033, RF-080.
 
@@ -367,7 +367,7 @@ No modo fechado, não existem pedidos: um administrador nomeia o autor, e a pess
 - **Requisito:** RF-038.
 
 #### RN-050 – Retirada do papel de autor ⬜
-Um administrador pode retirar o papel de autor, informando um motivo, que fica registrado. Os artigos já publicados continuam publicados e assinados pela pessoa, os rascunhos ficam guardados, mas não podem mais ser publicados, e os artigos agendados voltam a ser rascunhos. A pessoa pode pedir autoria de novo, pelas regras normais.
+Um administrador pode retirar o papel de autor, informando um motivo, que fica no registro das ações administrativas (RN-140). Os artigos já publicados continuam publicados e assinados pela pessoa, os rascunhos ficam guardados, mas não podem mais ser publicados, e os artigos agendados voltam a ser rascunhos. A pessoa pode pedir autoria de novo, pelas regras normais.
 
 - **Requisito:** RF-039.
 
@@ -383,7 +383,7 @@ Só pode ser promovido a administrador o moderador com mais de 12 meses na funç
 - **Requisito:** RF-041.
 
 #### RN-053 – Rebaixamento de administradores ⬜
-Só o superadministrador rebaixa um administrador, que volta a ser moderador. O motivo é obrigatório e fica no registro das ações administrativas (RF-130).
+Só o superadministrador rebaixa um administrador, que volta a ser moderador. O motivo é obrigatório e fica no registro das ações administrativas (RN-140).
 
 - **Requisito:** RF-042.
 
@@ -399,7 +399,7 @@ Para a plataforma começar a funcionar, o superadministrador pode promover algu�
 - **Requisito:** RF-045.
 
 #### RN-056 – Transferência da posse da plataforma ⬜
-A transferência exige a reautenticação (RN-030). Quem recebe precisa ser um administrador ativo, com a verificação em duas etapas ativa, e deve aceitar em até 7 dias. Depois do aceite, o dono anterior vira administrador. A transferência fica no registro das ações administrativas.
+A transferência exige a reautenticação (RN-030). Quem recebe precisa ser um administrador ativo, com a verificação em duas etapas ativa, e deve aceitar em até 7 dias. Depois do aceite, o dono anterior vira administrador. A transferência fica no registro das ações administrativas (RN-140).
 
 - **Erro (proposto):** `422` · `error.ownership.invalid_recipient`.
 - **Requisito:** RF-044.
@@ -411,7 +411,7 @@ A transferência exige a reautenticação (RN-030). Quem recebe precisa ser um a
 ### 5.1 Artigos
 
 #### RN-057 – Quem escreve e edita ⬜
-Escrevem artigos os autores, os moderadores com permissão de autor, a administração e, no modo aberto, todo leitor ativo (RN-045). Só o autor e os coautores editam um artigo. A administração não edita artigos de outras pessoas: ela só pode ocultá-los pela moderação.
+Escrevem artigos os autores, os moderadores que também são autores, a administração e, no modo aberto, todo leitor ativo (RN-045). Só o autor e os coautores editam um artigo. A administração não edita artigos de outras pessoas: ela só pode ocultá-los pela moderação.
 
 - **Erro:** `403` · `error.auth.access_denied`.
 - **Requisitos:** RF-053, RF-061.
@@ -618,7 +618,7 @@ Todo comentário novo e todo conteúdo denunciado recebem uma classificação (b
 - **Requisito:** RF-078.
 
 #### RN-090 – Interesses e recomendação ⬜
-Cada leitor escolhe até 20 tags de interesse. A recomendação usa essas tags, os autores seguidos, as reações e o histórico de interesses, quando ele está ligado (RN-041), e deixa de fora os artigos já lidos, os próprios artigos e os de usuários bloqueados. O cálculo é feito pela própria API, sem enviar dados ao modelo de IA (D-035).
+Cada leitor escolhe até 20 tags de interesse. A recomendação usa essas tags, os autores seguidos e, quando está ligado, o histórico de interesses (RN-041), e deixa de fora os artigos já lidos, os próprios artigos e os de usuários bloqueados. O cálculo é feito pela própria API, sem enviar dados ao modelo de IA (D-035).
 
 - **Requisitos:** RF-079, RF-080.
 
