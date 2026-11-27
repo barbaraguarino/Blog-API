@@ -353,3 +353,16 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** a autora aprovou a proposta ("Aprovo a seção 6"): a recomendação é calculada pela própria API, a partir das tags de interesse, dos autores seguidos, das reações e do histórico de interesses, sem enviar dados ao modelo. As outras funcionalidades de IA continuam usando o modelo.
 - **Alternativas consideradas:** pedir as recomendações ao modelo, o que gastaria parte do teto de US$ 15 por mês (D-022) e enviaria dados de leitura a um serviço externo.
 - **Consequências:** a recomendação não tem custo, não entra nos limites de uso da IA e continua funcionando quando a IA está indisponível. O cálculo fica descrito na Arquitetura.
+
+## D-036: Renumeração das Regras de Negócio na ordem do documento
+
+- **Data:** 2026-11-27
+- **Status:** Aceita
+- **Contexto:** a D-033 decidiu numerar as regras na ordem do documento, como os Requisitos (D-028). As Regras de Negócio foram reescritas seção por seção (versões 1.0 a 10.0), e as regras antigas ganharam números novos. A autora aprovou registrar a correspondência ("Aplica os três").
+- **Decisão:** as regras passam a ir de RN-001 a RN-140, na ordem do documento. Correspondência entre os números antigos e os novos (a RN-002 nova, a RN-004 e da RN-009 em diante, quando não aparecem aqui, são regras novas):
+  - RN-001 → RN-001; RN-002 → RN-003; RN-003 → RN-011; RN-004 → RN-005; RN-005 → RN-006; RN-006 → RN-007; RN-007 → RN-008; RN-008 → RN-017; RN-009 → RN-012; RN-010 → RN-013;
+  - RN-011 → RN-018; RN-012 → RN-019; RN-013 → RN-020; RN-014 → RN-021; RN-015 → RN-022; RN-016 → RN-010; RN-017 → RN-023; RN-018 → RN-024; RN-019 → RN-025; RN-020 → RN-026;
+  - RN-021 → RN-027; RN-022 → RN-031; RN-030 → RN-046; RN-031 → RN-047; RN-032 → RN-048; RN-033 e RN-034 → RN-075; RN-035 → RN-057; RN-036 → RN-058; RN-037 → RN-059; RN-038 → RN-077;
+  - RN-039 → RN-074; RN-040 → RN-076; RN-041 → RN-078; RN-050 → RN-092; RN-051 → RN-093; RN-052 → RN-098; RN-053 → RN-100; RN-054 → RN-101; RN-060 → RN-113; RN-061 → RN-115.
+- **Alternativas consideradas:** manter os blocos de números por módulo, que não comportavam as regras novas.
+- **Consequências:** os números provisórios RN-1xx, usados durante a reescrita, não valem mais. O relatório de testes de 2026-11-15 não é editado e continua com os números antigos. O Plano de Testes é atualizado na revisão dele, com esta tabela.

@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 10.0 · **Última modificação:** 27/11/2026
+**Versão:** 10.1 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -21,7 +21,7 @@ Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão.
 
 ### Formato de erro
 
-Toda violação de regra devolve um corpo neste formato:
+Toda violação de regra devolve um corpo neste formato, que é o formato único de erro da API (RNF-026):
 
 ```json
 {
@@ -65,7 +65,7 @@ O cadastro com e-mail e senha responde sempre `202 Accepted`, com a mensagem "Se
 - **Erro:** só os de validação (`400`, RN-003).
 - **Requisitos:** RF-001, RNF-013.
 
-#### RN-003 – Dados obrigatórios e limites do cadastro ✅
+#### RN-003 – Dados obrigatórios e limites do cadastro 🟡
 O cadastro com e-mail e senha exige estes campos:
 
 | Campo | Obrigatório | Formato | Limite |
@@ -107,7 +107,7 @@ Por exemplo, "Ana Júlia Souza" vira `ana_jlia_souza_4821`. O resultado segue o 
 
 - **Requisitos:** RF-001, RF-002, RF-005.
 
-#### RN-007 – Cadastro com provedor social ✅ ⚠️ D5
+#### RN-007 – Cadastro com provedor social 🟡 ⚠️ D5
 O cadastro com provedor social, como o Google, só é aceito com os provedores que o dono ativou. Ele recebe o token de identidade emitido pelo provedor, e a API valida a assinatura e o destinatário do token (o `client-id` configurado) e exige que o provedor tenha confirmado o e-mail (`email_verified`). Do token vêm o identificador da pessoa no provedor, o e-mail e o nome: a API não confia em dados enviados pelo cliente, só no que vem dentro de um token assinado. A conta nasce sem senha local e com o e-mail já confirmado.
 
 - **Erros:**
@@ -152,7 +152,7 @@ Toda conta nasce com o papel de leitor. Ninguém nasce autor, moderador ou admin
 
 ### 2.3 Login
 
-#### RN-012 – Login por e-mail ou nickname ✅ ⚠️ D6
+#### RN-012 – Login por e-mail ou nickname 🟡 ⚠️ D6
 O campo `login` aceita o e-mail ou o nickname: se contém `@`, a busca é por e-mail; senão, por nickname, que nunca contém `@` (RN-032). A senha é comparada com o hash BCrypt. A situação da conta só é conferida depois de a senha estar certa, para que uma senha errada nunca revele que a conta existe.
 
 - **Erros:**
