@@ -340,7 +340,17 @@ Uma ideia nova só entra no Roadmap depois de virar requisito e, se for além da
 
 ---
 
-## 6. Fluxo de trabalho
+## 6. Riscos e pontos de atenção
+
+- **Escopo grande para uma pessoa:** são 132 requisitos funcionais, 44 não funcionais e 140 regras de negócio, desenvolvidos sem prazo fixo. Para reduzir o risco, a ordem segue as dependências e cada versão entrega algo que funciona sozinho, de modo que o projeto tem valor mesmo se parar no meio.
+- **Custo da Apple:** o programa de desenvolvedor da Apple custa cerca de US$ 8 por mês, quase metade do teto de US$ 15 (D-025). Por isso a Apple pode ficar desativada enquanto o custo não couber.
+- **Idade mínima:** o padrão é de 18 anos. Um valor menor só deve ser liberado depois de conferir a Lei 15.211/2025, o ECA Digital (D-033).
+- **Cadastros bloqueados a partir da v0.4:** a plataforma só aceita cadastros depois de o dono publicar os termos e o contato do encarregado (RN-127). Por isso, os testes e os arquivos `.http` passam a preparar o dono e os termos antes de cadastrar alguém.
+- **Serviços externos:** cada versão que usa um serviço novo depende de uma conta ou chave criada pela autora, listada nos pré-requisitos dela. Sem isso, a versão para no meio.
+
+---
+
+## 7. Fluxo de trabalho
 
 Cada versão é um Milestone do GitHub, e cada entrega dentro dela é uma issue, puxada uma de cada vez pelo quadro Kanban do Projects, sem Sprints (D-015). Cada issue tem um branch e um único PR para a `develop`. Ao fechar o Milestone, um branch `release/vX.Y.Z` leva a versão para a `main`, junto com um relatório de testes. As versões não têm datas: cada uma termina quando todas as suas issues estão prontas.
 
