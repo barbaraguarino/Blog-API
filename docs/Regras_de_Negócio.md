@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 7.0 · **Última modificação:** 27/11/2026
+**Versão:** 8.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -730,7 +730,70 @@ O perfil público mostra os dados que a pessoa escolheu mostrar (RN-034) e, no c
 
 ---
 
-## 8. Moderação
+## 8. Notificações
+
+#### RN-104 – Tipos de aviso e canais ⬜
+A plataforma avisa sobre estes eventos:
+
+- comentário em um artigo da pessoa;
+- resposta a um comentário dela;
+- menção;
+- novo seguidor;
+- novo artigo de um autor seguido;
+- convite de coautoria;
+- resultado de pedidos, denúncias e recursos;
+- ação de moderação sobre o conteúdo dela;
+- anúncio da plataforma.
+
+Os avisos chegam por dois canais: dentro da plataforma e por e-mail. Por padrão, todos os tipos chegam dentro da plataforma, mas por e-mail chegam só os resultados, as ações de moderação e os convites, para não encher a caixa de entrada. A pessoa muda os canais de cada tipo.
+
+- **Requisitos:** RF-093, RF-094, RF-095.
+
+#### RN-105 – E-mails essenciais ⬜
+São essenciais os e-mails com códigos e os de dispositivo novo, troca de e-mail, tentativa de cadastro com o e-mail da pessoa, redefinição de senha, exclusão agendada, suspensão e novos termos de uso. Eles não podem ser desligados, não entram no resumo diário e continuam sendo enviados quando o teto de custos é atingido, para que ninguém perca o acesso à conta.
+
+- **Requisitos:** RF-095, RF-124.
+
+#### RN-106 – Entrega em tempo real ⬜
+Os avisos dentro da plataforma chegam por uma conexão contínua (*Server-Sent Events*), sem que o front-end precise consultar a API de tempos em tempos. Todo aviso é guardado antes de ser enviado, e quem estava desconectado recebe os pendentes ao se conectar de novo.
+
+- **Requisitos:** RF-093, RNF-030.
+
+#### RN-107 – Lista de avisos ⬜
+A lista de avisos é paginada, com os mais recentes primeiro, e informa quantos ainda não foram lidos. A pessoa marca um aviso ou todos como lidos. Os avisos são apagados depois de 90 dias.
+
+- **Requisito:** RF-096.
+
+#### RN-108 – Agrupamento de avisos ⬜
+Eventos do mesmo tipo sobre o mesmo item, ocorridos em até 10 minutos, viram um único aviso, como "Ana e mais 3 pessoas comentaram no seu artigo".
+
+- **Requisito:** RF-093.
+
+#### RN-109 – Resumo diário por e-mail ⬜
+Quem escolhe o resumo diário recebe um único e-mail por dia, às 8h no fuso da plataforma, e só se houver avisos não lidos. O resumo traz até 50 avisos e termina com "e mais N avisos" quando houver mais.
+
+- **Requisito:** RF-097.
+
+#### RN-110 – Limites de e-mail ⬜
+Cada pessoa recebe um número limitado de e-mails de aviso por dia, e o que passar do limite vai para o resumo do dia. A plataforma também tem uma cota mensal de e-mails, que custa por volta de US$ 1 no padrão; quando ela acaba, só os e-mails essenciais (RN-105) continuam.
+
+- ⚙️ e-mails de aviso por pessoa: padrão de 20 por dia · intervalo: 5 a 50.
+- ⚙️ cota mensal da plataforma: padrão de 10.000 e-mails · intervalo: 1.000 a 50.000.
+- **Requisitos:** RNF-022, RNF-023.
+
+#### RN-111 – Reenvio de e-mails que falharam ⬜
+Um e-mail cujo envio falhar é tentado de novo até 3 vezes, depois de 1, 5 e 30 minutos; se continuar falhando, é marcado como perdido e entra nas estatísticas de e-mails. Um endereço que devolve os e-mails de forma permanente deixa de receber os e-mails não essenciais até a pessoa confirmar o endereço de novo.
+
+- **Requisitos:** RF-128, RNF-043.
+
+#### RN-112 – Avisos, bloqueios e situação da conta ⬜
+Ninguém recebe avisos causados por alguém com quem tem um bloqueio (RN-102). Contas que não estão ativas (RN-009) recebem só os e-mails essenciais.
+
+- **Requisitos:** RF-091, RF-093.
+
+---
+
+## 9. Moderação
 
 #### RN-160 – Denúncias ⬜
 - **Regra:** um usuário denuncia o mesmo conteúdo **uma única vez**, escolhendo um motivo de uma lista fixa (spam, assédio, conteúdo impróprio, desinformação, outro) e com uma descrição opcional.
@@ -748,7 +811,7 @@ O perfil público mostra os dados que a pessoa escolheu mostrar (RN-034) e, no c
 
 ---
 
-## 9. Divergências conhecidas
+## 10. Divergências conhecidas
 
 Pontos em que o código atual não cumpre totalmente a regra pretendida. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
 
