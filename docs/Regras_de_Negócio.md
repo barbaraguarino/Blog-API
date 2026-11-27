@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 13.0 · **Última modificação:** 27/11/2026
+**Versão:** 13.1 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -17,7 +17,7 @@ Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê
 
 ### Regras ajustáveis pelo dono
 
-Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão. O dono pode ajustá-los pela API (RF-119), sempre dentro de um intervalo seguro definido no código, e cada mudança guarda quem a fez, quando, o valor anterior e o novo. Só o perfil de testes aceita valores fora desse intervalo, para que os testes não precisem esperar prazos reais; fora dele, a API não sobe com um valor inseguro. Cada regra ajustável informa o padrão e o intervalo, como em "⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses". Os limites por dia são contados de meia-noite a meia-noite no fuso da plataforma (RN-125).
+Os prazos, as quantidades e os limites marcados com ⚙️ são valores padrão, que o dono pode ajustar dentro de um intervalo seguro (RN-131). Cada regra ajustável informa o padrão e o intervalo, como em "⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses". Os limites por dia são contados de meia-noite a meia-noite no fuso da plataforma (RN-125).
 
 ---
 
@@ -583,7 +583,7 @@ Cada autor tem um limite diário de pedidos de correção, sugestões de texto e
 - **Requisitos:** RNF-022, RNF-023.
 
 #### RN-083 – Tradução automática ⬜
-A tradução automática é oferecida nos idiomas escolhidos pelo dono entre os suportados (D-033). Cada tradução é gerada na primeira vez que alguém a pede e é guardada para todos os leitores. Quando o original muda, ela é refeita só na primeira leitura seguinte, e não a cada edição. A tradução preserva o formato do artigo e aparece marcada como automática. O autor não edita uma tradução automática: para isso, ele escreve a própria versão naquele idioma (RN-068). ⚙️ idiomas: padrão de português, inglês e espanhol · o dono escolhe entre os idiomas suportados.
+A tradução automática é oferecida nos idiomas escolhidos pelo dono. Cada tradução é gerada na primeira vez que alguém a pede e é guardada para todos os leitores. Quando o original muda, ela é refeita só na primeira leitura seguinte, e não a cada edição. A tradução preserva o formato do artigo e aparece marcada como automática. O autor não edita uma tradução automática: para isso, ele escreve a própria versão naquele idioma (RN-068). ⚙️ idiomas: padrão de português, inglês e espanhol · o dono escolhe entre os idiomas suportados.
 
 - **Requisitos:** RF-072, RNF-024, RNF-028.
 
@@ -697,7 +697,7 @@ Quem foi bloqueado não comenta nos artigos de quem bloqueou, não responde a es
 #### RN-103 – Perfil público ⬜
 O perfil público exibe os dados que a pessoa escolheu mostrar (RN-034) e, no caso dos autores, os artigos publicados e as séries. O perfil de uma conta desativada, suspensa, com exclusão agendada ou excluída responde `404`. O perfil sai do ar nesses casos, mas o conteúdo da pessoa segue as regras de cada situação (RN-038, RN-077 e RN-117).
 
-- **Requisitos:** RF-092, RF-064.
+- **Requisitos:** RF-064, RF-092.
 
 ---
 
@@ -790,7 +790,7 @@ O conteúdo ocultado some das listagens, da busca, do feed e do perfil público,
 - **Requisitos:** RF-099, RF-101.
 
 #### RN-117 – Suspensão de contas ⬜
-Só a administração suspende uma conta, sempre com um motivo e um prazo, ou por tempo indeterminado. Ao suspender, as sessões da pessoa são encerradas, e o login passa a responder `403` (RN-012). O conteúdo dela continua visível, a menos que também seja ocultado. Como a pessoa não consegue entrar na conta, o e-mail de suspensão traz um link de uso único para recorrer. O superadministrador não pode ser suspenso (RN-054), e só ele suspende administradores. A conta volta a ficar ativa ao fim do prazo ou quando a administração a reativa.
+Só a administração suspende uma conta, com as opções da RN-115. Ao suspender, as sessões da pessoa são encerradas, e o login passa a responder `403` (RN-012). O conteúdo dela continua visível, a menos que também seja ocultado. Como a pessoa não consegue entrar na conta, o e-mail de suspensão traz um link de uso único para recorrer. O superadministrador não pode ser suspenso (RN-054), e só ele suspende administradores. A conta volta a ficar ativa ao fim do prazo ou quando a administração a reativa.
 
 - **Erro:** `403` · `error.auth.access_denied`.
 - **Requisitos:** RF-043, RF-118.
@@ -832,6 +832,8 @@ Cada painel é visto só por quem precisa dele:
 - da moderação: os moderadores e a administração;
 - do moderador: o próprio moderador e a administração;
 - do dono: só o superadministrador.
+
+Qualquer outro acesso é recusado.
 
 - **Erro:** `403` · `error.auth.access_denied`.
 - **Requisitos:** RF-103, RF-104, RF-105, RF-106, RF-107, RF-108, RF-109.
@@ -886,7 +888,7 @@ A administração lista os usuários com filtros por papel e situação. Cada pe
 ### 10.4 Regras e operação
 
 #### RN-131 – Ajuste das regras ⬜
-Todo valor marcado com ⚙️ só muda dentro do intervalo seguro, com o histórico descrito na seção 1.
+O dono ajusta pela API os valores marcados com ⚙️, sempre dentro do intervalo seguro definido no código, e cada mudança guarda quem a fez, quando, o valor anterior e o novo. Só o perfil de testes aceita valores fora desse intervalo, para que os testes não precisem esperar prazos reais; fora dele, a API não sobe com um valor inseguro.
 
 - **Erro (proposto):** `422` · `error.settings.out_of_range`.
 - **Requisito:** RF-119.
@@ -947,7 +949,7 @@ Cada ação administrativa guarda quem a fez, o que foi feito, sobre quem ou sob
 
 ## 11. Divergências conhecidas
 
-Pontos em que o código atual não cumpre totalmente a regra pretendida. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
+Pontos em que o código atual contraria uma regra ou não a cumpre totalmente. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
 
 | ID | Regra | O que acontece hoje | Impacto | Correção proposta |
 |---|---|---|---|---|
