@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 8.0 · **Última modificação:** 27/11/2026
+**Versão:** 9.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -795,19 +795,56 @@ Ninguém recebe avisos causados por alguém com quem tem um bloqueio (RN-102). C
 
 ## 9. Moderação
 
-#### RN-160 – Denúncias ⬜
-- **Regra:** um usuário denuncia o mesmo conteúdo **uma única vez**, escolhendo um motivo de uma lista fixa (spam, assédio, conteúdo impróprio, desinformação, outro) e com uma descrição opcional.
-- **Erro (proposto):** `409` · `error.report.already_exists`.
+#### RN-113 – Denúncias ⬜
+O usuário autenticado pode denunciar artigos, comentários e perfis. Cada pessoa denuncia o mesmo item uma única vez, e ninguém denuncia o próprio conteúdo. O motivo é escolhido de uma lista fixa (spam, assédio, discurso de ódio, conteúdo impróprio, desinformação, violação de direitos autorais ou outro), e a descrição, de até 1.000 caracteres, é obrigatória no motivo "outro". No momento da denúncia, uma cópia do conteúdo é guardada, para que a análise não dependa de uma edição feita depois. Cada pessoa faz até 20 denúncias por dia. Quem denunciou nunca é revelado a quem foi denunciado.
+
+- **Erros (propostos):** `409` · `error.report.already_exists`; `422` · `error.report.own_content`; `429` · `error.report.too_many`.
 - **Requisito:** RF-098.
 
-#### RN-161 – Ações de moderação ⬜
-- **Regra:** uma denúncia pode ser:
-  - **arquivada**, quando não procede;
-  - resolvida com a **ocultação do conteúdo**, que some das listagens públicas;
-  - resolvida com a **penalização do autor**, que pode chegar ao bloqueio da conta (`locked = true`).
+#### RN-114 – Fila e conflito de interesse ⬜
+A fila de denúncias é ordenada pela classificação da triagem (RN-089) e, depois, pela data, da mais antiga para a mais nova. As denúncias sobre o mesmo item são analisadas juntas. Ninguém analisa uma denúncia sobre o próprio conteúdo nem uma denúncia que fez. A análise exige a verificação em duas etapas ativa (RN-028).
 
-  Toda ação registra quem a tomou e quando.
-- **Requisito:** RF-099.
+- **Erro (proposto):** `403` · `error.moderation.conflict_of_interest`.
+- **Requisitos:** RF-099, RF-107.
+
+#### RN-115 – Ações de moderação ⬜
+Os moderadores e a administração arquivam a denúncia quando ela não procede, ocultam artigos e comentários e removem comentários. Só a administração aplica penalidades ao autor: advertência, suspensão temporária, de 1 a 90 dias, ou suspensão por tempo indeterminado. Toda ação exige um motivo e fica registrada com quem a tomou e quando. Uma denúncia é procedente quando leva a qualquer ação além do arquivamento.
+
+- **Erro:** `403` · `error.auth.access_denied`.
+- **Requisitos:** RF-099, RF-130.
+
+#### RN-116 – Conteúdo ocultado ⬜
+O conteúdo ocultado some das listagens, da busca, do feed e do perfil público, e um artigo ocultado leva junto os comentários dele. O autor continua vendo o conteúdo, marcado como ocultado e com o motivo. A ocultação só é desfeita pela moderação ou por um recurso aceito (RN-119).
+
+- **Requisitos:** RF-099, RF-101.
+
+#### RN-117 – Suspensão de contas ⬜
+Só a administração suspende uma conta, sempre com um motivo e um prazo, ou por tempo indeterminado. Ao suspender, as sessões da pessoa são encerradas, e o login passa a responder `403` (RN-012). O conteúdo dela continua visível, a menos que também seja ocultado. Como a pessoa não consegue entrar na conta, o e-mail de suspensão traz um link de uso único para recorrer. Ninguém suspende o superadministrador (RN-054), e só o superadministrador suspende administradores. A conta volta a ficar ativa ao fim do prazo ou quando a administração a reativa.
+
+- **Erro:** `403` · `error.auth.access_denied`.
+- **Requisitos:** RF-043, RF-118.
+
+#### RN-118 – Resultado da análise ⬜
+Quem denunciou fica sabendo só se a denúncia foi procedente ou não, sem os detalhes da ação, para proteger a privacidade de quem foi denunciado. Quem foi denunciado fica sabendo a ação tomada e o motivo, mas nunca quem denunciou.
+
+- **Requisito:** RF-100.
+
+#### RN-119 – Recurso ⬜
+O autor pode recorrer de uma ocultação ou de uma penalidade uma única vez, dentro de um prazo, com um texto de até 1.000 caracteres. O recurso é analisado por alguém diferente de quem tomou a decisão, e o recurso contra uma penalidade só pode ser analisado pela administração. A decisão do recurso é final. Se o recurso for aceito, o conteúdo volta e a penalidade é desfeita, e a ação passa a contar como revertida no painel de quem a tomou. ⚙️ prazo para recorrer: padrão de 30 dias · intervalo: 7 a 90 dias.
+
+- **Erros (propostos):** `422` · `error.appeal.deadline_passed`; `409` · `error.appeal.already_exists`.
+- **Requisitos:** RF-101, RF-108.
+
+#### RN-120 – Denúncia procedente contra um moderador ⬜
+Para a promoção a administrador (RN-052), conta como denúncia procedente contra um moderador toda denúncia procedente sobre um conteúdo ou o perfil dele. As ações dele que forem revertidas aparecem no painel do moderador, mas não contam como denúncia procedente (D-031).
+
+- **Requisitos:** RF-041, RF-108.
+
+#### RN-121 – Palavras bloqueadas ⬜
+O dono mantém uma lista de até 500 palavras ou expressões bloqueadas. A comparação ignora maiúsculas e acentos e considera só palavras inteiras. Um comentário com uma palavra da lista é recusado com uma mensagem genérica, sem dizer qual palavra foi encontrada, para não ensinar a contornar a lista. Os comentários barrados entram, de forma agregada, no painel da moderação.
+
+- **Erro (proposto):** `422` · `error.comment.blocked_word`.
+- **Requisitos:** RF-102, RF-107.
 
 ---
 
