@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 10.1 · **Última modificação:** 27/11/2026
+**Versão:** 11.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -11,7 +11,7 @@ Este documento reúne as regras que o sistema obedece: validações, restriçõe
 Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê, e, quando pode ser violada, qual erro o cliente recebe. As regras são numeradas na ordem em que aparecem neste documento. Uma regra nova entra na seção do seu módulo e, quando necessário, a numeração é refeita e registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos. Os requisitos que as regras detalham estão em [Requisitos.md](Requisitos.md).
 
 - **Status:** ✅ implementado · 🟡 parcial · ⬜ planejado.
-- **Divergências:** quando o código não cumpre totalmente uma regra já implementada, ela recebe a marca ⚠️, e a diferença é descrita na seção *Divergências conhecidas*.
+- **Divergências:** quando o código atual contraria uma regra ou não a cumpre totalmente, ela recebe a marca ⚠️, e a diferença é descrita na seção *Divergências conhecidas*.
 - **Erros:** status HTTP e chave de i18n, traduzida conforme o cabeçalho `Accept-Language` e devolvida no campo `message`. Nas regras planejadas, a chave é uma proposta.
 - **Testes:** toda regra implementada tem pelo menos um teste que cita o ID no `@DisplayName`, e uma regra que muda é atualizada aqui no mesmo PR da mudança de código.
 
@@ -117,7 +117,7 @@ O cadastro com provedor social, como o Google, só é aceito com os provedores q
   - `422` · `error.auth.provider_disabled`.
 - **Requisitos:** RF-002, RF-005.
 
-#### RN-008 – Conta de provedor única ✅ ⚠️ D2
+#### RN-008 – Conta de provedor única 🟡 ⚠️ D2
 Cada conta de um provedor social está ligada a no máximo um usuário. O identificador do provedor é conferido antes do e-mail. Como o token prova que a pessoa é dona do e-mail, a resposta pode dizer claramente o que aconteceu, sem revelar contas a quem não é dono delas. As contas nunca são vinculadas automaticamente: o vínculo é sempre uma ação explícita do usuário (RN-031).
 
 - **Erros:**
@@ -195,7 +195,7 @@ Um login bem-sucedido emite um JWT assinado com HMAC256, com emissor igual ao no
 - **Requisitos:** RF-003, RF-004, RNF-002, RNF-004.
 
 #### RN-018 – Sessões com renovação ⬜
-O token de acesso dura 15 minutos, e o token de renovação dura 7 dias. Cada login cria uma sessão com o usuário, o hash do token de renovação, o IP, o dispositivo (User-Agent), a data de criação, o último uso, a expiração e a data em que foi encerrada. O logout encerra a sessão atual e apaga os cookies. Um token de acesso curto limita o estrago de um token roubado, e o token de renovação guardado no banco permite encerrar sessões, o que um JWT sozinho não permite. ⚙️ validade do token de renovação: padrão de 7 dias · intervalo: 1 a 30 dias.
+O token de acesso passa a durar 15 minutos (o `JWT_EXPIRATION` da RN-017), e o token de renovação dura 7 dias. Cada login cria uma sessão com o usuário, o hash do token de renovação, o IP, o dispositivo (User-Agent), a data de criação, o último uso, a expiração e a data em que foi encerrada. O logout encerra a sessão atual e apaga os cookies. Um token de acesso curto limita o estrago de um token roubado, e o token de renovação guardado no banco permite encerrar sessões, o que um JWT sozinho não permite. ⚙️ validade do token de renovação: padrão de 7 dias · intervalo: 1 a 30 dias.
 
 - **Requisitos:** RF-010, RF-011, RNF-006.
 
@@ -230,7 +230,7 @@ Um novo código só pode ser pedido 60 segundos depois do anterior, e um novo c�
 - **Requisitos:** RF-014, RNF-007, RNF-023.
 
 #### RN-024 – Resposta neutra na recuperação de senha ⬜
-O pedido de recuperação responde sempre da mesma forma ("Se o e-mail estiver cadastrado, você receberá um código"), exista ou não a conta. Isso impede que alguém use a recuperação para descobrir quais e-mails estão cadastrados. Uma conta sem senha, criada só com um provedor social, pode definir uma senha por esse caminho, porque o código prova que a pessoa é dona do e-mail.
+O pedido de recuperação responde sempre da mesma forma ("Se o e-mail estiver cadastrado, você receberá um código"), exista ou não a conta. Isso impede que alguém use a recuperação para descobrir quais e-mails estão cadastrados. Uma conta sem senha, criada só com um provedor social, pode definir uma senha por esse caminho, porque o código prova que a pessoa é dona do e-mail. Pelo mesmo motivo, recuperar a senha de uma conta com o e-mail ainda não confirmado também confirma o e-mail; assim, quem teve o e-mail usado por outra pessoa no cadastro (RN-002) retoma a conta sem esperar o prazo da RN-010.
 
 - **Requisitos:** RF-015, RNF-013.
 
@@ -263,7 +263,7 @@ O usuário pode marcar o dispositivo em que entrou como confiável, e o código 
 - **Requisito:** RF-019.
 
 #### RN-030 – Reautenticação antes de ações sensíveis ⬜
-As ações sensíveis do RF-021 (trocar o e-mail, desativar a verificação em duas etapas, excluir a conta, transferir a posse da plataforma e baixar ou restaurar backups) exigem que a pessoa se confirme de novo, mesmo logada: com a senha, com o código do aplicativo autenticador ou, se a conta não tiver senha, com um código por e-mail. A confirmação vale por 5 minutos.
+As ações sensíveis do RF-021 (trocar o e-mail, desativar a verificação em duas etapas, excluir a conta, transferir a posse da plataforma e baixar ou restaurar backups) e as outras indicadas nestas regras, como cadastrar uma passkey e exportar os próprios dados, exigem que a pessoa se confirme de novo, mesmo logada: com a senha, com o código do aplicativo autenticador ou, se a conta não tiver senha, com um código por e-mail. A confirmação vale por 5 minutos.
 
 - **Erro:** `403` · `error.auth.reauthentication_required`.
 - **Requisito:** RF-021.
@@ -292,7 +292,7 @@ A troca exige a reautenticação (RN-030). O código vai para o endereço novo, 
 ## 3. Privacidade
 
 #### RN-034 – Perfil público escolhido pelo usuário ⬜
-O nickname é sempre público, porque identifica a pessoa nos comentários. O nome, a foto e a descrição só aparecem no perfil público se a pessoa escolher mostrá-los, e o padrão é ficarem ocultos: a privacidade vem ativada desde o início, como pede o art. 46 da LGPD. O e-mail nunca é público. Nos autores, os artigos publicados e o número de seguidores são sempre públicos, mas a lista de seguidores e a de autores seguidos nunca são.
+O nickname é sempre público, porque identifica a pessoa nos comentários. O nome, a foto e a descrição só aparecem no perfil público se a pessoa escolher mostrá-los, e o padrão é ficarem ocultos: a privacidade vem ativada desde o início, como pede o art. 46 da LGPD. O e-mail nunca é público. Nos autores, os artigos publicados e o número de seguidores são sempre públicos, mas a lista de seguidores e a de autores seguidos nunca são públicas.
 
 - **Requisitos:** RF-025, RF-092.
 
@@ -333,7 +333,7 @@ Um dispositivo é reconhecido por um identificador guardado em um cookie, junto 
 - **Requisitos:** RF-032, RF-124.
 
 #### RN-041 – Histórico de interesses ⬜
-O histórico de interesses guarda as tags dos artigos que a pessoa leu ou em que reagiu e os autores que ela segue, e vem ligado por padrão. Os registros são apagados depois de um prazo. Limpar o histórico apaga tudo na hora; desligá-lo faz a plataforma parar de registrar, e a recomendação passa a usar só as tags de interesse escolhidas e os autores seguidos. ⚙️ prazo dos registros: padrão de 90 dias · intervalo: 30 a 180 dias.
+O histórico de interesses guarda as tags dos artigos que a pessoa leu ou aos quais reagiu e os autores que ela segue, e vem ligado por padrão. Os registros são apagados depois de um prazo. Limpar o histórico apaga tudo na hora; desligá-lo faz a plataforma parar de registrar, e a recomendação passa a usar só as tags de interesse escolhidas e os autores seguidos. ⚙️ prazo dos registros: padrão de 90 dias · intervalo: 30 a 180 dias.
 
 - **Requisitos:** RF-033, RF-080.
 
@@ -384,7 +384,7 @@ Cada pessoa tem no máximo um pedido de autoria pendente, com uma motivação de
 - **Requisito:** RF-036.
 
 #### RN-048 – Aprovação do pedido de autoria ⬜
-O pedido precisa da aprovação de 2 administradores, ou de 1 se a plataforma tiver só um. O superadministrador conta como administrador e segue as mesmas regras. Uma única recusa, com motivo, encerra o pedido, e o motivo fica visível para o solicitante. A aprovação de mais de uma pessoa evita que alguém vire autor por favoritismo. ⚙️ aprovações: padrão de 2 · intervalo: 1 a 3.
+O pedido precisa da aprovação de 2 administradores. O superadministrador conta como administrador e segue as mesmas regras. Se houver menos administradores do que o número exigido, bastam as aprovações de todos eles. Uma única recusa, com motivo, encerra o pedido, e o motivo fica visível para o solicitante. A aprovação de mais de uma pessoa evita que alguém vire autor por favoritismo. ⚙️ aprovações: padrão de 2 · intervalo: 1 a 3.
 
 - **Erro:** `403` · `error.auth.access_denied` para quem não é da administração.
 - **Requisito:** RF-037.
@@ -406,7 +406,7 @@ O papel de moderador é concedido e retirado por um administrador e não exige s
 - **Requisito:** RF-040.
 
 #### RN-052 – Promoção a administrador ⬜
-Só pode ser promovido a administrador o moderador com mais de 12 meses na função e sem nenhuma denúncia procedente contra ele. A promoção começa com a indicação feita por um administrador. Com 3 ou mais administradores, ela exige a aprovação de 2 outros administradores, além de quem indicou e do próprio candidato; com menos de 3, quem aprova é o superadministrador. As exigências evitam o favoritismo na escolha de quem administra a plataforma. ⚙️ tempo como moderador: padrão de 12 meses · intervalo: 6 a 24 meses.
+Só pode ser promovido a administrador o moderador com mais de 12 meses na função e sem nenhuma denúncia procedente contra ele. A promoção começa com a indicação feita por um administrador. Com 3 ou mais administradores, contando o superadministrador, ela exige a aprovação de 2 outros administradores, além de quem indicou e do próprio candidato; com menos de 3, quem aprova é o superadministrador. As exigências evitam o favoritismo na escolha de quem administra a plataforma. ⚙️ tempo como moderador: padrão de 12 meses · intervalo: 6 a 24 meses.
 
 - **Erro (proposto):** `422` · `error.promotion.requirements_not_met`.
 - **Requisito:** RF-041.
@@ -573,7 +573,7 @@ São aceitas imagens em JPEG, PNG e WebP, com até 5 MB. Cada imagem é regravad
 - **Requisitos:** RF-067, RNF-010.
 
 #### RN-077 – Listagens públicas e paginação ⬜
-As listagens públicas mostram só os artigos publicados, que não estejam ocultados e cujo autor não esteja com a conta desativada, da publicação mais recente para a mais antiga. Toda listagem da API é paginada, com 10 itens por página por padrão e o máximo de 50.
+As listagens públicas mostram só os artigos publicados, que não estejam ocultados e cujo autor não esteja com a conta desativada nem com exclusão agendada, da publicação mais recente para a mais antiga. Toda listagem da API é paginada, com 10 itens por página por padrão e o máximo de 50.
 
 - **Requisitos:** RF-046, RNF-029.
 
@@ -604,7 +604,7 @@ O dono liga e desliga separadamente cada funcionalidade de IA: tradução, corre
 - **Requisito:** RF-081.
 
 #### RN-082 – Limites de uso da IA ⬜
-Cada autor tem um limite diário de pedidos de correção, sugestões de texto e descrições, e a plataforma tem uma cota mensal de gasto com IA. A cota padrão vem da conta do teto de custos: dos US$ 15 por mês, cerca de US$ 8 vão para o login com Apple, e sobram uns US$ 7 para a IA, as imagens e os e-mails.
+Cada autor tem um limite diário de pedidos de correção, sugestões de texto e descrições, e a plataforma tem uma cota mensal de gasto com IA. A cota padrão vem da conta do teto de custos: dos US$ 15 por mês, cerca de US$ 8 vão para o login com Apple, quando ele está ativo (D-025), e sobram uns US$ 7 para a IA, as imagens e os e-mails.
 
 - ⚙️ pedidos por autor: padrão de 20 por dia · intervalo: 5 a 100.
 - ⚙️ cota mensal da plataforma: padrão de US$ 4 · intervalo: US$ 0 a US$ 10.
@@ -612,7 +612,7 @@ Cada autor tem um limite diário de pedidos de correção, sugestões de texto e
 - **Requisitos:** RNF-022, RNF-023.
 
 #### RN-083 – Tradução automática ⬜
-A tradução automática é oferecida em português, inglês e espanhol, e o dono escolhe entre os idiomas suportados (D-033). Cada tradução é gerada na primeira vez que alguém a pede e é guardada para todos os leitores. Quando o original muda, ela é refeita só na primeira leitura seguinte, e não a cada edição. A tradução preserva o formato do artigo e aparece marcada como automática. O autor não edita uma tradução automática: para isso, ele escreve a própria versão naquele idioma (RN-068).
+A tradução automática é oferecida nos idiomas escolhidos pelo dono entre os suportados (D-033). Cada tradução é gerada na primeira vez que alguém a pede e é guardada para todos os leitores. Quando o original muda, ela é refeita só na primeira leitura seguinte, e não a cada edição. A tradução preserva o formato do artigo e aparece marcada como automática. O autor não edita uma tradução automática: para isso, ele escreve a própria versão naquele idioma (RN-068). ⚙️ idiomas: padrão de português, inglês e espanhol · o dono escolhe entre os idiomas suportados.
 
 - **Requisitos:** RF-072, RNF-024, RNF-028.
 
@@ -724,7 +724,7 @@ Quem foi bloqueado não comenta nos artigos de quem bloqueou, não responde a es
 - **Requisito:** RF-091.
 
 #### RN-103 – Perfil público ⬜
-O perfil público mostra os dados que a pessoa escolheu mostrar (RN-034) e, no caso dos autores, os artigos publicados e as séries. O perfil de uma conta desativada, suspensa, com exclusão agendada ou excluída responde `404`.
+O perfil público mostra os dados que a pessoa escolheu mostrar (RN-034) e, no caso dos autores, os artigos publicados e as séries. O perfil de uma conta desativada, suspensa, com exclusão agendada ou excluída responde `404`. O perfil sai do ar nesses casos, mas o conteúdo da pessoa segue as regras de cada situação (RN-038, RN-077 e RN-117).
 
 - **Requisitos:** RF-092, RF-064.
 
@@ -750,7 +750,7 @@ Os avisos chegam por dois canais: dentro da plataforma e por e-mail. Por padrão
 - **Requisitos:** RF-093, RF-094, RF-095.
 
 #### RN-105 – E-mails essenciais ⬜
-São essenciais os e-mails com códigos e os de dispositivo novo, troca de e-mail, tentativa de cadastro com o e-mail da pessoa, redefinição de senha, exclusão agendada, suspensão e novos termos de uso. Eles não podem ser desligados, não entram no resumo diário e continuam sendo enviados quando o teto de custos é atingido, para que ninguém perca o acesso à conta.
+São essenciais os e-mails com códigos e os de dispositivo novo, troca de e-mail, tentativa de cadastro com o e-mail da pessoa, redefinição de senha, exclusão agendada, suspensão e novos termos de uso. Eles não podem ser desligados, não entram no resumo diário e continuam sendo enviados quando o teto de custos é atingido, para que ninguém perca o acesso à conta. Os convites (RN-129) não são essenciais e param junto com os outros e-mails quando o teto é atingido.
 
 - **Requisitos:** RF-095, RF-124.
 
