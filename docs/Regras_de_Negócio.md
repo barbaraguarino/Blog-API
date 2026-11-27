@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 13.1 · **Última modificação:** 27/11/2026
+**Versão:** 13.2 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -343,7 +343,7 @@ O dono escolhe um dos três modos de autoria: por pedido, que é o padrão, fech
 - **Requisito:** RF-035.
 
 #### RN-046 – Prazo mínimo para pedir autoria ⬜
-No modo por pedido, só pode pedir autoria quem tem a conta há mais de 2 meses. O prazo reduz as contas criadas só para publicar spam e incentiva a participação como leitor antes. Só o perfil de testes aceita um prazo menor que o mínimo. ⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses.
+No modo por pedido, só pode pedir autoria quem tem a conta há mais de 2 meses. O prazo reduz as contas criadas só para publicar spam e incentiva a participação como leitor antes. ⚙️ prazo: padrão de 2 meses · intervalo: 2 a 12 meses.
 
 - **Erro (proposto):** `422` · `error.author_request.account_too_new`.
 - **Requisito:** RF-036.
@@ -425,7 +425,7 @@ O artigo está sempre em uma destas situações: rascunho, agendado, publicado o
 - publicado → arquivado;
 - arquivado → rascunho.
 
-A data de publicação é a da primeira publicação. O slug é gerado a partir do título, é único (um slug repetido ganha `-2`, `-3` e assim por diante) e não muda depois da publicação, para que os links para o artigo não quebrem. Para ser publicado, o artigo precisa ter título de 5 a 200 caracteres, conteúdo de até 200.000 caracteres, uma categoria, o idioma informado e as descrições de todas as imagens e fórmulas (RN-065). Um artigo arquivado sai das listagens, da busca e do feed, mas continua acessível pelo endereço, marcado como arquivado e com os comentários fechados.
+Um artigo arquivado sai das listagens, da busca e do feed, mas continua acessível pelo endereço, marcado como arquivado e com os comentários fechados. A data de publicação é a da primeira publicação. O slug é gerado a partir do título, é único (um slug repetido ganha `-2`, `-3` e assim por diante) e não muda depois da publicação, para que os links para o artigo não quebrem. Para ser publicado, o artigo precisa ter título de 5 a 200 caracteres, conteúdo de até 200.000 caracteres, uma categoria, o idioma informado e as descrições de todas as imagens e fórmulas (RN-065).
 
 - **Erros (propostos):** `422` · `error.article.invalid_transition`; `400` · `error.validation.article.<campo>.<regra>`.
 - **Requisitos:** RF-053, RF-060.
@@ -538,7 +538,7 @@ As categorias formam uma árvore de até 3 níveis, e cada uma tem um nome e um 
 - **Requisito:** RF-070.
 
 #### RN-076 – Imagens ⬜
-Na foto de perfil, na capa e no corpo dos artigos, são aceitas imagens em JPEG, PNG e WebP, com até 5 MB. Cada imagem é regravada antes de ser guardada, o que remove os metadados, como a localização. A legenda tem até 300 caracteres, e cada artigo tem até 30 imagens. Ao trocar uma imagem, a anterior é apagada, e uma imagem enviada e não usada em 24 horas também é apagada.
+Na foto de perfil, no logo da plataforma, na capa e no corpo dos artigos, são aceitas imagens em JPEG, PNG e WebP, com até 5 MB. Cada imagem é regravada antes de ser guardada, o que remove os metadados, como a localização. A legenda tem até 300 caracteres, e cada artigo tem até 30 imagens. Ao trocar uma imagem, a anterior é apagada, e uma imagem enviada e não usada em 24 horas também é apagada.
 
 - **Erros (propostos):** `400` · `error.upload.invalid_type` e `error.upload.too_large`; `422` · `error.upload.limit_reached`.
 - **Requisitos:** RF-067, RNF-010.
@@ -633,10 +633,10 @@ Quando uma funcionalidade de IA está desligada, a cota acabou, o provedor está
 ## 7. Social
 
 #### RN-092 – Comentários ⬜
-Os comentários dos artigos publicados podem ser lidos por qualquer pessoa, mesmo sem login, mas só contas ativas comentam, e só em artigos publicados que estejam com os comentários abertos. As respostas têm um único nível: não é possível responder a uma resposta. O comentário é texto puro, com até 2.000 caracteres. O autor do comentário pode editá-lo quando quiser, e ele passa a aparecer marcado como "editado". Um comentário removido pelo autor some; se tiver respostas, fica no lugar dele a mensagem "comentário removido", para que a conversa não perca o sentido.
+Os comentários dos artigos publicados podem ser lidos por qualquer pessoa, mesmo sem login, mas só contas ativas comentam, e só quando os comentários do artigo estão abertos. As respostas têm um único nível: não é possível responder a uma resposta. O comentário é texto puro, com até 2.000 caracteres. O autor do comentário pode editá-lo quando quiser, e ele passa a aparecer marcado como "editado". Um comentário removido pelo autor some; se tiver respostas, fica no lugar dele a mensagem "comentário removido", para que a conversa não perca o sentido.
 
 - **Erros (propostos):** `422` · `error.comment.closed` e `error.comment.reply_depth`; `400` · `error.validation.comment.content.size`.
-- **Requisito:** RF-082.
+- **Requisitos:** RF-047, RF-082.
 
 #### RN-093 – Quem remove comentários ⬜
 Um comentário pode ser removido pelo próprio autor, pelos moderadores e pela administração. O autor do artigo não remove comentários de outras pessoas: ele pode fechar os comentários (RN-095) ou denunciar.
@@ -869,7 +869,7 @@ A plataforma só aceita cadastros depois de o dono informar o contato do encarre
 #### RN-128 – Versões dos termos ⬜
 As versões dos termos de uso e da política de privacidade são numeradas, têm data de vigência e podem ser lidas por qualquer pessoa, mesmo sem login. Uma versão publicada não muda mais: qualquer alteração vira uma versão nova, que exige um novo aceite (RN-039).
 
-- **Requisito:** RF-113.
+- **Requisitos:** RF-047, RF-113.
 
 ### 10.3 Convites e usuários
 
