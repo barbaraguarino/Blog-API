@@ -105,7 +105,7 @@ Algumas regras valem em todas as versões e, por isso, não se repetem em cada u
   - correção das divergências D1 a D7;
   - testes para as classes que ainda não têm.
 - **Requisitos:** RF-009 a RF-012 e RF-014 a RF-016 · RNF-004, RNF-006, RNF-007, RNF-013, RNF-015, RNF-027 e RNF-040.
-- **Regras:** RN-002, RN-003, RN-006 a RN-008, RN-009 (e-mail não confirmado e ativa), RN-010, RN-012 a RN-014, RN-017 a RN-020, RN-021 (sessões), RN-022 a RN-026 e RN-136.
+- **Regras:** RN-002, RN-006 a RN-008, RN-012, RN-013 e RN-017 (divergências D1 a D7), RN-009 (e-mail não confirmado e ativa), RN-010, RN-014, RN-018 a RN-020, RN-021 (sessões), RN-022 a RN-026 e RN-136.
 - **Dependências internas:**
   ```mermaid
   flowchart LR
@@ -171,8 +171,8 @@ Algumas regras valem em todas as versões e, por isso, não se repetem em cada u
   - exclusão da conta com prazo de carência e escolha entre apagar e anonimizar os conteúdos públicos;
   - lista dos serviços externos que recebem dados;
   - mascaramento e retenção dos logs e dos registros de acesso.
-- **Requisitos:** RF-006, RF-025 a RF-031, RF-034, RF-047 (termos e política), RF-112 e RF-113 · RNF-016, RNF-019 e RNF-020.
-- **Regras:** RN-003 (aceite), RN-004, RN-009 (desativada e com exclusão agendada), RN-034 a RN-039, RN-042, RN-043 (logs e registros de acesso), RN-127 e RN-128.
+- **Requisitos:** RF-006, RF-025 a RF-031, RF-034, RF-047 (termos e política), RF-112 e RF-113 · RNF-016, RNF-019 (mascaramento e prazo) e RNF-020.
+- **Regras:** RN-003 (idade e aceite), RN-004, RN-009 (desativada e com exclusão agendada), RN-034 a RN-039, RN-042, RN-043 (logs e registros de acesso), RN-127 e RN-128.
 - **Concluída quando:** um cadastro só for aceito depois de o dono publicar os termos e o contato do encarregado, e um usuário conseguir exportar os próprios dados, desativar a conta e pedir a exclusão, desistindo dela dentro da carência.
 
 ### v0.5 – Artigos ⏳
@@ -286,7 +286,7 @@ Algumas regras valem em todas as versões e, por isso, não se repetem em cada u
   - estatísticas de acesso e da comunidade;
   - métricas técnicas, de crescimento, de segurança e de uso da IA e dos e-mails;
   - consulta dos logs.
-- **Requisitos:** RF-047 (páginas institucionais), RF-110, RF-111, RF-114 a RF-116, RF-120 a RF-122, RF-125 a RF-129 e RF-131 · RNF-014, RNF-021 e RNF-041.
+- **Requisitos:** RF-047 (páginas institucionais), RF-110, RF-111, RF-114 a RF-116, RF-120 a RF-122, RF-125 a RF-129 e RF-131 · RNF-014, RNF-019 (registro das consultas), RNF-021 e RNF-041.
 - **Regras:** RN-043 (backups), RN-125, RN-126, RN-129, RN-132 a RN-134, RN-138 e RN-139.
 - **Concluída quando:** o dono conseguir definir a identidade da plataforma, convidar uma pessoa, baixar e restaurar um backup, colocar a plataforma em manutenção e consultar as estatísticas e os logs.
 
