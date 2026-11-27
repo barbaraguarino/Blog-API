@@ -316,15 +316,19 @@ Algumas regras valem em todas as versões e, por isso, não se repetem em cada u
 
 ---
 
-## 5. Depois da v0.4 (ideias, sem compromisso)
+## 5. Fora do escopo
 
-Ideias que podem entrar no backlog no futuro, depois de avaliadas:
+Ficam fora do projeto, pela [Definição do Projeto](Definição_do_Projeto.md) e pelas [Decisões](Decisões.md):
 
-- perfil de produção e publicação da API;
-- Docker e Docker Compose para o ambiente de desenvolvimento;
-- notificações (novo comentário, novo seguidor);
-- testes de carga;
-- painel de métricas da plataforma.
+- o front-end, inclusive as telas dos painéis e os pop-ups de notificação;
+- vários blogs na mesma instalação (D-017);
+- o editor de texto;
+- a publicação em produção: a configuração de produção fica pronta (RNF-040), mas não é publicada;
+- o feed RSS (D-026);
+- as notificações push no celular (D-020);
+- a verificação de senhas vazadas (D-031).
+
+Uma ideia nova só entra no Roadmap depois de virar requisito e, se for além da Definição, depois de registrada como decisão.
 
 ---
 
