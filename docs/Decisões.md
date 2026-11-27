@@ -81,7 +81,7 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 ## D-008: Repriorização da 2FA com app autenticador
 
 - **Data:** 2026-11-15
-- **Status:** Aceita (proposta, pode ser revista pela autora)
+- **Status:** Substituída por D-037
 - **Contexto:** o backlog antigo tinha quatro tarefas seguidas de autenticação antes de qualquer funcionalidade de blog.
 - **Decisão:** a v0.1 fica com o essencial de identidade (sessões, e-mail, ativação, recuperação e troca de senha). A 2FA com TOTP foi para a v0.4, depois de Artigos e Social.
 - **Consequências:** o núcleo do blog (artigos) é entregue antes. Para voltar à ordem original, basta mover a issue de milestone.
@@ -366,3 +366,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
   - RN-039 → RN-074; RN-040 → RN-076; RN-041 → RN-078; RN-050 → RN-092; RN-051 → RN-093; RN-052 → RN-098; RN-053 → RN-100; RN-054 → RN-101; RN-060 → RN-113; RN-061 → RN-115.
 - **Alternativas consideradas:** manter os blocos de números por módulo, que não comportavam as regras novas.
 - **Consequências:** os números provisórios RN-1xx, usados durante a reescrita, não valem mais. O relatório de testes de 2026-11-15 não é editado e continua com os números antigos. O Plano de Testes é atualizado na revisão dele, com esta tabela.
+
+## D-037: Novas versões do Roadmap, com a segurança da conta antes dos perfis
+
+- **Data:** 2026-11-27
+- **Status:** Aceita
+- **Contexto:** o Roadmap ia só até a v0.4 e deixava notificações, painéis, administração e Docker como ideias sem compromisso. Ele precisava cobrir todos os requisitos (versão 10.1) e todas as regras de negócio (versão 13.3). Além disso, a D-008 tinha deixado a verificação em duas etapas para depois de Artigos e Social, mas as regras atuais exigem que o dono a configure no primeiro acesso (RN-054) e que moderadores e administradores a tenham ativa (RN-028).
+- **Decisão:** a autora aprovou a proposta ("Aprovo tudo, v1.0 só com Docker"): as versões passam a ser v0.1 Identidade essencial, v0.2 Segurança da conta, v0.3 Perfis e autoria, v0.4 Privacidade e LGPD, v0.5 Artigos, v0.6 Conteúdo avançado, v0.7 Social, v0.8 Notificações, v0.9 Moderação, v0.10 Inteligência artificial, v0.11 Administração da plataforma, v0.12 Painéis e v1.0 Docker. A verificação em duas etapas vem antes dos perfis, e a correção das divergências D1 a D7 fica na v0.1.
+- **Alternativas consideradas:** manter a verificação em duas etapas na v0.4 (D-008), o que impediria a aprovação de autores antes dela; deixar o Docker como a última issue da v0.12, em vez de uma versão própria.
+- **Consequências:** a D-008 fica substituída. Cada versão lista os requisitos e as regras que entrega, e todos os RF, RNF e RN aparecem em alguma versão. A v1.0 marca o fim do escopo planejado. A seção 13 da Arquitetura é atualizada na revisão dela.

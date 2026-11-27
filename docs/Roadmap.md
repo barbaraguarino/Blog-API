@@ -10,28 +10,53 @@ O Roadmap mostra **para onde o produto vai**: as versões (Milestones) planejada
 timeline
     title Versões do Blog-API
     v0.0 Fundação : Exceções e i18n : Segurança JWT : Cadastro e login local e Google
-    v0.1 Identidade essencial : Swagger : Sessões e Refresh Token : E-mail e ativação : Recuperação e troca de senha : Correções e testes
-    v0.2 Artigos (MVP) : Autoria : Artigos e rascunhos : Categorias e tags : Imagens no S3
-    v0.3 Social : Comentários e reações : Seguidores e feed : Busca
-    v0.4 Moderação e segurança avançada : Denúncias e moderação : 2FA TOTP : Vínculo com Google
+    v0.1 Identidade essencial : Sessões : E-mail e confirmação : Senha : Divergências D1 a D7
+    v0.2 Segurança da conta : Verificação em duas etapas : Passkeys e login por código : Provedores sociais : Perfil e e-mail
+    v0.3 Perfis e autoria : Dono e papéis : Autoria : Moderadores e administradores : Regras ajustáveis
+    v0.4 Privacidade e LGPD : Termos e aceite : Dados pessoais : Desativação e exclusão
+    v0.5 Artigos : Ciclo do artigo : Formatos : Tags e categorias : Imagens : Busca
+    v0.6 Conteúdo avançado : Revisões : Idiomas : Coautoria e séries : Listas de leitura
+    v0.7 Social : Comentários : Reações : Seguidores e feed : Bloqueio
+    v0.8 Notificações : Avisos em tempo real : E-mails e resumo diário : Menções e anúncios
+    v0.9 Moderação : Denúncias : Ações e suspensão : Recurso
+    v0.10 Inteligência artificial : Tradução e correção : Sugestões e resumo : Triagem : Recomendação : Teto de custos
+    v0.11 Administração da plataforma : Identidade e páginas : Convites : Backup : Métricas e logs
+    v0.12 Painéis : Minha conta : Autores : Moderação : Dono
+    v1.0 Docker : API e banco em contêineres
 ```
 
 | Versão | Tema | Situação |
 |---|---|---|
 | **v0.0 – Fundação** | Base técnica e identidade básica | ✅ Concluída |
-| [**v0.1 – Identidade essencial**](https://github.com/barbaraguarino/Blog-API/milestone/1) | Contas e sessões seguras | ▶️ Próxima |
-| [**v0.2 – Artigos (MVP)**](https://github.com/barbaraguarino/Blog-API/milestone/2) | Publicar conteúdo | ⏳ Planejada |
-| [**v0.3 – Social**](https://github.com/barbaraguarino/Blog-API/milestone/3) | Interagir com o conteúdo | ⏳ Planejada |
-| [**v0.4 – Moderação e segurança avançada**](https://github.com/barbaraguarino/Blog-API/milestone/4) | Proteger a comunidade | ⏳ Planejada |
+| **v0.1 – Identidade essencial** | Contas confiáveis e sessões seguras | ▶️ Próxima |
+| **v0.2 – Segurança da conta** | Proteção extra e outras formas de entrar | ⏳ Planejada |
+| **v0.3 – Perfis e autoria** | O dono, os papéis e quem pode escrever | ⏳ Planejada |
+| **v0.4 – Privacidade e LGPD** | Os direitos de cada pessoa sobre os próprios dados | ⏳ Planejada |
+| **v0.5 – Artigos** | Publicar conteúdo organizado | ⏳ Planejada |
+| **v0.6 – Conteúdo avançado** | Escrever em equipe e em vários idiomas | ⏳ Planejada |
+| **v0.7 – Social** | Interagir com o conteúdo e com as pessoas | ⏳ Planejada |
+| **v0.8 – Notificações** | Avisar cada pessoa do que a envolve | ⏳ Planejada |
+| **v0.9 – Moderação** | Proteger a comunidade | ⏳ Planejada |
+| **v0.10 – Inteligência artificial** | Ajudar quem escreve e quem lê, dentro do teto de custos | ⏳ Planejada |
+| **v0.11 – Administração da plataforma** | Dar ao dono o controle da instalação | ⏳ Planejada |
+| **v0.12 – Painéis** | Uma visão do próprio trabalho para cada perfil | ⏳ Planejada |
+| **v1.0 – Docker** | Executar a API e o banco em contêineres | ⏳ Planejada |
+
+A v1.0 marca o fim do escopo planejado: com ela, todos os requisitos e todas as regras de negócio estão entregues.
 
 ---
 
 ## 2. Por que esta ordem
 
-1. **Identidade antes de tudo:** todas as outras funcionalidades dependem de saber quem é o usuário. Sessões revogáveis, e-mail verificado e recuperação de senha são o mínimo para uma conta ser confiável.
-2. **Conteúdo antes de interação:** só faz sentido comentar, reagir ou seguir quando existem artigos. Por isso a v0.2 (artigos) vem antes da v0.3 (social).
-3. **Moderação depois da comunidade:** a moderação trata o conteúdo e as interações. Ela vem quando ambos existem.
-4. **Segurança avançada por último:** a 2FA com app autenticador e o vínculo com Google melhoram uma base que já funciona. Eles foram movidos para a v0.4 para que o núcleo do blog fosse entregue antes (D-008).
+1. **Identidade antes de tudo:** todas as outras funcionalidades dependem de saber quem é o usuário. Sessões revogáveis, e-mail confirmado e recuperação de senha são o mínimo para uma conta ser confiável, e por isso a v0.1 também corrige as divergências D1 a D7 das Regras de Negócio.
+2. **Verificação em duas etapas antes dos perfis:** o dono configura a verificação em duas etapas no primeiro acesso (RN-054), e moderadores e administradores só usam as funções desses papéis com ela ativa (RN-028). Sem ela, ninguém aprova os pedidos de autoria e, sem autores, não há artigos. Por isso a segurança da conta vem na v0.2 (D-037, que substitui a D-008).
+3. **Perfis antes da privacidade:** a plataforma só aceita cadastros depois de o dono publicar os termos de uso, a política de privacidade e o contato do encarregado (RN-127), e o dono só existe a partir da v0.3.
+4. **Privacidade antes do conteúdo:** com a consulta, a exportação e a exclusão dos dados prontas na v0.4, cada versão seguinte já nasce incluindo os próprios dados nelas, em vez de adaptá-las no fim.
+5. **Conteúdo antes de interação:** só faz sentido comentar, reagir ou seguir quando existem artigos. Por isso os artigos (v0.5 e v0.6) vêm antes do Social (v0.7).
+6. **Notificações depois do Social e antes da Moderação:** os avisos precisam de eventos para avisar, como comentários, seguidores e respostas. A moderação, que vem logo depois, já nasce avisando o resultado das denúncias e dos recursos.
+7. **Inteligência artificial depois da Moderação:** a recomendação usa os seguidores e as reações, e a triagem usa os comentários e as denúncias. O teto de custos entra junto, porque a IA é o serviço pago cujo uso mais varia.
+8. **Administração antes dos Painéis:** o painel do dono reúne o backup, as estatísticas, as métricas e os logs, que são entregues na v0.11.
+9. **Docker por último:** a execução em contêineres é a última tarefa do projeto (D-016). Até ela, a API e o banco rodam diretamente na máquina (RNF-039).
 
 ---
 
