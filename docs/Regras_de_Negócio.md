@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 13.3 · **Última modificação:** 27/11/2026
+**Versão:** 13.4 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -8,7 +8,7 @@ Este documento reúne as regras que o sistema obedece: validações, restriçõe
 
 ## 1. Como ler este documento
 
-Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê, e, quando pode ser violada, qual erro o cliente recebe. As regras são numeradas na ordem em que aparecem neste documento. Uma regra nova entra na seção do seu módulo e, quando necessário, a numeração é refeita e registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos. Os requisitos que as regras detalham estão em [Requisitos.md](Requisitos.md). Os perfis e os termos seguem a [Definição do Projeto](Definição_do_Projeto.md): o dono é o superadministrador, e a administração reúne os administradores e o dono.
+Cada regra tem um identificador (RN-xxx), diz o que o sistema obedece e por quê, e, quando pode ser violada, qual erro o cliente recebe. As regras são numeradas na ordem em que aparecem neste documento. Uma regra nova entra na seção do seu módulo e, quando necessário, a numeração é refeita, as referências nos outros documentos, inclusive o Roadmap, são atualizadas, e a mudança é registrada em [Decisões.md](Decisões.md), com a correspondência entre os números antigos e os novos. Os requisitos que as regras detalham estão em [Requisitos.md](Requisitos.md), e a versão em que cada regra é entregue está no [Roadmap](Roadmap.md). Os perfis e os termos seguem a [Definição do Projeto](Definição_do_Projeto.md): o dono é o superadministrador, e a administração reúne os administradores e o dono.
 
 - **Status:** ✅ implementado · 🟡 parcial · ⬜ planejado.
 - **Divergências:** quando o código atual contraria uma regra ou não a cumpre totalmente, ela recebe a marca ⚠️, e a diferença é descrita na seção *Divergências conhecidas*.
