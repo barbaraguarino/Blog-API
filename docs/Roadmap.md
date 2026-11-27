@@ -105,9 +105,12 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - respostas que não revelam quais contas existem;
   - limites de tentativas de login, de envio de códigos e de requisições em toda a API;
   - correção das divergências D1 a D7;
-  - testes para as classes que ainda não têm.
+  - testes para as classes que ainda não têm;
+  - banco PostgreSQL de testes, rodando na máquina e sem contêineres, para os testes de integração;
+  - integração contínua: um workflow do GitHub Actions que roda a suíte de testes em cada PR (D-038).
 - **Requisitos:** RF-009 a RF-012 e RF-014 a RF-016 · RNF-004, RNF-006, RNF-007, RNF-013, RNF-015, RNF-027 e RNF-040.
 - **Regras:** RN-002, RN-006 a RN-008, RN-012, RN-013 e RN-017 (divergências D1 a D7), RN-009 (e-mail não confirmado e ativa), RN-010, RN-014, RN-018 a RN-020, RN-021 (sessões), RN-022 a RN-026 e RN-136.
+- **Pré-requisitos:** conta na AWS com o SES configurado. Uma conta nova do SES só envia e-mails para endereços verificados, até a AWS liberar a saída desse modo de teste.
 - **Dependências internas:**
   ```mermaid
   flowchart LR
@@ -119,7 +122,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
       MAIL --> CHANGE[Troca de senha]
       SES --> CHANGE
   ```
-- **Concluída quando:** uma pessoa conseguir se cadastrar, confirmar o e-mail, entrar, ver e encerrar as próprias sessões e recuperar a senha esquecida, as divergências D1 a D7 estiverem corrigidas e toda classe de produção tiver teste.
+- **Concluída quando:** uma pessoa conseguir se cadastrar, confirmar o e-mail, entrar, ver e encerrar as próprias sessões e recuperar a senha esquecida, as divergências D1 a D7 estiverem corrigidas e toda classe de produção tiver teste, e a suíte rodar sozinha em cada PR.
 
 ### v0.2 – Segurança da conta ⏳
 
@@ -136,6 +139,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - troca de e-mail.
 - **Requisitos:** RF-005, RF-007, RF-008, RF-013, RF-017 a RF-019, RF-021 a RF-024 e RF-032.
 - **Regras:** RN-007, RN-008 e RN-013 (outros provedores), RN-015, RN-016, RN-021 (histórico de acessos), RN-027, RN-029 a RN-033 e RN-040.
+- **Pré-requisitos:** aplicativo OAuth do GitHub e, se a Apple for ativada, o programa de desenvolvedor dela, que custa US$ 99 por ano.
 - **Concluída quando:** um usuário conseguir entrar com a verificação em duas etapas, com uma passkey, com um código por e-mail e com o GitHub, vincular e desvincular um provedor e receber o alerta de acesso em um dispositivo novo.
 
 ### v0.3 – Perfis e autoria ⏳
@@ -156,7 +160,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - registro das ações administrativas.
 - **Requisitos:** RF-020, RF-035 a RF-045, RF-117, RF-119 e RF-130.
 - **Regras:** RN-028, RN-044 a RN-056, RN-130, RN-131 e RN-140.
-- **Concluída quando:** o dono conseguir fazer o primeiro acesso, nomear o primeiro moderador e o primeiro administrador, aprovar um pedido de autoria e ajustar um prazo, com tudo guardado no registro das ações administrativas.
+- **Concluída quando:** o dono conseguir fazer o primeiro acesso, nomear o primeiro moderador e o primeiro administrador, aprovar um pedido de autoria e ajustar um prazo, com tudo guardado no registro das ações administrativas, e um moderador sem a verificação em duas etapas não conseguir usar as funções do papel.
 
 ### v0.4 – Privacidade e LGPD ⏳
 
@@ -175,7 +179,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - mascaramento e retenção dos logs e dos registros de acesso.
 - **Requisitos:** RF-006, RF-025 a RF-031, RF-034, RF-047 (termos e política), RF-112 e RF-113 · RNF-016, RNF-019 (mascaramento e prazo) e RNF-020.
 - **Regras:** RN-003 (idade e aceite), RN-004, RN-009 (desativada e com exclusão agendada), RN-034 a RN-039, RN-042, RN-043 (logs e registros de acesso), RN-127 e RN-128.
-- **Concluída quando:** um cadastro só for aceito depois de o dono publicar os termos e o contato do encarregado, e um usuário conseguir exportar os próprios dados, desativar a conta e pedir a exclusão, desistindo dela dentro da carência.
+- **Concluída quando:** um cadastro só for aceito depois de o dono publicar os termos e o contato do encarregado, e um usuário conseguir exportar os próprios dados, desativar a conta e pedir a exclusão, desistindo dela dentro da carência, e, em outra conta, a exclusão acontecer de fato ao fim da carência.
 
 ### v0.5 – Artigos ⏳
 
@@ -188,9 +192,10 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - descrições obrigatórias das imagens e das fórmulas;
   - imagens no AWS S3, sem metadados, para a foto de perfil, a capa e o corpo dos artigos;
   - tags e categorias;
-  - listagens paginadas, leitura pública, tempo estimado de leitura e busca.
+  - listagens, leitura pública, tempo estimado de leitura e busca.
 - **Requisitos:** RF-046, RF-050, RF-051, RF-053 a RF-057, RF-066 a RF-068, RF-070 e RF-071 · RNF-009 a RNF-011.
 - **Regras:** RN-057 a RN-066 e RN-074 a RN-078.
+- **Pré-requisitos:** bucket no AWS S3.
 - **Concluída quando:** um autor conseguir publicar um artigo com capa, imagens descritas, categoria e tags, e um visitante sem login conseguir encontrá-lo pela busca e lê-lo.
 
 ### v0.6 – Conteúdo avançado ⏳
@@ -254,7 +259,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - palavras bloqueadas.
 - **Requisitos:** RF-098 a RF-102 e RF-118.
 - **Regras:** RN-009 (suspensa) e RN-113 a RN-121.
-- **Concluída quando:** um conteúdo denunciado puder ser ocultado por um moderador, quem denunciou receber o resultado e o recurso do autor for analisado por outra pessoa.
+- **Concluída quando:** um conteúdo denunciado puder ser ocultado por um moderador, quem denunciou receber o resultado, o recurso do autor for analisado por outra pessoa e uma conta suspensa não conseguir entrar por nenhuma forma de login.
 
 ### v0.10 – Inteligência artificial ⏳
 
@@ -273,6 +278,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - estimativa dos custos, avisos ao dono e pausa dos serviços não essenciais ao atingir o teto.
 - **Requisitos:** RF-033, RF-072 a RF-081, RF-123 e RF-124 · RNF-012, RNF-017, RNF-022, RNF-023 (IA), RNF-024, RNF-028 e RNF-042.
 - **Regras:** RN-041, RN-081 a RN-091 e RN-137.
+- **Pré-requisitos:** chave da API da Anthropic e alerta de gasto configurado na conta.
 - **Concluída quando:** um leitor ler um artigo traduzido para o idioma dele, um autor aceitar parte das correções sugeridas, a triagem ordenar a fila da moderação e, com o teto atingido em um teste, a IA for pausada enquanto a plataforma continua funcionando com o conteúdo original.
 
 ### v0.11 – Administração da plataforma ⏳

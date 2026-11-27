@@ -375,3 +375,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** a autora aprovou a proposta ("Aprovo tudo, v1.0 só com Docker"): as versões passam a ser v0.1 Identidade essencial, v0.2 Segurança da conta, v0.3 Perfis e autoria, v0.4 Privacidade e LGPD, v0.5 Artigos, v0.6 Conteúdo avançado, v0.7 Social, v0.8 Notificações, v0.9 Moderação, v0.10 Inteligência artificial, v0.11 Administração da plataforma, v0.12 Painéis e v1.0 Docker. A verificação em duas etapas vem antes dos perfis, e a correção das divergências D1 a D7 fica na v0.1.
 - **Alternativas consideradas:** manter a verificação em duas etapas na v0.4 (D-008), o que impediria a aprovação de autores antes dela; deixar o Docker como a última issue da v0.12, em vez de uma versão própria.
 - **Consequências:** a D-008 fica substituída. Cada versão lista os requisitos e as regras que entrega, e todos os RF, RNF e RN aparecem em alguma versão. A v1.0 marca o fim do escopo planejado. A seção 13 da Arquitetura é atualizada na revisão dela.
+
+## D-038: Integração contínua com os testes em cada PR
+
+- **Data:** 2026-11-27
+- **Status:** Aceita
+- **Contexto:** na revisão do Roadmap, notou-se que nenhum workflow roda os testes. A Definição de Pronto exige a suíte passando, mas isso dependia só de rodá-la à mão.
+- **Decisão:** a autora aprovou a proposta ("Aplica tudo"): a v0.1 ganha um workflow do GitHub Actions que roda `./mvnw test` em cada PR, usando só actions oficiais com versão fixada e permissões mínimas.
+- **Alternativas consideradas:** continuar rodando os testes só na máquina, o que deixa passar um PR com a suíte quebrada.
+- **Consequências:** os testes não podem depender de serviços externos de verdade (RNF-035), nem de segredos do repositório. Os testes de integração precisam de um PostgreSQL no runner, que é configurado no próprio workflow, sem Docker na máquina da autora (D-016).
