@@ -83,8 +83,8 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
 - **Entregas:**
   - tratamento global de exceções com formato único de erro;
   - internacionalização das mensagens (pt-BR e en);
-  - Spring Security stateless com JWT em cookie `HttpOnly`;
-  - cadastro com e-mail e senha (BCrypt) e com conta Google;
+  - autenticação sem sessão no servidor, com token JWT em cookie `HttpOnly`;
+  - cadastro com e-mail e senha, guardada só como hash, e com conta Google;
   - login por e-mail ou nickname, e login com Google.
 - **Requisitos:** RF-001 a RF-004, em parte: o aceite dos termos e a idade mínima entram na v0.4.
 - **Regras:** RN-001, RN-005, RN-011 e RN-017 e, em parte, RN-003, RN-006, RN-007, RN-008, RN-012 e RN-013.
@@ -92,7 +92,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
 
 ### v0.1 – Identidade essencial ▶️
 
-- **Objetivo:** tornar as contas confiáveis, com o e-mail comprovado, sessões que podem ser encerradas e a senha recuperável, e alinhar o código atual às Regras de Negócio.
+- **Objetivo:** tornar as contas confiáveis (e-mail comprovado, sessões que podem ser encerradas e senha recuperável) e alinhar o código atual às Regras de Negócio.
 - **Entregas:**
   - documentação da API com Swagger;
   - configurações separadas por ambiente, com a de produção pronta;
@@ -129,13 +129,13 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
   - reautenticação antes de ações sensíveis;
   - passkeys;
   - login com código enviado por e-mail;
-  - cadastro e login com GitHub e Apple, e vínculo e desvínculo de provedores sociais;
+  - cadastro e login com GitHub e Apple, e vínculo e desvínculo de provedores sociais. A Apple pode ficar desativada enquanto o custo não couber no teto (D-025);
   - histórico de acessos com local aproximado e alerta de acesso em dispositivo novo;
   - edição do perfil e troca do nickname;
   - troca de e-mail.
 - **Requisitos:** RF-005, RF-007, RF-008, RF-013, RF-017 a RF-019, RF-021 a RF-024 e RF-032.
 - **Regras:** RN-007, RN-008 e RN-013 (outros provedores), RN-015, RN-016, RN-021 (histórico de acessos), RN-027, RN-029 a RN-033 e RN-040.
-- **Concluída quando:** um usuário conseguir ativar a verificação em duas etapas e entrar com o código do aplicativo, entrar com uma passkey, com um código por e-mail e com o GitHub, vincular e desvincular um provedor e receber o alerta ao entrar de um dispositivo novo.
+- **Concluída quando:** um usuário conseguir entrar com a verificação em duas etapas, com uma passkey, com um código por e-mail e com o GitHub, vincular e desvincular um provedor e receber o alerta de acesso em um dispositivo novo.
 
 ### v0.3 – Perfis e autoria ⏳
 
@@ -159,7 +159,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
 
 ### v0.4 – Privacidade e LGPD ⏳
 
-- **Objetivo:** garantir os direitos de cada pessoa sobre os próprios dados e cumprir a LGPD antes de a plataforma aceitar cadastros.
+- **Objetivo:** garantir os direitos de cada pessoa sobre os próprios dados e cumprir a LGPD, que exige os termos e o contato do encarregado antes de qualquer cadastro.
 - **Entregas:**
   - contato do encarregado pelos dados pessoais;
   - versões públicas dos termos de uso e da política de privacidade;
@@ -244,7 +244,7 @@ Alguns pontos valem em todas as versões e, por isso, não se repetem em cada um
 - **Objetivo:** manter a comunidade saudável, com decisões justas e revisáveis.
 - **Entregas:**
   - denúncias de artigos, comentários e perfis;
-  - fila de denúncias, com regra de conflito de interesse;
+  - fila de denúncias, em que ninguém analisa uma denúncia que o envolve;
   - ações de moderação: arquivar a denúncia, ocultar o conteúdo, remover comentários e penalizar o autor;
   - suspensão de contas;
   - resultado da análise para quem denunciou;
