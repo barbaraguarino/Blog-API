@@ -335,3 +335,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
   - Valores padrão que estavam em aberto na D-031: a tradução automática oferece português, inglês e espanhol, e o dono escolhe entre os idiomas suportados; o link de prévia vale 7 dias (de 1 a 30); a carência da exclusão de conta é de 30 dias (de 7 a 30); o dispositivo confiável vale 30 dias (de 1 a 90); a idade mínima é de 18 anos (de 16 a 18).
 - **Alternativas consideradas:** manter os blocos de números por módulo, que estourariam com as regras novas; manter o `409` no cadastro, que revela quais e-mails estão cadastrados.
 - **Consequências:** a idade mínima abaixo de 18 anos só deve ser liberada depois de conferir a Lei 15.211/2025 (ECA Digital). Os limites de trabalho em andamento do Kanban, a última questão em aberto da D-031, ficam para a revisão do Processo de Desenvolvimento.
+
+## D-034: Aprovações na promoção a administrador
+
+- **Data:** 2026-11-27
+- **Status:** Aceita
+- **Contexto:** a D-031 diz que, com 3 ou mais administradores, a promoção de um moderador a administrador "exige a aprovação de 2 outros". Ao escrever a regra (RN-052), não estava claro se quem indica o moderador conta como uma dessas aprovações.
+- **Decisão:** a autora aprovou a proposta ("Aprovo assim"): a promoção começa com a indicação de um administrador e exige a aprovação de 2 administradores além de quem indicou e do próprio candidato.
+- **Alternativas consideradas:** contar quem indicou como uma das aprovações, o que deixaria a promoção depender de só mais uma pessoa.
+- **Consequências:** com exatamente 3 administradores, todos participam da promoção (um indica e dois aprovam). Com menos de 3, quem aprova continua sendo o superadministrador.

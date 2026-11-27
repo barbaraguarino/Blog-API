@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 3.0 · **Última modificação:** 27/11/2026
+**Versão:** 4.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -358,23 +358,84 @@ Nos logs técnicos, e-mails e IPs aparecem mascarados (por exemplo, `a***@exempl
 
 ---
 
-## 4. Autoria e conteúdo *(v0.2–v0.3)*
+## 4. Perfis e autoria
 
-#### RN-130 – Prazo mínimo para pedir autoria ⬜
-- **Regra:** só pode pedir autoria quem tem a conta **criada há mais de 2 meses**.
-- **Por quê:** reduz contas criadas só para publicar spam e incentiva a participação como leitor antes.
+#### RN-044 – Papéis e hierarquia ⬜
+Os papéis seguem a ordem leitor, autor, moderador, administrador e superadministrador, e cada papel só é concedido ou retirado por alguém acima dele, conforme as regras desta seção. O moderador pode ter também a permissão de autor; sem ela, não escreve artigos. O administrador e o superadministrador escrevem artigos.
+
+- **Erro:** `403` · `error.auth.access_denied`.
+- **Requisitos:** RF-040, RF-117.
+
+#### RN-045 – Modo de autoria ⬜
+O dono escolhe um dos três modos de autoria: por pedido, que é o padrão, fechado ou aberto. Ao mudar o modo, os autores atuais continuam autores. Ao sair do modo por pedido, os pedidos pendentes são cancelados, e cada solicitante é avisado. No modo aberto, todo leitor ativo pode escrever enquanto o modo durar; ao sair dele, quem publicou pelo menos um artigo vira autor, e os demais voltam a ser só leitores.
+
+- **Requisito:** RF-035.
+
+#### RN-046 – Prazo mínimo para pedir autoria ⬜
+No modo por pedido, só pode pedir autoria quem tem a conta há mais de 2 meses. O prazo reduz as contas criadas só para publicar spam e incentiva a participação como leitor antes. Só o perfil de testes aceita um prazo menor que o mínimo. ⚙️ padrão: 2 meses · intervalo: 2 a 12 meses.
+
 - **Erro (proposto):** `422` · `error.author_request.account_too_new`.
 - **Requisito:** RF-036.
 
-#### RN-131 – Um pedido pendente por vez ⬜
-- **Regra:** um usuário tem no máximo **um** pedido de autoria pendente. Depois de uma recusa, pode pedir de novo.
-- **Erro (proposto):** `409` · `error.author_request.already_pending`.
+#### RN-047 – Um pedido pendente por vez ⬜
+Cada pessoa tem no máximo um pedido de autoria pendente, com uma motivação de até 1.000 caracteres. Depois de uma recusa, um novo pedido só pode ser feito após um intervalo, para que os pedidos repetidos não sobrecarreguem a administração. ⚙️ intervalo depois de uma recusa: padrão de 30 dias · intervalo: 0 a 90 dias.
+
+- **Erros (propostos):** `409` · `error.author_request.already_pending`; `422` · `error.author_request.too_soon`.
 - **Requisito:** RF-036.
 
-#### RN-132 – Aprovação de autoria ⬜
-- **Regra:** só o `ADMIN` aprova ou recusa. A aprovação muda o papel para `AUTHOR`. A recusa exige um motivo, visível para o solicitante.
-- **Erro:** `403` · `error.auth.access_denied` para quem não é admin.
+#### RN-048 – Aprovação do pedido de autoria ⬜
+O pedido precisa da aprovação de 2 administradores, ou de 1 se a plataforma tiver só um. O superadministrador conta como administrador e segue as mesmas regras. Uma única recusa, com motivo, encerra o pedido, e o motivo fica visível para o solicitante. A aprovação de mais de uma pessoa evita que alguém vire autor por favoritismo. ⚙️ aprovações: padrão de 2 · intervalo: 1 a 3.
+
+- **Erro:** `403` · `error.auth.access_denied` para quem não é da administração.
 - **Requisito:** RF-037.
+
+#### RN-049 – Nomeação direta no modo fechado ⬜
+No modo fechado, não existem pedidos: um administrador nomeia o autor, e a pessoa é avisada. Fora do modo fechado, a nomeação direta só vale pelas exceções de início (RN-055).
+
+- **Erro (proposto):** `422` · `error.author.direct_appointment_not_allowed`.
+- **Requisito:** RF-038.
+
+#### RN-050 – Retirada do papel de autor ⬜
+Um administrador pode retirar o papel de autor, informando um motivo, que fica registrado. Os artigos já publicados continuam publicados e assinados pela pessoa, e os rascunhos ficam guardados, mas não podem mais ser publicados. A pessoa pode pedir autoria de novo, pelas regras normais.
+
+- **Requisito:** RF-039.
+
+#### RN-051 – Papel de moderador ⬜
+O papel de moderador é concedido e retirado por um administrador e não exige ser autor. Para usar as funções de moderação, o moderador precisa ter a verificação em duas etapas ativa (RN-028).
+
+- **Requisito:** RF-040.
+
+#### RN-052 – Promoção a administrador ⬜
+Só pode ser promovido a administrador o moderador com mais de 12 meses na função e sem nenhuma denúncia procedente contra ele. A promoção começa com a indicação feita por um administrador. Com 3 ou mais administradores, ela exige a aprovação de 2 outros administradores, além de quem indicou e do próprio candidato; com menos de 3, quem aprova é o superadministrador. As exigências evitam o favoritismo na escolha de quem administra a plataforma. ⚙️ tempo como moderador: padrão de 12 meses · intervalo: 6 a 24 meses.
+
+- **Erro (proposto):** `422` · `error.promotion.requirements_not_met`.
+- **Requisito:** RF-041.
+
+#### RN-053 – Rebaixamento de administradores ⬜
+Só o superadministrador rebaixa um administrador, que volta a ser moderador. O motivo é obrigatório e fica no registro das ações administrativas (RF-130).
+
+- **Requisito:** RF-042.
+
+#### RN-054 – Superadministrador único ⬜
+O superadministrador é criado na primeira subida da API, a partir de variáveis de ambiente que trazem só o nome e o e-mail do dono. No primeiro acesso, o dono define a senha com um código enviado ao e-mail e configura a verificação em duas etapas; assim, nenhuma senha fica guardada em variável de ambiente. Se as variáveis faltarem na primeira subida, a API não sobe. Nunca há mais de um superadministrador, e nenhum outro perfil altera ou suspende a conta dele.
+
+- **Erro (proposto):** `403` · `error.auth.owner_protected`.
+- **Requisito:** RF-043.
+
+#### RN-055 – Exceções de início ⬜
+Para a plataforma começar a funcionar, o superadministrador pode promover alguém diretamente para um perfil que ainda não tem ninguém, como o primeiro moderador e o primeiro administrador, e pode nomear até 5 autores no total sem prazo nem aprovação. Fora dessas exceções, ele segue as regras normais, para que não haja favoritismo. ⚙️ autores iniciais: padrão de 5 · intervalo: 0 a 10.
+
+- **Requisito:** RF-045.
+
+#### RN-056 – Transferência da posse da plataforma ⬜
+A transferência exige a reautenticação (RN-030). Quem recebe precisa ser um administrador ativo, com a verificação em duas etapas ativa, e deve aceitar em até 7 dias. Depois do aceite, o dono anterior vira administrador. A transferência fica no registro das ações administrativas.
+
+- **Erro (proposto):** `422` · `error.ownership.invalid_recipient`.
+- **Requisito:** RF-044.
+
+---
+
+## 5. Conteúdo *(v0.2–v0.3)*
 
 #### RN-133 – Categorias ⬜
 - **Regra:** a categoria tem nome, **slug único** e uma categoria pai opcional, formando uma árvore. Uma categoria não pode ser pai dela mesma, nem de um ancestral. Só o `ADMIN` gerencia categorias.
@@ -422,7 +483,7 @@ Nos logs técnicos, e-mails e IPs aparecem mascarados (por exemplo, `a***@exempl
 
 ---
 
-## 5. Social e moderação *(v0.3–v0.4)*
+## 6. Social e moderação *(v0.3–v0.4)*
 
 #### RN-150 – Comentários ⬜
 - **Regra:** só é possível comentar artigos publicados. Há respostas em **um único nível** (comentário → resposta). Responder uma resposta não é permitido.
@@ -460,7 +521,7 @@ Nos logs técnicos, e-mails e IPs aparecem mascarados (por exemplo, `a***@exempl
 
 ---
 
-## 6. Divergências conhecidas
+## 7. Divergências conhecidas
 
 Pontos em que o código atual não cumpre totalmente a regra pretendida. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
 
