@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 6.0 · **Última modificação:** 27/11/2026
+**Versão:** 7.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -659,27 +659,78 @@ Quando uma funcionalidade de IA está desligada, a cota acabou, o provedor está
 
 ---
 
-## 7. Social e moderação *(v0.3–v0.4)*
+## 7. Social
 
-#### RN-150 – Comentários ⬜
-- **Regra:** só é possível comentar artigos publicados. Há respostas em **um único nível** (comentário → resposta). Responder uma resposta não é permitido.
+#### RN-092 – Comentários ⬜
+Só contas ativas comentam, e só em artigos publicados que estejam com os comentários abertos. As respostas têm um único nível: não é possível responder a uma resposta. O comentário é texto puro, com até 2.000 caracteres. O autor do comentário pode editá-lo quando quiser, e ele passa a aparecer marcado como "editado". Um comentário removido pelo autor some; se tiver respostas, fica no lugar dele a mensagem "comentário removido", para que a conversa não perca o sentido.
+
+- **Erros (propostos):** `422` · `error.comment.closed` e `error.comment.reply_depth`; `400` · `error.validation.comment.content.size`.
 - **Requisito:** RF-082.
 
-#### RN-151 – Quem altera comentários ⬜
-- **Regra:** o autor do comentário edita e remove o próprio comentário. `ADMIN` e `MODERATOR` removem qualquer comentário.
-- **Requisito:** RF-082.
+#### RN-093 – Quem remove comentários ⬜
+Um comentário pode ser removido pelo próprio autor, pelos moderadores e pela administração. O autor do artigo não remove comentários de outras pessoas: ele pode fechar os comentários (RN-095) ou denunciar.
 
-#### RN-152 – Uma reação por artigo ⬜
-- **Regra:** cada usuário tem no máximo **uma** reação por artigo. Uma nova reação substitui a anterior.
+- **Erro:** `403` · `error.auth.access_denied`.
+- **Requisitos:** RF-082, RF-099.
+
+#### RN-094 – Limite de frequência de comentários ⬜
+Cada conta faz no máximo 1 comentário a cada 30 segundos e um número limitado de comentários por dia, para proteger a plataforma contra spam. ⚙️ comentários por dia: padrão de 50 · intervalo: 10 a 200.
+
+- **Erro (proposto):** `429` · `error.comment.too_many`.
+- **Requisitos:** RNF-007, RNF-015.
+
+#### RN-095 – Fechar e reabrir os comentários ⬜
+O autor principal e os coautores fecham e reabrem os comentários de um artigo. Com os comentários fechados, os que já existem continuam visíveis e continuam recebendo reações, mas não entram comentários novos nem respostas.
+
+- **Requisito:** RF-083.
+
+#### RN-096 – Comentário fixado ⬜
+Cada artigo tem no máximo um comentário fixado no topo, e fixar outro substitui o anterior. Só um comentário de primeiro nível pode ser fixado, e ele pode ser desfixado a qualquer momento.
+
+- **Requisito:** RF-084.
+
+#### RN-097 – Menções ⬜
+Uma menção é um `@nickname` existente no texto do comentário, e cada comentário avisa no máximo 5 pessoas mencionadas. Não há aviso quando existe um bloqueio entre as duas pessoas, quando a conta mencionada não está ativa ou quando a pessoa menciona a si mesma. Se a pessoa mencionada trocar o nickname, o texto do comentário não muda.
+
+- **Requisitos:** RF-085, RF-093.
+
+#### RN-098 – Reações aos artigos ⬜
+Há cinco tipos fixos de reação: gostei, amei, útil, interessante e engraçado. Cada pessoa tem no máximo uma reação por artigo; uma nova reação substitui a anterior, e a reação pode ser retirada. Ninguém reage aos próprios artigos, para não inflar as estatísticas.
+
+- **Erro (proposto):** `422` · `error.reaction.own_content`.
 - **Requisito:** RF-086.
 
-#### RN-153 – Seguir autores ⬜
-- **Regra:** não é possível seguir a si mesmo, e seguir alguém que já é seguido não duplica.
-- **Requisito:** RF-088.
+#### RN-099 – Reações aos comentários ⬜
+As reações aos comentários usam os mesmos tipos da RN-098. Cada pessoa tem no máximo uma reação por comentário e não reage aos próprios comentários.
 
-#### RN-154 – Feed ⬜
-- **Regra:** o feed mostra só artigos publicados de autores seguidos, paginados, do mais recente para o mais antigo.
+- **Erro (proposto):** `422` · `error.reaction.own_content`.
+- **Requisito:** RF-087.
+
+#### RN-100 – Seguir autores ⬜
+Só é possível seguir quem é ou já foi autor e tem artigos publicados. Ninguém segue a si mesmo, e seguir de novo alguém já seguido não duplica. A lista de autores seguidos só é vista pela própria pessoa. Se o autor perder o papel, os seguidores são mantidos.
+
+- **Erros (propostos):** `422` · `error.follow.self` e `error.follow.not_author`.
+- **Requisitos:** RF-088, RF-089.
+
+#### RN-101 – Feed ⬜
+O feed mostra os artigos publicados dos autores seguidos, inclusive os escritos em coautoria, do mais recente para o mais antigo. Ficam de fora os artigos ocultados e os de quem tem um bloqueio com a pessoa.
+
 - **Requisito:** RF-090.
+
+#### RN-102 – Bloqueio entre usuários ⬜
+Quem foi bloqueado não comenta nos artigos de quem bloqueou, não responde a essa pessoa, não a segue, não a menciona com aviso e não a convida para uma coautoria. Ao bloquear, os "seguir" entre as duas pessoas são desfeitos nos dois sentidos. Quem foi bloqueado não é avisado. Os comentários antigos continuam visíveis para as outras pessoas e aparecem recolhidos para quem bloqueou. O bloqueio não impede as ações de moderação nem os avisos da plataforma. Cada pessoa bloqueia até 1.000 contas.
+
+- **Erro (proposto):** `403` · `error.block.interaction_not_allowed`.
+- **Requisito:** RF-091.
+
+#### RN-103 – Perfil público ⬜
+O perfil público mostra os dados que a pessoa escolheu mostrar (RN-034) e, no caso dos autores, os artigos publicados e as séries. O perfil de uma conta desativada, suspensa, com exclusão agendada ou excluída responde `404`.
+
+- **Requisitos:** RF-092, RF-064.
+
+---
+
+## 8. Moderação
 
 #### RN-160 – Denúncias ⬜
 - **Regra:** um usuário denuncia o mesmo conteúdo **uma única vez**, escolhendo um motivo de uma lista fixa (spam, assédio, conteúdo impróprio, desinformação, outro) e com uma descrição opcional.
@@ -697,7 +748,7 @@ Quando uma funcionalidade de IA está desligada, a cota acabou, o provedor está
 
 ---
 
-## 8. Divergências conhecidas
+## 9. Divergências conhecidas
 
 Pontos em que o código atual não cumpre totalmente a regra pretendida. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
 
