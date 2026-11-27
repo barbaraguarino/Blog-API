@@ -344,3 +344,12 @@ Decisões de arquitetura, tecnologia e processo do Blog-API, no formato de ADR (
 - **Decisão:** a autora aprovou a proposta ("Aprovo assim"): a promoção começa com a indicação de um administrador e exige a aprovação de 2 administradores além de quem indicou e do próprio candidato.
 - **Alternativas consideradas:** contar quem indicou como uma das aprovações, o que deixaria a promoção depender de só mais uma pessoa.
 - **Consequências:** com exatamente 3 administradores, todos participam da promoção (um indica e dois aprovam). Com menos de 3, quem aprova continua sendo o superadministrador.
+
+## D-035: Recomendação calculada pela própria API
+
+- **Data:** 2026-11-27
+- **Status:** Aceita
+- **Contexto:** a recomendação de artigos (RF-080) está entre as funcionalidades de inteligência artificial, mas pode ser feita sem chamar o modelo de IA, só com os sinais que cada leitor dá.
+- **Decisão:** a autora aprovou a proposta ("Aprovo a seção 6"): a recomendação é calculada pela própria API, a partir das tags de interesse, dos autores seguidos, das reações e do histórico de interesses, sem enviar dados ao modelo. As outras funcionalidades de IA continuam usando o modelo.
+- **Alternativas consideradas:** pedir as recomendações ao modelo, o que gastaria parte do teto de US$ 15 por mês (D-022) e enviaria dados de leitura a um serviço externo.
+- **Consequências:** a recomendação não tem custo, não entra nos limites de uso da IA e continua funcionando quando a IA está indisponível. O cálculo fica descrito na Arquitetura.

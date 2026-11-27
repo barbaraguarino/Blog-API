@@ -1,6 +1,6 @@
 # Regras de Negócio
 
-**Versão:** 5.0 · **Última modificação:** 27/11/2026
+**Versão:** 6.0 · **Última modificação:** 27/11/2026
 
 Este documento reúne as regras que o sistema obedece: validações, restrições, permissões e comportamentos esperados, incluindo os valores padrão que o dono da plataforma pode ajustar.
 
@@ -596,7 +596,70 @@ A exportação gera um ZIP com todas as versões de idioma dos artigos da pessoa
 
 ---
 
-## 6. Social e moderação *(v0.3–v0.4)*
+## 6. Inteligência artificial
+
+#### RN-081 – Funcionalidades de IA ligáveis pelo dono ⬜
+O dono liga e desliga separadamente cada funcionalidade de IA: tradução, correção, sugestões de texto, sugestão de tags e de categoria, resumo, descrições de imagens e fórmulas, triagem da moderação e recomendação. Todas vêm ligadas por padrão.
+
+- **Requisito:** RF-081.
+
+#### RN-082 – Limites de uso da IA ⬜
+Cada autor tem um limite diário de pedidos de correção, sugestões de texto e descrições, e a plataforma tem uma cota mensal de gasto com IA. A cota padrão vem da conta do teto de custos: dos US$ 15 por mês, cerca de US$ 8 vão para o login com Apple, e sobram uns US$ 7 para a IA, as imagens e os e-mails.
+
+- ⚙️ pedidos por autor: padrão de 20 por dia · intervalo: 5 a 100.
+- ⚙️ cota mensal da plataforma: padrão de US$ 4 · intervalo: US$ 0 a US$ 10.
+- **Erro (proposto):** `429` · `error.ai.quota_exceeded`.
+- **Requisitos:** RNF-022, RNF-023.
+
+#### RN-083 – Tradução automática ⬜
+A tradução automática é oferecida em português, inglês e espanhol, e o dono escolhe entre os idiomas suportados (D-033). Cada tradução é gerada na primeira vez que alguém a pede e é guardada para todos os leitores. Quando o original muda, ela é refeita só na primeira leitura seguinte, e não a cada edição. A tradução preserva o formato do artigo e aparece marcada como automática. O autor não edita uma tradução automática: para isso, ele escreve a própria versão naquele idioma (RN-068).
+
+- **Requisitos:** RF-072, RNF-024, RNF-028.
+
+#### RN-084 – Correção e sugestões de texto ⬜
+O autor envia o artigo inteiro ou um trecho, e a IA devolve uma lista de sugestões, cada uma com a sua posição no texto. Nada é aplicado sozinho: o autor aceita ou recusa cada sugestão.
+
+- **Requisitos:** RF-073, RF-074, RNF-028.
+
+#### RN-085 – Sugestões de tags, categoria e resumo ⬜
+A IA sugere até 5 tags, de preferência entre as que já existem, e uma categoria, escolhida só entre as existentes; o autor decide se aceita. O resumo tem até 300 caracteres e é gerado na publicação, para cada versão de idioma. Um resumo editado pelo autor nunca é sobrescrito, e um novo resumo só é gerado se o autor pedir.
+
+- **Requisitos:** RF-075, RF-076, RNF-024.
+
+#### RN-086 – Descrições sugeridas para imagens e fórmulas ⬜
+A descrição de uma imagem ou fórmula só é gerada quando o autor pede, uma por vez, porque enviar imagens ao modelo custa mais, e cada pedido conta no limite diário (RN-082). A sugestão nunca é aceita sozinha: o autor a aceita ou edita, respeitando o limite de 250 caracteres da RN-065.
+
+- **Requisito:** RF-077.
+
+#### RN-087 – Proteção contra instruções no conteúdo ⬜
+O conteúdo enviado ao modelo vai sempre separado das instruções e marcado como dado, para que um texto escrito para enganar a IA (*prompt injection*) não mude o que ela faz. Cada resposta é validada antes do uso: o formato esperado, o tamanho e, nas traduções, a mesma estrutura de formatação do original. O HTML devolvido passa de novo pela limpeza da RN-063. Uma resposta inválida é descartada, e a funcionalidade aparece como indisponível. Nenhuma ação do sistema é decidida pelo texto que a IA devolve.
+
+- **Requisito:** RNF-012.
+
+#### RN-088 – Dados enviados à IA ⬜
+A IA recebe só o conteúdo necessário para cada tarefa, nunca e-mails, nomes ou outros dados das contas. Na triagem da moderação, até os `@nickname` mencionados no texto são trocados por um marcador, para que nenhum identificador de pessoa saia da plataforma.
+
+- **Requisitos:** RF-078, RNF-017.
+
+#### RN-089 – Triagem da moderação ⬜
+Todo comentário novo e todo conteúdo denunciado recebem uma classificação (baixa, média ou alta chance de abuso) e um motivo provável, e a fila da moderação é ordenada por essa classificação. Um comentário classificado com alta chance entra na fila mesmo sem denúncia, marcado como "triagem automática". A IA nunca remove, oculta nem penaliza nada: quem decide é sempre uma pessoa.
+
+- **Requisito:** RF-078.
+
+#### RN-090 – Interesses e recomendação ⬜
+Cada leitor escolhe até 20 tags de interesse. A recomendação usa essas tags, os autores seguidos, as reações e o histórico de interesses, quando ele está ligado (RN-041), e deixa de fora os artigos já lidos, os próprios artigos e os de usuários bloqueados. O cálculo é feito pela própria API, sem enviar dados ao modelo de IA (D-035).
+
+- **Requisitos:** RF-079, RF-080.
+
+#### RN-091 – Funcionamento sem a IA ⬜
+Quando uma funcionalidade de IA está desligada, a cota acabou, o provedor está fora do ar ou os serviços pagos foram pausados pelo teto de custos, a plataforma mostra o conteúdo original, e a resposta avisa que a funcionalidade está indisponível e diz o motivo. Publicar nunca depende da IA: as descrições de imagens e fórmulas continuam obrigatórias e são escritas pelo autor.
+
+- **Erro (proposto):** `503` · `error.ai.unavailable`, só nos pedidos feitos diretamente pelo autor.
+- **Requisitos:** RF-124, RNF-042.
+
+---
+
+## 7. Social e moderação *(v0.3–v0.4)*
 
 #### RN-150 – Comentários ⬜
 - **Regra:** só é possível comentar artigos publicados. Há respostas em **um único nível** (comentário → resposta). Responder uma resposta não é permitido.
@@ -634,7 +697,7 @@ A exportação gera um ZIP com todas as versões de idioma dos artigos da pessoa
 
 ---
 
-## 7. Divergências conhecidas
+## 8. Divergências conhecidas
 
 Pontos em que o código atual não cumpre totalmente a regra pretendida. Cada um vira uma issue `type:bug` e é removido daqui quando corrigido e testado.
 
