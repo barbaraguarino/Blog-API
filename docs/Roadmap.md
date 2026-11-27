@@ -60,9 +60,9 @@ A v1.0 marca o fim do escopo planejado: com ela, todos os requisitos e todas as 
 
 ---
 
-## 3. Regras que valem para todas as versões
+## 3. O que vale para todas as versões
 
-Algumas regras valem em todas as versões e, por isso, não se repetem em cada uma delas:
+Alguns pontos valem em todas as versões e, por isso, não se repetem em cada uma delas:
 
 - os requisitos de base valem desde a primeira linha de código: RNF-001, RNF-002, RNF-003, RNF-005, RNF-008, RNF-025, RNF-026, RNF-029 e RNF-031 a RNF-039;
 - cada PR segue a Definição de Pronto, com testes, arquivos `.http`, Swagger e documentos atualizados;
