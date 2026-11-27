@@ -339,4 +339,4 @@ Cada versão é um Milestone do GitHub, e cada entrega dentro dela é uma issue,
 
 Quando uma versão é concluída, a situação dela passa a ✅, e a da próxima, a ▶️. Um requisito ou uma regra nova entra na versão do seu tema, e uma mudança na ordem das versões, ou de uma entrega de uma versão para outra, é registrada em [Decisões.md](Decisões.md).
 
-O processo completo está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md), e as decisões estão em [Decisões.md](Decisões.md).
+O processo completo está no [Processo_de_Desenvolvimento.md](Processo_de_Desenvolvimento.md).
